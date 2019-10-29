@@ -1,6 +1,8 @@
 <template>
-  <el-container>
-    <el-header>Header</el-header>
+  <el-container class="layout-default">
+    <el-header>
+      <my-header />
+    </el-header>
     <el-main>
       <nuxt />
     </el-main>
@@ -8,7 +10,16 @@
   </el-container>
 </template>
 
-<style>
+<script>
+import MyHeader from '@/components/public/header/index.vue'
+export default {
+  components: {
+    MyHeader
+  }
+}
+</script>
+
+<style lang="scss">
 html {
   font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
     Roboto, 'Helvetica Neue', Arial, sans-serif;
