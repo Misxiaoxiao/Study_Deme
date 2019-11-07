@@ -192,3 +192,33 @@ router.post('/removePerson', async function(ctx, next) {
 ```
 
 在端口输入`curl -d params url`，`params`为请求参数，`url`为请求地址访问接口既可，例如：`curl -d 'name=Ali&age=10' http://localhost:3000/users/addPerson`
+
+## 接口配置
+```js
+import mongoose from 'mongoose'
+import bodyParser from 'koa-bodyparser'
+import session from 'koa-generic-session'
+import Redis from 'koa-redis'
+import json from 'koa-json'
+
+// 添加接口配置
+app.keys = ['mt', 'keyskeys']
+app.proxy = true
+app.use(session({
+  key: 'mt',
+  prefix: 'mt:uid',
+  store: new Redis()
+}))
+app.use(bodyParser({
+  extendTypes: ['json', 'form', 'text']
+}))
+app.use(json())
+// 连接数据库
+mongoose.connect(dbConfig.dbs, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+// passport
+app.use(passport.initialize())
+app.use(passport.session())
+```
