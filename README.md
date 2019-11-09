@@ -98,6 +98,19 @@ router.get('/fix', async function(ctx, next) {
 
 ## [使用mongoose](http://www.mongoosejs.net/docs/guide.html)
 
+```js
+1简单的方法
+启动  brew services start mongodb  // 再输入mongo可以进入数据库
+关闭  brew services stop mongodb 
+brew services restart mongodb 重启
+
+2  麻烦的方法
+启动 mongod --config /usr/local/etc/mongod.conf
+关闭 打开另一个终端窗口 切换到你的mongodb/bin目录下   ./mongo
+       > use admin
+        > db.shutdownServer()
+```
+
  * 例子
 在`koa2_learn`下新建`dbs`文件夹，用来操作连接`MongoDB`，新建`config.js`用来写入数据库相关配置
 ```js

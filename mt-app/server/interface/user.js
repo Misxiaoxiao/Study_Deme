@@ -14,6 +14,7 @@ let Store = new Redis().client
 
 // 注册
 router.post('/signup', async (ctx, next) => {
+  console.log(ctx)
   const {
     username,
     password,
@@ -146,7 +147,7 @@ router.post('/verify', async (ctx, next) => {
 
   await transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-      return console.log('error')
+      return console.log(error)
     } else {
       Store.hmset(`nodemail:${ko.user}`, 'code', ko.code, 'expire', ko.expire, 'email', ko.email)
     }

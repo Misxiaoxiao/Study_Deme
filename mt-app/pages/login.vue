@@ -61,4 +61,5 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@/assets/css/login/index.scss";
 </style>
