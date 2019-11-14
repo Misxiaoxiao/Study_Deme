@@ -1,24 +1,9 @@
 import Router from 'koa-router'
 import axios from './utils/axios'
 import Province from '../dbs/models/province'
+import Menu from '../dbs/models/menu'
 
 let router = new Router({prefix: '/geo'})
-
-// router.get('/getPosition', async (ctx) => {
-//   let res = await axios.get('http://pv.sohu.com/cityjson?ie=utf-8')
-//   // console.log(res)
-//   if (status === 200) {
-//     ctx.body = {
-//       province,
-//       city
-//     }
-//   } else {
-//     ctx.body = {
-//       province: '',
-//       city: ''
-//     }
-//   }
-// })
 
 router.get('/province', async (ctx) => {
   let province = await Province.find()
@@ -30,6 +15,13 @@ router.get('/province', async (ctx) => {
         name: item.value[0]
       }
     })
+  }
+})
+
+router.get('/menu', async (ctx) => {
+  const result = await Menu.findOne()
+  ctx.body = {
+    menu: result.menu
   }
 })
 
