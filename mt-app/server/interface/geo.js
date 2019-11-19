@@ -1,5 +1,4 @@
 import Router from 'koa-router'
-import axios from './utils/axios'
 import Province from '../dbs/models/province'
 import Menu from '../dbs/models/menu'
 
@@ -21,7 +20,7 @@ router.get('/province', async (ctx) => {
 router.get('/menu', async (ctx) => {
   const result = await Menu.findOne()
   ctx.body = {
-    menu: result.menu
+    menu: result ? result.menu : []
   }
 })
 
