@@ -53,4 +53,23 @@ router.get('hotPlace', async (ctx) => {
   }
 })
 
+router.get('/getScenesList', async (ctx) => {
+  const { tab } = ctx.query
+  let {
+    status,
+    data
+  } = await axios.get('https://bj.meituan.com/ptapi/getScenesList', {
+    params: {
+      theme: 'quality',
+      tab,
+      ci: 1,
+      limit: 10,
+    }
+  })
+  ctx.body = {
+    code: 0,
+    data: status === 200 ? data : {}
+  }
+})
+
 export default router

@@ -108,15 +108,15 @@
 </template>
 
 <script>
-// import _ from 'lodash'
+import _ from 'lodash'
 
 export default {
   data () {
     return {
       isFocus: false,
       search: '',
-      hotPlace: ['火锅', '火锅', '火锅', '火锅'],
-      searchList: ['故宫', '故宫', '故宫', '故宫']
+      hotPlace: [],
+      searchList: []
     }
   },
   computed: {
@@ -136,9 +136,22 @@ export default {
         this.isFocus = false
       }, 200)
     },
-    input () {
-
-    }
+    input: _.debounce(async function() {
+      const city = this.$store.state.geo.position.city.replace('市', '')
+      this.searchList = []
+      const {
+        status,
+        data: {
+          top
+        }
+      } = await this.$axios.get('/search/top', {
+        params: {
+          input: this.search,
+          city
+        }
+      })
+      this.searchList = status === 200 ? top.slice(0, 10) : []
+    }, 300)
   }
 }
 </script>
