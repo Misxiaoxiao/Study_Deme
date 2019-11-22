@@ -29,8 +29,8 @@
             <li class="pos">
               <span
                 v-for="(tag, i) in item.tags"
-                :key="i"
                 v-show="i < 4"
+                :key="i"
               >{{ tag.tag }}</span>
             </li>
             <li class="price">
@@ -49,12 +49,8 @@ export default {
     return {
       kind: 'all',
       tabs: [],
+      cur: [],
       list: {
-        all: [],
-        part: [],
-        spa: [],
-        movie: [],
-        travel: []
       }
     }
   },
@@ -87,7 +83,6 @@ export default {
       if (tag === 'dd') {
         this.kind = dom.getAttribute('kind')
         const keyword = dom.getAttribute('keyword')
-        console.log(keyword)
         const {
           status,
           data: {

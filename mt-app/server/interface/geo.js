@@ -1,6 +1,7 @@
 import Router from 'koa-router'
 import Province from '../dbs/models/province'
 import Menu from '../dbs/models/menu'
+import City from '../dbs/models/city'
 
 let router = new Router({prefix: '/geo'})
 
@@ -21,6 +22,31 @@ router.get('/menu', async (ctx) => {
   const result = await Menu.findOne()
   ctx.body = {
     menu: result ? result.menu : []
+  }
+})
+
+router.get('/hotCity', async (ctx) => {
+  const list = [
+    '北京市',
+    '上海市',
+    '广州市',
+    '深圳市',
+    '天津市',
+    '西安市',
+    '杭州市',
+    '南京市',
+    '武汉市',
+    '成都市'
+  ]
+
+  const result = await City.find()
+  let nList = []
+  result.forEach(item => {
+    nList = nList.concat(item.value.filter(k => list.includes(k.name) || list.includes(k.province)))
+  })
+  ctx.body = {
+    code: 0,
+    hots: nList
   }
 })
 
