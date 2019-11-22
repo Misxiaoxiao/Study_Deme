@@ -27,7 +27,11 @@
               {{ item.title }}
             </li>
             <li class="pos">
-              <span>{{ item.subTitle }}</span>
+              <span
+                v-for="(tag, i) in item.tags"
+                :key="i"
+                v-show="i < 4"
+              >{{ tag.tag }}</span>
             </li>
             <li class="price">
               ￥<em>{{ item.currentPrice }}</em><span>/起</span>
@@ -40,8 +44,6 @@
 </template>
 
 <script>
-// import axios from 'axios'
-
 export default {
   data () {
     return {
