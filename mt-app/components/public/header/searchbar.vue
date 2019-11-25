@@ -44,11 +44,11 @@
           </dl>
         </div>
         <p class="suggest">
-          <a href="#">1</a>
-          <a href="#">1</a>
-          <a href="#">1</a>
-          <a href="#">1</a>
-          <a href="#">1</a>
+          <a
+            v-for="(item,idx) in $store.state.home.hotPlace.slice(0,5)"
+            :key="idx"
+            :href="'/products?keyword='+encodeURIComponent(item.name)"
+          >{{ item.name }}</a>
         </p>
         <ul class="nav">
           <li>
