@@ -5,6 +5,27 @@ import City from '../dbs/models/city'
 
 let router = new Router({prefix: '/geo'})
 
+router.get('/city', async (ctx) => {
+  let city = []
+  const result = await City.find()
+  result.forEach(item => {
+    city = city.concat(item.value)
+  })
+
+  ctx.body = {
+    code: 0,
+    city: city.map(item => {
+      return {
+        province: item.province,
+        id: item.id,
+        name: item.name === '市辖区' || item.name === '省直辖县级行政区划'
+          ? item.province
+          : item.name
+      }
+    })
+  }
+})
+
 router.get('/province', async (ctx) => {
   let province = await Province.find()
 
