@@ -47,7 +47,7 @@
           <a
             v-for="(item,idx) in $store.state.home.hotPlace.slice(0,5)"
             :key="idx"
-            :href="'/products?keyword='+encodeURIComponent(item.name)"
+            :href="'/products?keyword=' + encodeURIComponent(item.name)"
           >{{ item.name }}</a>
         </p>
         <ul class="nav">
