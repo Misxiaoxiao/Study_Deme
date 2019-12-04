@@ -1,6 +1,8 @@
 import Router from 'koa-router'
 import axios from './utils/axios'
 
+const sign = 'abcd'
+
 let router = new Router({prefix: '/search'})
 
 router.get('/top', async (ctx) => {
@@ -69,6 +71,37 @@ router.get('/getScenesList', async (ctx) => {
   ctx.body = {
     code: 0,
     data: status === 200 ? data : {}
+  }
+})
+
+router.get('/products', async (ctx) => {
+  const keyword = ctx.query.keyword || '旅游'
+  const city = ctx.query.city || '北京'
+  const {
+    status,
+    data: {
+      product,
+      more
+    }
+  } = await axios.get('', {
+    params: {
+      keyword,
+      city,
+      sign
+    }
+  })
+  if (status === 200) {
+    ctx.body = {
+      product,
+      more: ctx.isAuthenticated() ? more : [],
+      login: ctx.isAuthenticated()
+    }
+  } else {
+    ctx.bodu = {
+      product: {},
+      more: ctx.isAuthenticated() ? more : [],
+      login: ctx.isAuthenticated()
+    }
   }
 })
 

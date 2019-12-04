@@ -15,7 +15,7 @@
         :to="{ path: '/' }"
       >
         <a href="/">
-          {{ $store.state.geo.position.city.replace('市', '') }}{{ decodeURIComponent(keyword)  }}
+          {{ $store.state.geo.position.city.replace('市', '') }}{{ decodeURIComponent(keyword) }}
         </a>
       </el-breadcrumb-item>
     </el-breadcrumb>
