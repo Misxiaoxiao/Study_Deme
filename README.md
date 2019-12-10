@@ -235,3 +235,264 @@ mongoose.connect(dbConfig.dbs, {
 app.use(passport.initialize())
 app.use(passport.session())
 ```
+
+
+
+## next 集成 antd
+
+`npm install @zeit/next-css`
+
+新建文件`next.config.js`，在文件中写入
+```js
+const withCss = reuqire('@zeit/next-css')
+
+if (typeof require !== 'undefined') {
+  require.extensions['.css'] = file => {}
+}
+
+module.exports = withCss({})
+```
+
+`npm install antd babel-plugin-import`
+
+新建文件`.babelrc`，在文件中写入
+```js
+{
+  "presets": ["next/babel"],
+  "plugins": [
+    [
+      "import",
+      {
+        "libraryName": "antd",
+        // "style": "css"
+      }
+    ]
+  ]
+}
+```
+
+引入样式
+在`/page`下新建`_app.js`，文件中写入
+```js
+import App from 'next/app'
+import 'antd/dist/antd.css'
+
+export default App
+```
+
+`server.js`
+```js
+const Koa = require('koa')
+const next = require('next')
+
+const dev = process.env.NODE_ENV !== 'production'
+const app = next({ dev })
+const handle = app.getRequestHandler()
+
+app.prepare().then(() => {
+  const server = new Koa()
+
+  server.use(async (ctx, next) => {
+    await handle(ctx.req, ctx.res)
+    ctx.respond = false
+  })
+
+  server.listen(3000, () => {
+    console.log('koa server listening on 3000')
+  })
+})
+```
+
+### 路由跳转
+
+Link
+```js
+import Link from 'next/link'
+
+export default () => (
+  <Link href="/a">
+    <Button>A</Button>
+  </Link>
+)
+```
+`Link`只能有唯一的子节点
+
+Router模块
+```js
+import Link from 'next/link'
+import Router from 'next/router'
+import { Button } from 'antd'
+
+export default () => {
+  function goToTestB() {
+    Router.push('/test/b')
+  }
+
+  return (
+    <>
+      <Link href="/a" title="AAA">
+        <Button>A</Button>
+      </Link>
+      <Button onClick={goToTestB}>test B</Button>
+    </>
+  )
+}
+```
+
+参数
+只能通过`query`
+```js
+// link
+<Link href="/a?id=1" title="AAA">
+</Link>
+
+// router
+Router.push('/test/b', {
+  query: {
+    id: 2
+  }
+})
+```
+
+改变路由的显示方式
+```js
+// link
+<Link href="/a?id=1" as="/a/1" title="AAA">
+</Link>
+
+// router
+Router.push('/test/b', {
+  query: {
+    id: 2
+  }
+}, '/test/b/2')
+```
+刷新`/test/b/2`之后页面会404
+
+`server.js`添加
+```js
+const Koa = require('koa')
+const Router = require('koa-router')
+const next = require('next')
+
+const dev = process.env.NODE_ENV !== 'production'
+const app = next({ dev })
+const handle = app.getRequestHandler()
+
+app.prepare().then(() => {
+  const server = new Koa()
+  const router = new Router()
+
+  router.get('/a/:id', async (ctx) => {
+    const id = ctx.params.id
+    await handle(ctx.req, ctx.res, {
+      pathname: '/a',
+      query: {
+        id
+      }
+    })
+  })
+
+  server.use(router.routes())
+
+  server.use(async (ctx, next) => {
+    await handle(ctx.req, ctx.res)
+    ctx.respond = false
+  })
+
+  server.listen(3000, () => {
+    console.log('koa server listening on 3000')
+  })
+})
+```
+
+路由变化的钩子
+```js
+const events = [
+  'routeChangeStart',
+  'routeChangeComplete',
+  'routeChangeError',
+  'beforeHistoryChange',
+  'hashChangeStart',
+  'hashChangeComplete'
+]
+
+const makeEvent = (type) => (...args) => {
+  console.log(type, ...args)
+}
+
+events.forEach(event => {
+  Router.events.on(event, makeEvent(event))
+})
+```
+
+### 获取数据
+```js
+import { withRouter } from 'next/router'
+import Comp from '../components/comp'
+
+const A = ({ router, name }) => <Comp>A {router.query.id} {name}</Comp>
+
+A.getInitialProps = () => {
+  return {
+    name: 'joker'
+  }
+}
+
+export default withRouter(A)
+```
+
+### 重写App
+在`page`下`_app.js`
+```js
+import App from 'next/app'
+
+class MyApp extends App {
+  static async getInitialProps ({ Component }) {
+    let pageProps
+    if (Component.getInitialProps) {
+      pageProps = await Component.getInitialProps()
+    }
+
+    return {
+      pageProps
+    }
+  }
+  render () {
+    const { Component, pageProps } = this.props
+
+    return (
+      <Component {...pageProps} />
+    )
+  }
+}
+
+export default MyApp
+```
+
+### 设置公用模板Layout
+
+新建`layout.jsx`
+```js
+import Link from 'next/link'
+import { Button } from 'antd'
+
+export default ({ children }) => (
+  <>
+    <header>
+      <Link href="/a">
+        <Button>A</Button>
+      </Link>
+      <Link href="/test/b">
+        <Button>Test B</Button>
+      </Link>
+    </header>
+    {children}
+  </>
+)
+```
+之后在`_app.js`当做组件使用
+
+### 自定义Document
+
+新建`document.jsx`
