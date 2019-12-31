@@ -1,10 +1,9 @@
 import React, { useEffect, useCallback } from 'react';
 import { withRouter } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import UserTypes from 'reducer/user/dispatch.type';
 
 const Authroute = (props) => {
-  const user = useSelector(state => state.user.user)
   const dispatch = useDispatch()
 
   const uploadUser = useCallback((user) => dispatch({
@@ -23,7 +22,7 @@ const Authroute = (props) => {
     } else {
       uploadUser('joker')
     }
-  }, [])
+  })
 
   return <div />
 }
