@@ -1,0 +1,6 @@
+export default {
+  AUTH_SUCCESS: 'AUTH_SUCCESS',
+  ERROR_MSG: 'ERROR_MSG',
+  LOAD_DATA: 'LOAD_DATA',
+  LOGOUT: 'LOGOUT'
+}
