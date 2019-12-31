@@ -25,7 +25,7 @@ const Authroute = (props) => {
     } else {
       uploadUser('joker')
     }
-  }, [user])
+  }, [])
 
   return <div />
 }
