@@ -15,8 +15,6 @@ const Authroute = (props) => {
   }), [dispatch])
 
   useEffect(() => {
-    console.log('authroute init')
-    console.log(user)
     const publicList = ['/login', 'register'];
     const pathName = props.location.pathName;
 

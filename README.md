@@ -496,3 +496,683 @@ export default ({ children }) => (
 ### 自定义Document
 
 新建`document.jsx`
+
+```js
+import Document, { Html, Head, NextScript, Main } from 'next/document'
+
+class MyDocument extends Document {
+  static async getInitialProps(ctx) {
+    const props = await Document.getInitialProps(ctx)
+
+    return {
+      ...props
+    }
+  }
+
+  render () {
+    return (
+      <Html>
+        <Head />
+        <body className="test">
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    )
+  }
+}
+
+export default MyDocument
+```
+新版中的`title`需要在`_page`中设置，因此修改
+```js
+import App from 'next/app'
+import Head from 'next/head'
+import Layout from '../components/layout'
+
+class MyApp extends App {
+  static async getInitialProps ({ Component }) {
+    let pageProps
+    if (Component.getInitialProps) {
+      pageProps = await Component.getInitialProps()
+    }
+
+    return {
+      pageProps
+    }
+  }
+  render () {
+    const { Component, pageProps } = this.props
+
+    return (
+      <>
+        <Head>
+          <title>My App</title>
+          <style jsx>{`.test { color: red; }`}</style>
+        </Head>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </>
+    )
+  }
+}
+
+export default MyApp
+```
+
+### 集成styled Component
+
+`npm install styled-components babel-plugin-styled-components`,
+修改`.babelrc`
+```js
+{
+  "presets": ["next/babel"],
+  "plugins": [
+    [
+      "import",
+      {
+        "libraryName": "antd",
+        "style": "css"
+      }
+    ],
+    [
+      "styled-components",
+      {
+        "ssr": true
+      }
+    ]
+  ]
+}
+```
+
+### 异步模块加载
+
+异步加载`moment`
+```js
+import { withRouter } from 'next/router'
+import Comp from '../components/comp'
+import styled from 'styled-components'
+
+const Title = styled.h1`
+  color: yellow;
+  font-size: 40px;
+`
+
+const A = ({ router, name }) => (
+  <>
+    <Title>Title {}</Title>
+    <Comp>{router.query.id} {name}</Comp>
+  </>
+)
+
+A.getInitialProps = async (ctx) => {
+  const moment = await import('moment')
+
+  return {
+    name: 'joker',
+    time: moment.default(Date.now() - 60 * 1000).fromNow
+  }
+}
+
+export default withRouter(A)
+```
+
+异步组件加载
+```js
+import dynamic from 'next/dynamic'
+
+const Comp = dynamic(import('../components/comp'))
+```
+
+### next配置
+```js
+const withCss = require('@zeit/next-css')
+
+// 配置说明
+const configs = {
+    // 编译文件的输出目录
+    distDir: 'build',
+    // 是否给每个路由生成Etag
+    // Etag是用来做缓存验证的，如果路由执行的时候，新的Etag是相同的，那么就会复用当前内容，而无需重新渲染
+    // 默认情况下，nextJS是会对每个路由生成Etag的。但是如果我们部署的时候，ngx已经做了Etag的配置，那么就可以关闭nextJS的Etag，节省性能
+    generateEtags: true,
+    // （不常用）页面内容缓存配置，只针对开发环境
+    onDemandEntries: {
+        // 内容在内存中缓存的时长（ms）
+        maxInactiveAge: 25 * 1000,
+        // 最多同时缓存多少个页面
+        pagesBufferLength: 2,
+    },
+    // 在pages目录下那种后缀的文件会被认为是页面
+    pageExtensions: ['jsx', 'js'],
+    // （不常用）配置buildId，一般用于同一个项目部署多个节点的时候用到
+    generateBuildId: async () => {
+        if (process.env.YOUR_BUILD_ID) {
+        return process.env.YOUR_BUILD_ID
+        }
+
+        // 返回null，使用nextJS默认的unique id
+        return null
+    },
+    // （重要配置）手动修改webpack config
+    webpack(config, options) {
+        return config
+    },
+    // （重要配置）修改webpackDevMiddleware配置
+    webpackDevMiddleware: config => {
+        return config
+    },
+    // （重要配置）可以在页面上通过 procsess.env.customKey 获取 value。跟webpack.DefinePlugin实现的一致
+    env: {
+        customKey: 'value',
+    },
+    // 下面两个要通过 'next/config' 来读取
+    // 只有在服务端渲染时才会获取的配置
+    serverRuntimeConfig: {
+        mySecret: 'secret',
+        secondSecret: process.env.SECOND_SECRET,
+    },
+    // 在服务端渲染和客户端渲染都可获取的配置
+    publicRuntimeConfig: {
+        staticFolder: '/static',
+    },
+    // 上面这两个配置在组件里使用方式如下：
+    // import getCofnig from 'next/config'
+    // const { serverRuntimeConfig,publicRuntimeConfig } = getCofnig()
+    // console.log( serverRuntimeConfig,publicRuntimeConfig )
+}
+
+if (typeof require !== 'undefined') {
+    require.extensions['.css'] = file => { }
+}
+
+// 虽然next-css看起来是一个处理样式的插件，实则它是接收的一个对象，可以把传入的其他非css相关的webpack配置一并处理。
+// 建议不要直接写一个新的webpack配置，因为next-css里面的webpack的配置是非常全面的，如果被覆盖了，可能会导致报错。
+module.exports = withCss({
+    distDir: 'build'                                                // 这里配置了之后才会生效
+})
+```
+
+# Hooks
+
+让函数组件具有类组件的能力
+
+```js
+import React, {useState, useEffect} from 'react'
+// 传统组件
+class MyCount extends React.Component {
+  state = {
+    count: 0
+  }
+
+  componentDidMount () {
+    this.interval = setInterval(() => {
+      this.setState({ count: this.state.count + 1 })
+    }, 1000);
+  }
+
+  componentWillUnmount () {
+    if (this.interval) {
+      clearInterval(this.interval)
+    }
+  }
+
+  render () {
+    return <span>{this.state.count}</span>
+  }
+}
+// hooks组件
+function MyCountFunc () {
+  const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCount(count => count + 1)
+    }, 1000);
+    return () => clearInterval(interval)
+  }, [])
+
+  return <span>{count}</span>
+}
+
+export default MyCountFunc
+```
+
+## State Hooks
+```js
+// useState
+useState(0)
+useState(n => n + 1)
+
+// useReducer
+import { useReducer, useEffect } from 'react'
+
+function countReducer(state, action) {
+  switch (action.type) {
+    case 'add':
+      return state + 1
+    case 'minus':
+      return state - 1
+    default:
+      return state
+  }
+}
+
+function MyCountFunc () {
+  const [ count, dispatchCount ] = useReducer(countReducer, 0)
+
+  // 更新到页面上的时候进行执行
+  useEffect(() => {
+    const interval = setInterval(() => {
+      dispatchCount({ type: 'minus' })
+    }, 1000);
+    return () => clearInterval(interval)
+  }, [])
+  
+  // 没有更新到页面上的时候进行执行
+  useLayoutEffect(() => {
+    console.log('layout effect invoked')
+    return () => console.log('layout effect deteched')
+  }, [name])
+
+  return <span>{count}</span>
+}
+
+export default MyCountFunc
+```
+
+### useContext
+在`lib`文件夹下新建`my-content.js`文件
+```js
+import React from 'react'
+
+export default React.createContext('')
+```
+组件中使用
+```js
+import App from 'next/app'
+import Head from 'next/head'
+import Layout from '../components/layout'
+
+import MyContext from '../lib/my-content'
+
+class MyApp extends App {
+  state = {
+    context: 'joker'
+  }
+
+  static async getInitialProps ({ Component }) {
+    let pageProps
+    if (Component.getInitialProps) {
+      pageProps = await Component.getInitialProps()
+    }
+
+    return {
+      pageProps
+    }
+  }
+  render () {
+    const { Component, pageProps } = this.props
+
+    return (
+      <>
+        <Head>
+          <title>My App</title>
+          <style>{`.test { color: red; }`}</style>
+        </Head>
+        <Layout>
+          <MyContext.Provider value={this.state.context}>
+            <Component {...pageProps} />
+          </MyContext.Provider>
+          <button onClick={() => this.setState({ context: `${this.state.context}1` })}>update context</button>
+        </Layout>
+      </>
+    )
+  }
+}
+
+export default MyApp
+```
+子组件中
+```js
+import React, {useState, useReducer, useEffect, useContext, useLayoutEffect} from 'react'
+import MyContext from '../../lib/my-content'
+
+function MyCountFunc () {
+  // const [count, setCount] = useState(0)
+  const [ count, dispatchCount ] = useReducer(countReducer, 0)
+  const [ name, setName ] = useState('joker')
+  const context = useContext(MyContext)
+
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     // setCount(count => count + 1)
+  //     dispatchCount({ type: 'minus' })
+  //   }, 1000);
+  //   return () => clearInterval(interval)
+  // }, [])
+
+  useEffect(() => {
+    console.log('effect invoked')
+    return () => console.log('effect deteched')
+  }, [name])
+
+  useLayoutEffect(() => {
+    console.log('layout effect invoked')
+    return () => console.log('layout effect deteched')
+  }, [name])
+
+  return <div>
+    <input value={name} onChange={(e) => {setName(e.target.value)}} />
+    <button onClick={() => dispatchCount({ type: 'add' })}>{count}</button>
+    <p>{context}</p>
+  </div>
+}
+
+export default MyCountFunc
+```
+
+### useRef
+
+```js
+import React, {useState, useReducer, useEffect, useContext, useRef} from 'react'
+
+function MyCountFunc () {
+  const [ count, dispatchCount ] = useReducer(countReducer, 0)
+  const [ name, setName ] = useState('joker')
+  const context = useContext(MyContext)
+  const inputRef = useRef()
+
+  useEffect(() => {
+    console.log('effect invoked')
+    console.log(inputRef)
+    return () => console.log('effect deteched')
+  }, [name])
+
+  return <div>
+    <input ref={inputRef} value={name} onChange={(e) => {setName(e.target.value)}} />
+    <button onClick={() => dispatchCount({ type: 'add' })}>{count}</button>
+    <p>{context}</p>
+  </div>
+}
+
+export default MyCountFunc
+```
+
+### Hooks 渲染优化
+```js
+import { useReducer, useState, memo, useMemo, useCallback } from 'react'
+
+function countReducer(state, action) {
+  switch (action.type) {
+    case 'add':
+      return state + 1
+    case 'minus':
+      return state - 1
+    default:
+      return state
+  }
+}
+
+function MyCountFunc () {
+  const [ count, dispatchCount ] = useReducer(countReducer, 0)
+  const [ name, setName ] = useState('joker')
+
+  const config = useMemo(
+    () => ({
+      text: `count is ${count}`,
+      color: count > 3 ? 'red' : 'blue'
+    }),
+    [count]
+  )
+
+  const handleButtonClick = useCallback(
+    () => dispatchCount({ type: 'add' }),
+    []
+  )
+
+  return (
+    <div>
+      <input value={name} onChange={e => setName(e.target.value)} />
+      <Child
+        config={config}
+        onButtonClick={handleButtonClick}
+      />
+    </div>
+  )
+}
+
+const Child = memo(({ onButtonClick, config }) => {
+  console.log('child render')
+  return (
+    <button onClick={onButtonClick} style={{ color: config.color }}>
+      {config.text}
+    </button>
+  )
+})
+
+export default MyCountFunc
+```
+
+## 引入Redux
+
+`npm install redux redux-thunk`
+在`store`文件夹下的`store.js`
+```js
+import { createStore, combineReducers, applyMiddleware } from 'redux'
+import ReduxThunk from 'redux-thunk'
+
+const countState = {
+  count: 0
+}
+
+const userState = {
+  username: ''
+}
+
+const ADD = 'ADD'
+function countReducer(state = countState, action) {
+  switch (action.type) {
+    case ADD:
+      return { count: state.count + (action.num || 1) }
+    default:
+      return state
+  }
+}
+
+const UPDATE_USERNAME = 'UPDATE_USERNAME'
+function userReducer(state = userReducer, action) {
+  switch (action.type) {
+    case UPDATE_USERNAME:
+      return {
+        ...state,
+        username: action.username
+      }
+    default:
+      return state
+  }
+}
+
+const allReducer = combineReducers({
+  count: countReducer,
+  user: userReducer
+})
+
+const store = createStore(
+  allReducer,
+  {
+    count: countState,
+    user: userState
+  },
+  applyMiddleware(ReduxThunk)
+)
+
+function add(num) {
+  return {
+    type: 'ADD',
+    num
+  }
+}
+
+function asyncAdd(num) {
+  return dispatch => {
+    setTimeout(() => {
+      dispatch(add(num))
+    }, 3000);
+  }
+}
+
+store.dispatch(add(3))
+console.log(store.getState())
+store.dispatch({ type: ADD })
+store.dispatch({ type: UPDATE_USERNAME, username: 'joker' })
+store.dispatch(asyncAdd(5))
+store.subscribe(() => {
+  console.log(store.getState(), 'change')
+})
+
+export default store
+```
+
+### redux 连接组件
+`npm install react-redux`
+在`_app.js`中
+```js
+import { Provider } from 'react-redux'
+// 之后在render方法中包裹组件
+  render () {
+    const { Component, pageProps } = this.props
+
+    return (
+      <>
+        <Head>
+          <title>My App</title>
+          <style>{`.test { color: red; }`}</style>
+        </Head>
+        <Layout>
+          <MyContext.Provider value={this.state.context}>
+            <Provider store={store}>
+              <Component {...pageProps} />
+            </Provider>
+          </MyContext.Provider>
+        </Layout>
+      </>
+    )
+  }
+```
+之后在`index.jsx`中使用
+```js
+import { connect } from 'react-redux'
+
+const Index = ({ count, username, add, rename }) => {
+
+  return (
+    <>
+      <span>count: {count}</span>
+      <span>username: {username}</span>
+      <input value={username} onChange={e => {rename(e.target.value)}} />
+      <button onClick={() => add(count)}>ADD</button>
+    </>
+  )
+}
+
+export default connect(
+  function mapStateToProps(state) {
+    return {
+      count: state.count.count,
+      username: state.user.username
+    }
+  },
+  function mapActionToProps(dispatch) {
+    return {
+      add: num => dispatch({ type: 'ADD', num }),
+      rename: name => dispatch({ type: 'UPDATE_USERNAME', name })
+    }
+  }
+)(Index)
+```
+
+### redux 连接 next
+在`lib`下新建一个`with-redux.js`用来处理next使用redux时造成client和server时store数据不统一的问题，其功能是作为`_aap.js`的高阶组件创建一个store
+```js
+import React from 'react'
+
+const isServer = typeof window === 'underfined'
+const __NEXT_REDUX_STORE__ = '__NEXT_REDUX_STORE__'
+
+function getHocCreateStore (initialState) {
+  if (isServer) {
+    return createStore(initialState)
+  }
+  if (!window[__NEXT_REDUX_STORE__]) {
+    window[__NEXT_REDUX_STORE__] = createStore(initialState)
+  }
+  return window[__NEXT_REDUX_STORE__]
+}
+
+export default Comp => {
+  class WithReduxApp extends React.Component {
+    constructor (props) {
+      super(props)
+      this.reduxStore = getHocCreateStore(props.initialReduxState)
+    }
+
+    render () {
+      const { Component, pageProps, ...rest } = this.props
+
+      return <Comp Component={Component} pageProps={pageProps} {...rest} reduxStore={this.reduxStore} />
+    }
+  }
+
+  WithReduxApp.getInitialProps = async (ctx) => {
+    const reduxStore = getHocCreateStore()
+
+    ctx.reduxStore = reduxStore
+
+    let appProps = {}
+    if (typeof Comp.getInitialProps === 'function') {
+      appProps = await Comp.getInitialProps(ctx)
+    }
+
+    return {
+      ...appProps,
+      initialReduxState: reduxStore.getState()
+    }
+  }
+
+  return WithReduxApp
+}
+```
+完成`with-redux`组件后修改`_app.jsx`组件
+```js
+import App from 'next/app'
+import { Provider } from 'react-redux'
+import withRedux from '../lib/with-redux'
+
+class MyApp extends App {
+  static async geiInitialProps (ctx) {
+    const { Component } = ctx
+    let pageProps
+    if (Component.getInitialProps) {
+      pageProps = await Component.getInitialProps(ctx)
+    }
+
+    return {
+      pageProps
+    }
+  }
+  
+  render () {
+    const { Component, pageProps, reduxStore } = this.props
+
+    return (
+      <Provider store={reduxStore}>
+        <Component {...pageProps} />
+      </Provider>
+    )
+  }
+}
+
+export default withRedux(MyApp)
+```
