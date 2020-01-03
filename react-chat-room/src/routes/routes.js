@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Router, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Authroute from 'components/authroute/authroute';
+import Login from 'pages/login/login';
 
 class Routes extends Component {
   constructor(props) {
@@ -13,6 +14,9 @@ class Routes extends Component {
       <BrowserRouter>
         <div>
           <Authroute />
+          <Switch>
+            <Route path="/login" component={Login} />
+          </Switch>
         </div>
       </BrowserRouter>
     );
