@@ -6,12 +6,15 @@ import UserTypes from 'reducer/user/dispatch.type';
 const Authroute = (props) => {
   const dispatch = useDispatch()
 
-  const uploadUser = useCallback((user) => dispatch({
-    type: UserTypes.LOAD_DATA,
-    payload: {
-      user
-    }
-  }), [dispatch])
+  const uploadUser = useCallback(
+    (user) => dispatch({
+      type: UserTypes.LOAD_DATA,
+      payload: {
+        user
+      }
+    }),
+    [dispatch]
+  )
 
   useEffect(() => {
     const publicList = ['/login', 'register'];
