@@ -84,5 +84,20 @@ export const userFuc = {
         }
       }
     }
+  },
+  // 完善信息
+  update: (data) => {
+    return dispatch => {
+      const bool = true
+      if (bool) {
+        dispatch(userActions.authSuccess(data))
+      } else {
+        const err = 'err'
+        if (err) {
+          Toast.info(err, 1);
+          dispatch(userActions.errorMsg(err))
+        }
+      }
+    }
   }
 }

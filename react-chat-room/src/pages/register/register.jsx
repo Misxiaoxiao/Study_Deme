@@ -5,6 +5,7 @@ import { WingBlank, List, InputItem, WhiteSpace, Radio, Button } from 'antd-mobi
 import { userFuc } from 'reducer/user/redux';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import './register.css';
 
 const RadioItem = Radio.RadioItem;
 const register = userFuc.register;
