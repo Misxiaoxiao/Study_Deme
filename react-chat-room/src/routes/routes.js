@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Authroute from 'components/authroute/authroute';
 import Login from 'pages/login/login';
+import Register from 'pages/register/register';
 
 class Routes extends Component {
   constructor(props) {
@@ -16,6 +17,7 @@ class Routes extends Component {
           <Authroute />
           <Switch>
             <Route path="/login" component={Login} />
+            <Route path="/register" component={Register} />
           </Switch>
         </div>
       </BrowserRouter>

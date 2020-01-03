@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, memo } from 'react';
 import { withRouter } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import UserTypes from 'reducer/user/dispatch.type';
@@ -30,4 +30,4 @@ const Authroute = (props) => {
   return <div />
 }
 
-export default withRouter(Authroute);
+export default withRouter(memo(Authroute));
