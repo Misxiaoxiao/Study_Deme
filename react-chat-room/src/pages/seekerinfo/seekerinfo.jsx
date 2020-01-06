@@ -7,13 +7,10 @@ import { connect } from 'react-redux';
 
 const update = userFuc.update
 
-const BossInfo = (props) => {
+const SeekerInfo = (props) => {
   const [ state, setState ] = useState({
     title: '',
-    company: '',
-    money: '',
-    desc: '',
-    avatar: ''
+    desc: ''
   })
 
   const onChange = useCallback(
@@ -37,14 +34,12 @@ const BossInfo = (props) => {
         (props.redirectTo && props.redirectTo !== '/login') ? <Redirect to={props.redirectTo} /> : ''
       }
       <NavBar mode="dark">
-        BOSS完善信息
+        求职者完善信息
       </NavBar>
       <AvatarSelector selectAvatar={selectAvatar} />
       <WhiteSpace />
-      <InputItem onChange={v => onChange('title', v)}>招聘职位</InputItem>
-      <InputItem onChange={v => onChange('company', v)}>公司名称</InputItem>
-      <InputItem onChange={v => onChange('money', v)}>薪资范围</InputItem>
-      <TextareaItem onChange={v => onChange('desc', v)} rows={3} autoHeight title="职位要求" />
+      <InputItem onChange={v => onChange('title', v)}>求职岗位</InputItem>
+      <TextareaItem onChange={v => onChange('desc', v)} rows={3} autoHeight title="个人简介" />
       <WhiteSpace />
       <WhiteSpace />
       <WhiteSpace />
@@ -57,4 +52,4 @@ const BossInfo = (props) => {
 export default connect(
   state => state.user,
   { update }
-)(memo(BossInfo))
+)(memo(SeekerInfo))
