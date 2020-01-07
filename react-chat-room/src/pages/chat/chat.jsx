@@ -7,6 +7,7 @@ import { chatFuc } from 'reducer/chat/redux';
 const { getChatList, sendMsg, msgReceive, readMsg } = chatFuc
 
 const Chat = (props) => {
+  console.log(props)
   const [ state, setState ] = useState({
     text: '',
     msg: []
@@ -23,17 +24,17 @@ const Chat = (props) => {
     [setState]
   )
 
-  useEffect(() => {
-    if (!props.chat.chatmsg.length) {
-      props.getChatList();
-      props.msgReceive();
-    }
-    fixedBug()
-    return () => {
-      const to = props.match.params.user;
-      props.readMsg(to);
-    }
-  })
+  // useEffect(() => {
+  //   if (!props.chat.chatmsg.length) {
+  //     props.getChatList();
+  //     props.msgReceive();
+  //   }
+  //   fixedBug()
+    // return () => {
+    //   const to = props.match.params.user;
+    //   props.readMsg(to);
+    // }
+  // })
 
   const fixedBug = () => {
     setTimeout(() => {
@@ -43,7 +44,8 @@ const Chat = (props) => {
 
   const emoji = '😀 😃 😄 😁 😆 😅 😂 😊 😇 🙂 🙃 😉 😌 😍 😘 😗 😙 😚 😋 😜 😝 😛 🤑 🤗 🤓 😎 😏 😒 😞 😔 😟 😕 🙁 😣 😖 😫 😩 😤 😠 😡 😶 😐 😑 😯 😦 😧 😮 😲 😵 😳 😱 😨 😰 😢 😥 😭 😓 😪 😴 🙄 🤔 😬 🤐 😷 🤒 🤕 😈 👿 👹 👺 💩 👻 💀 ☠️ 👽 👾 🤖 🎃 😺 😸 😹 😻 😼 😽 🙀 😿 😾 👐 🙌 👏 🙏 👍 👎 👊 ✊ 🤘 👌 👈 👉 👆 👇 ✋  🖐 🖖 👋  💪 🖕 ✍️  💅 🖖 💄 💋 👄 👅 👂 👃 👁 👀 '.split(' ').filter(v => v).map(v => ({text: v}));
   const userId = props.match.params.user;
-  const currentChatId = getChatId(userId, props.user._id);
+  console.log(props.user)
+  const currentChatId = '2131' || getChatId(userId, props.user.user);
   const chatMsgs = props.chat.chatmsg.filter(v => v.chatId === currentChatId);
   const Item = List.Item;
   const users = props.chat.users;

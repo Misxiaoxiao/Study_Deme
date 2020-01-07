@@ -41,7 +41,7 @@ export const chatActions = {
 
 export const chatFuc = {
   msgReceive: (dispatch, getState) => {
-    WebSocket.on('receivemsg', (data) => {
+    socket.on('receivemsg', (data) => {
       const userid = getState().user._id;
       dispatch(chatActions.receiveMsg(data, userid));
     })
@@ -49,12 +49,12 @@ export const chatFuc = {
   sendMsg: (from, to, msg) => {
     socket.emit('sendmsg', {from, to, msg});
   },
-  getChatList: (dispatch, getState) => {
+  getChatList: () => (dispatch, getState) => {
     const bool = true;
     if (bool) {
       const res = {}
       const userid = getState().user._id;
-      dispatch(chatActions.msgList(res.data.data, res.data.users, userid));
+      dispatch(chatActions.msgList([], '', userid));
     }
   },
   readMsg: (from) => (dispatch, getState) => {
