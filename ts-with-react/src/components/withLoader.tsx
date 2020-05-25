@@ -24,7 +24,23 @@ const WithLoader = <P extends ILoaderState>(WrappedComponent: React.ComponentTyp
         isLoading: true
       })
 
-      
+      axiso.get(url).then(result => {
+        this.setState({
+          data: result.data,
+          isLoading: false
+        })
+      })
+    }
+
+    render () {
+      const { data, isLoading } = this.state
+      return (
+        <>
+        { (isLoading || !data) ? <p>data is loading</p> : <WrappedComponent { ...this.props as P } data={ data } /> }
+        </>
+      )
     }
   }
 }
+
+export default WithLoader
