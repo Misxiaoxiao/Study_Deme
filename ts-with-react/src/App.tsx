@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logo from './logo.svg';
 import Hello from './components/Hello';
-import LikeButton from './components/likeButton';
+// import LikeButton from './components/likeButton';
 import MouseTracker from './components/MouseTracker';
 import useMouseTracker from './hooks/useMouseTracker';
-import withLoader from './components/withLoader';
+// import withLoader from './components/withLoader';
+import useURLLoader from './hooks/useURLLoader';
 import './App.css';
 
 interface IShowResult {
@@ -12,19 +13,22 @@ interface IShowResult {
   status: string;
 }
 
-const DogShow: React.FC<{ data: IShowResult }> = ({ data }) => {
-  return (
-    <>
-    <h2>Dog show: { data.status }</h2>
-    <img src={ data.message } />
-    </>
-  )
-}
+// const DogShow: React.FC<{ data: IShowResult }> = ({ data }) => {
+//   return (
+//     <>
+//     <h2>Dog show: { data.status }</h2>
+//     <img src={ data.message } alt="" />
+//     </>
+//   )
+// }
 
 const App: React.FC = () => {
   const position = useMouseTracker()
 
-  const WrappedDogShow = withLoader(DogShow, 'https://dog.ceo/api/breeds/image/random')
+  // const WrappedDogShow = withLoader(DogShow, 'https://dog.ceo/api/breeds/image/random')
+  const [show, setShow] = useState(true)
+  const [data, loading] = useURLLoader('https://dog.ceo/api/breeds/image/random', [show])
+  const dogResult = data as IShowResult
 
   return (
     <div className="App">
@@ -36,7 +40,11 @@ const App: React.FC = () => {
 
         <p>x: { position.x }, y: { position.y }</p>
 
-        <WrappedDogShow />
+        <button onClick={() => {setShow(!show)}}>change img</button>
+
+        { loading ? <p>加载中...</p> : <img src={dogResult && dogResult.message} alt="" /> }
+
+        {/* <WrappedDogShow /> */}
 
         <MouseTracker />
 
