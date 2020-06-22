@@ -213,6 +213,13 @@ $btn-border-radius-sm:        $border-radius-sm !default;
 
 $btn-transition:              color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out !default;
 
+// alert
+$alert-padding:               .75rem !default;
+$alert-title-font-size:       .875rem !default;
+$alert-font-size:             .75rem !default;
+$alert-border-radius:         6px !default;
+$alert-padding:               12px !default;
+
 // menu
 $menu-border-width:            $border-width !default;
 $menu-border-color:            $border-color !default;

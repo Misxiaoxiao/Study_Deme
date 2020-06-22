@@ -1,18 +1,24 @@
 import React from 'react';
-import logo from './logo.svg';
-// import './App.css';
+import Button, { ButtonType, ButtonSize } from './components/Button/button'
+
+import Alert, { AlertType } from './components/Alert/alert'
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Hello world</h1>
-        <h2>Hello world</h2>
-        <h3>Hello world</h3>
-        <hr/>
-        <code>
-          const a = b
-        </code>
+        <Button autoFocus onClick={(e) => {e.preventDefault(); alert(123)}}>default</Button>
+        <Button disabled>default disabled</Button>
+        <Button btnType={ButtonType.Primary} size={ButtonSize.Large}>primary large</Button>
+        <Button btnType={ButtonType.Primary} size={ButtonSize.Small}>primary small</Button>
+        <Button btnType={ButtonType.Link} href="http://www.baidu.com" target="_blank">link</Button>
+        <Button disabled btnType={ButtonType.Link} href="http://www.baidu.com">link disabled</Button>
+        <Button btnType={ButtonType.Danger}>danger</Button>
+
+        <Alert description={'123131'}/>
+        <Alert message={'alert-title'} description={'alert-description'} alertType={AlertType.Success} />
+        <Alert message={'alert-title'} description={'alert-description'} alertType={AlertType.Danger} />
+        <Alert message={'alert-title'} description={'alert-description'} alertType={AlertType.warning} />
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
         </p>

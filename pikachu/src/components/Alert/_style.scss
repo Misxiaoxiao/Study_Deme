@@ -1,0 +1,36 @@
+.alert {
+    position: relative;
+    display: block;
+    margin: 12px;
+    padding: $alert-padding;
+    min-width: 50px;
+    border-radius: $alert-border-radius;
+    box-sizing: border-box;
+    .alert-close-btn {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        cursor: pointer;
+    }
+    .alert-message {
+        font-size: 16px;
+    }
+    .alert-description {
+        font-size: 14px;
+    }
+}
+.alert-default {
+    @include alert-type($primary);
+}
+
+.alert-success {
+    @include alert-type($success);
+}
+
+.alert-danger {
+    @include alert-type($danger);
+}
+
+.alert-warning {
+    @include alert-type($warning);
+}
