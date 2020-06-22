@@ -16,17 +16,17 @@ export enum ButtonType {
 interface BaseButtonProps {
   className?: string,
   disabled?: boolean,
-  size?: ButtonSize,
-  btnType?: ButtonType,
+  size?: ButtonSize | string,
+  btnType?: ButtonType | string,
   children?: React.ReactNode,
   href?: string
 }
 
 type NativeButtonProps = BaseButtonProps & React.ButtonHTMLAttributes<HTMLElement>
 type AnchorButtonProps = BaseButtonProps & React.AnchorHTMLAttributes<HTMLElement>
-export type ButtonTypes = Partial<NativeButtonProps & AnchorButtonProps>
+export type ButtonProps = Partial<NativeButtonProps & AnchorButtonProps>
 
-const Button:React.FC<ButtonTypes> = (props) => {
+const Button:React.FC<ButtonProps> = (props) => {
   const {
     className,
     disabled,
