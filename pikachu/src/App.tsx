@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button, { ButtonType, ButtonSize } from './components/Button/button'
 import Alert, { AlertType } from './components/Alert/alert'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -11,10 +11,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 
 import Icon from './components/Icon/icon'
-
+import Transition from './components/Transition/transition'
+// 添加图标
 library.add(fas)
 
 function App() {
+  const [ show, setShow ] = useState(true)
+
   return (
     <div className="App">
       <header className="App-header">
@@ -22,7 +25,7 @@ function App() {
 
         {/* <FontAwesomeIcon icon={faCoffee} size='lg' /> */}
 
-        <Menu defaultIndex='0' onSelect={(i) => {alert(i)}} mode='vertical' defaultOpenSubMenus={['1']}>
+        <Menu defaultIndex='0' onSelect={(i) => {alert(i)}} mode='horizontal'>
           <MenuItem>cool link</MenuItem>
           <MenuItem>cool link1</MenuItem>
           <SubMenu title="dropdown">
@@ -44,9 +47,28 @@ function App() {
         <Alert message={'alert-title'} description={'alert-description'} alertType={AlertType.Success} />
         <Alert message={'alert-title'} description={'alert-description'} alertType={AlertType.Danger} />
         <Alert message={'alert-title'} description={'alert-description'} alertType={AlertType.warning} />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
+
+        <Button onClick={() => {setShow(!show)} }>toggle</Button>
+
+        <Transition
+          in={show}
+          timeout={300}
+          animation='zoom-in-left'
+        >
+          <p>
+            Edit <code>src/App.tsx</code> and save to reload.
+          </p>
+        </Transition>
+
+        <Transition
+          in={show}
+          timeout={300}
+          animation='zoom-in-left'
+        >
+          <Button>123</Button>
+        </Transition>
+
+        <br/>
         <a
           className="App-link"
           href="https://reactjs.org"

@@ -2,6 +2,8 @@ import React, { useContext, FunctionComponentElement, useState } from 'react'
 import classNames from 'classnames'
 import { MenuContext } from './menu'
 import { MenuItemProps } from './menuItem'
+import Icon from '../Icon/icon'
+import Transition from '../Transition/transition'
 
 export interface SubMenuProps {
   index?: string;
@@ -17,7 +19,9 @@ const SubMenu: React.FC<SubMenuProps> = ({ index, title, className, children }) 
 
   const [ menuOpen, setOpen ] = useState(isOpen)
   const classes = classNames('menu-item submenu-item', className, {
-    'is-active': context.index === index
+    'is-active': context.index === index,
+    'is-opened': menuOpen,
+    'is-vertical': context.mode === 'vertical'
   })
 
   const handleClick = (e: React.MouseEvent) => {
@@ -59,15 +63,20 @@ const SubMenu: React.FC<SubMenuProps> = ({ index, title, className, children }) 
       }
     })
     return (
-      <ul className={subMenuClasses}>
-        {childrenConponent}
-      </ul>
+      <Transition in={menuOpen} timeout={300} classNames="zoom-in-top">
+        <ul className={subMenuClasses}>
+          {childrenConponent}
+        </ul>
+      </Transition>
     )
   }
 
   return (
     <li key={index} className={classes} {...hoverEvents}>
-      <div className="subMenu-title" {...clickEvents}>{title}</div>
+      <div className="subMenu-title" {...clickEvents}>
+        {title}
+        <Icon icon='angle-down' className="arrow-icon" />
+      </div>
       {renderChildren()}
     </li>
   )
