@@ -1,15 +1,18 @@
-import React, { useState, createContext } from 'react'
+import React, { useState, createContext, FC, CSSProperties } from 'react'
 import classNames from 'classnames'
 import { MenuItemProps } from './menuItem'
 
-type MenuMode = 'horizontal' | 'vertical'
-type SelectCallback = (selectedIndex: string) => void
+export type MenuMode = 'horizontal' | 'vertical'
+export type SelectCallback = (selectedIndex: string) => void
 
 export interface MenuProps {
+  /** 设置默认的下标 */
   defaultIndex?: string;
   className?: string;
+  /** 设置菜单的模式 */
   mode?: MenuMode;
-  style?: React.CSSProperties;
+  style?: CSSProperties;
+  /** 设置默认展开的菜单项 */
   defaultOpenSubMenus?: string[];
   onSelect?: SelectCallback;
 }
@@ -23,7 +26,16 @@ interface IMenuContext {
 
 export const MenuContext = createContext<IMenuContext>({index: '0'})
 
-const Menu: React.FC<MenuProps> = (props) => {
+/**
+ * ## Menu 组件
+ * 
+ * 这是一个 Menu 组件
+ * 
+ * ~~~js
+ * import { Menu } from 'Menu'
+ * ~~~
+ */
+export const Menu: FC<MenuProps> = (props) => {
   const { defaultIndex, className, mode, style, onSelect, children, defaultOpenSubMenus } = props
   const [currentActive, setActive] = useState(defaultIndex)
   const classes = classNames('viking-menu', className, {

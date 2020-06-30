@@ -1,15 +1,17 @@
-import React, { useContext } from 'react'
+import React, { useContext, FC, CSSProperties } from 'react'
 import classNames from 'classnames'
 import { MenuContext } from './menu'
 
 export interface MenuItemProps {
+	/** 设置下标 */
 	index?: string;
+	/** 设置是否禁用 */
 	disabled?: boolean;
 	className?: string;
-	style?: React.CSSProperties;
+	style?: CSSProperties;
 }
 
-const MenuItem: React.FC<MenuItemProps> = (props) => {
+export const MenuItem: FC<MenuItemProps> = (props) => {
 	const { index, disabled, className, children, style } = props
 	const context = useContext(MenuContext)
 
