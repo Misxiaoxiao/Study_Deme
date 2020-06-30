@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Button, { ButtonType, ButtonSize } from './components/Button/button'
+import Button, { ButtonType } from './components/Button/button'
 import Alert, { AlertType } from './components/Alert/alert'
 import { library } from '@fortawesome/fontawesome-svg-core'
 
@@ -7,7 +7,6 @@ import Menu from './components/Menu/menu'
 import MenuItem from './components/Menu/menuItem'
 import SubMenu from './components/Menu/subMenu'
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 
 import Icon from './components/Icon/icon'
@@ -37,8 +36,8 @@ function App() {
 
         <Button autoFocus onClick={(e) => {e.preventDefault(); alert(123)}}>default</Button>
         <Button disabled>default disabled</Button>
-        <Button btnType={ButtonType.Primary} size={ButtonSize.Large}>primary large</Button>
-        <Button btnType={ButtonType.Primary} size={ButtonSize.Small}>primary small</Button>
+        <Button btnType={ButtonType.Primary} size='lg'>primary large</Button>
+        <Button btnType={ButtonType.Primary} size='sm'>primary small</Button>
         <Button btnType={ButtonType.Link} href="http://www.baidu.com" target="_blank">link</Button>
         <Button disabled btnType={ButtonType.Link} href="http://www.baidu.com">link disabled</Button>
         <Button btnType={ButtonType.Danger}>danger</Button>
