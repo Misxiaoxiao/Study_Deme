@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Button, { ButtonType } from './components/Button/button'
+import Button from './components/Button/button'
 import Alert, { AlertType } from './components/Alert/alert'
 import { library } from '@fortawesome/fontawesome-svg-core'
 
@@ -20,7 +20,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Icon icon='coffee' theme='danger' size='lg' />
+        <Icon icon='search' theme='danger' size='lg' />
 
         {/* <FontAwesomeIcon icon={faCoffee} size='lg' /> */}
 
@@ -36,11 +36,11 @@ function App() {
 
         <Button autoFocus onClick={(e) => {e.preventDefault(); alert(123)}}>default</Button>
         <Button disabled>default disabled</Button>
-        <Button btnType={ButtonType.Primary} size='lg'>primary large</Button>
-        <Button btnType={ButtonType.Primary} size='sm'>primary small</Button>
-        <Button btnType={ButtonType.Link} href="http://www.baidu.com" target="_blank">link</Button>
-        <Button disabled btnType={ButtonType.Link} href="http://www.baidu.com">link disabled</Button>
-        <Button btnType={ButtonType.Danger}>danger</Button>
+        <Button btnType='primary' size='lg'>primary large</Button>
+        <Button btnType='primary' size='sm'>primary small</Button>
+        <Button btnType='link' href="http://www.baidu.com" target="_blank">link</Button>
+        <Button disabled btnType='link' href="http://www.baidu.com">link disabled</Button>
+        <Button btnType='danger'>danger</Button>
 
         <Alert description={'123131'}/>
         <Alert message={'alert-title'} description={'alert-description'} alertType={AlertType.Success} />
