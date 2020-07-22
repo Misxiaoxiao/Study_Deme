@@ -1,0 +1,13 @@
+.layout {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #000613;
+}
+
+.layout .react-grid-item {
+    border: 0;
+    padding: 0 3px;
+    border: 1px solid #fff;
+    color: #fff;
+}
