@@ -111,15 +111,13 @@ export const Upload: FC<UploadProps> = (props) => {
       }
     })
       .then(resp => {
-        if (onSuccess) {
-          onSuccess(resp.data, file)
-        }
+        updateFileList(_file, { status: 'success' })
+        onSuccess && onSuccess(resp.data, file)
         onChange && onChange(file)
       })
       .catch(err => {
-        if (onError) {
-          onError(err, file)
-        }
+        updateFileList(_file, { status: 'error' })
+        onError && onError(err, file)
         onChange && onChange(file)
       })
   }
