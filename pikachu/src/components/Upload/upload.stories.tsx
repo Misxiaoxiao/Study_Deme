@@ -32,6 +32,9 @@ const SimpleUpload = () => {
       onError={action('error')}
       onChange={action('changed')}
       defaultFileList={defaultFileList}
+      accept=".jpg"
+      multiple
+      drag
     />
   )
 }
