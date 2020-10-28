@@ -1,0 +1,9 @@
+{
+  // "powermode.enabled": true,
+  "terminal.integrated.rendererType": "dom",
+  "vscode_custom_css.imports": [
+    "file:///Users/misxiao/Documents/vscode-styles/custom.css",
+    "file:///Users/misxiao/Documents/vscode-styles/custom.js"
+  ],
+  "vscode_custom_css.policy": true
+}
