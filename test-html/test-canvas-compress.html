@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <input type="file" id="upload">
+  <script>
+    const ACCEPT = [ 'image/jpg', 'image/png', 'image/jpeg' ]
+    const MAXSIZE = 10 * 1024 * 1024
+    const MAXSIZE_STR = '10MB'
+    const upload = document.getElementById('upload')
+
+    function convertImageToBase64(file, callback) {
+      let reader = new FileReader()
+      reader.addEventListener('load', function(e) {
+        const base64Image = e.target.result
+        callback && callback()
+        reader = null
+      })
+      reader.readAsDataURL(file)
+    }
+
+    function compress (base64Image) {
+      let maxW = 1024
+      let maxH = 1024
+      const image = new Image()
+      image.addEventListener('load', function(e) {
+        let ratio
+        let needCompress = false
+        if (maxW < image.naturalWidth) {
+          needCompress = true
+          ratio = image.naturalWidth / maxW
+          maxH = image.naturalHeight / ratio
+        }
+        if (maxH < image.naturalHeight) {
+          needCompress = true
+          ratio = image.naturalHeight / maxH
+          maxw = image.naturalWidth / ratio
+        }
+
+        if (!needCompress) {
+          maxW = image.naturalWidth
+          maxH = image.naturalHeight
+        }
+
+        const canvas = document.createElement('canvas')
+        canvas.setAttribute('id', '__compress__')
+        canvas.width = maxW
+        canvas.height = maxH
+        canvas.style.visibility = 'visible'
+        document.body.appendChild(canvas)
+
+        const ctx = canvas.getContext('2d')
+        ctx.clearRect(0, 0, maxW, maxH)
+        ctx.drawImage(image, 0, 0, maxw, maxH)
+        const compressImage = canvas.toDataURL('image/jpeg', 0.1)
+        // callback
+      })
+      image.src = base64Image
+      document.body.appendChild(image)
+    }
+
+    upload.addEventListener('change', function(e) {
+      const [ file ] = e.target.files
+      if (!file) return
+      const { type: fileType, size: fileSize } = file
+      if (!ACCEPT.includes(fileType)) {
+        alert('不支持[' + fileType + ']这种类型!')
+        return
+      }
+      console.log(fileSize)
+      if (fileSize > MAXSIZE) {
+        alert(`文件超出${MAXSIZE_STR}`)
+        upload.value = ''
+        return
+      }
+      // 压缩图片
+      convertImageToBase64(file, compress)
+    })
+  </script>
+</body>
+</html>
