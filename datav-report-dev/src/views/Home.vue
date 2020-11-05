@@ -15,7 +15,7 @@ import MapView from '../components/MapView'
 
 export default {
   name: 'Home',
-  component: {
+  components: {
     TopView,
     SalesView,
     BottomView,
