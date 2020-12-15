@@ -42,11 +42,12 @@ const App: React.FC = () => {
 
         <button onClick={() => {setShow(!show)}}>change img</button>
 
-        { loading ? <p>加载中...</p> : <img src={dogResult && dogResult.message} alt="" /> }
+        {/* { loading ? <p>加载中...</p> : <img src={dogResult && dogResult.message} alt="" /> } */}
 
         {/* <WrappedDogShow /> */}
+        <p>{process.env.REACT_APP_SECRET_ENV}</p>
 
-        <MouseTracker />
+        {/* <MouseTracker /> */}
 
         <Hello message='2' />
         <a
