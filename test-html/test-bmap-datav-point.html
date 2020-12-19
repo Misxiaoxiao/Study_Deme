@@ -6,8 +6,10 @@
   <title>测试百度地图散点图</title>
   <script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&type=webgl&ak=VXPSxWlSlSjyA8MFMxG2uz3n6QC9tySo"></script>
   <script src="https://mapv.baidu.com/gl/examples/static/common.js"></script>
+  <script src="https://mapv.baidu.com/build/mapv.js"></script>
+  <script src="https://code.bdstatic.com/npm/mapvgl@1.0.0-beta.54/dist/mapvgl.min.js"></script>
   <style type="text/css">
-    body, html, #map {
+    body, html, #map_container {
       width: 100%;
       height: 100%;
       overflow: hidden;
@@ -21,12 +23,42 @@
 </head>
 
 <body>
-  <div id="map"></div>
+  <div id="map_container"></div>
   <script type="text/javascript">
-    const map = new BMapGL.Map("map")
-    const point = new BMapGL.Point(121.47939,31.237164)
-    map.centerAndZoom(point, 10)
-    map.enableScrollWheelZoom(true)
+    function initBMap () {
+      const map = initMap({
+        center: [cityCenter.lng, cityCenter.lat],
+        tilt: 0,
+        zoom: 10,
+        style: snowStyle
+      })
+    }
+    // 准备数据源
+    function initData () {
+      const cities = ['上海']
+      const cityCenter = mapv.utilCityCenter.getCenterByCityName(cities[0])
+      const data = []
+      data.push({
+        geometry: {
+          type: 'Point',
+          coordiantes: [cityCenter.lng, cityCenter.lat]
+        }
+      })
+
+      return data
+    }
+
+    // 绘制数据源
+    function setData () {
+      // 1. 生成 mapvgl 视图 View
+      const view = new mapvgl.View({ map })
+      // 2. 初始化 Point 对象
+      const pointeLayer = new mapvgl.pointeLayer()
+      // 3. 将 pointeLayer 对象加入 View 中
+      view.addLayer(pointeLayer)
+      // 4. 将 data 与 pointeLayer 进行绑定
+      pointeLayer.setData(data)
+    }
   </script>
 </body>
 
