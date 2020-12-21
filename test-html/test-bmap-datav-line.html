@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+  <title>测试百度地图散点图</title>
+  <script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&type=webgl&ak=VXPSxWlSlSjyA8MFMxG2uz3n6QC9tySo"></script>
+  <script src="https://mapv.baidu.com/gl/examples/static/common.js"></script>
+  <script src="https://mapv.baidu.com/build/mapv.js"></script>
+  <script src="https://code.bdstatic.com/npm/mapvgl@1.0.0-beta.54/dist/mapvgl.min.js"></script>
+  <script src="https://unpkg.com/mapvgl/dist/mapvgl.threelayers.min.js"></script>
+  <style type="text/css">
+    body, html, #map_container {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    .anchorBL, .BMap_cpyCtrl {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map_container"></div>
+  <script type="text/javascript">
+    const map = initBMap()
+    const data = initData()
+    setData(map, data)
+
+    function initBMap () {
+      const cityCenter = mapv.utilCityCenter.getCenterByCityName('上海')
+      const map = initMap({
+        center: [cityCenter.lng, cityCenter.lat],
+        tilt: 30,
+        zoom: 8,
+        style: snowStyle,
+        style: purpleStyle
+      })
+
+      return map
+    }
+    // 准备数据源
+    function initData () {
+      let data = []
+      const cities = ["北京","天津","上海","重庆","石家庄","太原","呼和浩特","哈尔滨","长春","沈阳","济南","南京","合肥","杭州","南昌","福州","郑州","武汉","长沙","广州","南宁","西安","银川","兰州","西宁","乌鲁木齐","成都","贵阳","昆明","拉萨","海口"]
+      let randomCount = 100
+      // 生成贝塞尔曲线坐标集
+      // 1. 实例化贝塞尔曲线对象
+      const curve = new mapvgl.BezierCurve()
+      while (randomCount--) {
+        // 2. 设置起点和终点坐标
+        const start = mapv.utilCityCenter.getCenterByCityName(cities[parseInt(Math.random() * cities.length)])
+        const end = mapv.utilCityCenter.getCenterByCityName(cities[parseInt(Math.random() * cities.length)])
+
+        curve.setOptions({
+          start: [start.lng, start.lat],
+          end: [end.lng, end.lat]
+        })
+        // 3. 生成贝塞尔曲线坐标集
+        const curveData = curve.getPoints()
+        data.push({
+          geometry: {
+            type: 'LineString',
+            coordinates: curveData
+          }
+        })
+      }
+
+      console.log(data)
+      return data
+    }
+
+    // 绘制数据源
+    function setData (map, data) {
+      // 1. 初始化图层
+      const view = new mapvgl.View({ map })
+      // 2. 初始化飞线对象
+      const flyLine = new mapvgl.FlyLineLayer({
+        color: 'red',
+        textureColor: 'blue',
+        textureWidth: 20
+      })
+
+      // 3. 将飞线对象添加到图层中
+      view.addLayer(flyLine)
+
+      // 4. 将飞线对象与数据源进行绑定
+      flyLine.setData(data)
+    }
+  </script>
+</body>
+</html>
