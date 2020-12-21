@@ -25,41 +25,72 @@
 <body>
   <div id="map_container"></div>
   <script type="text/javascript">
+    const map = initBMap()
+    const data = initData()
+    setData(map, data)
+
     function initBMap () {
+      const cityCenter = mapv.utilCityCenter.getCenterByCityName('南京')
       const map = initMap({
         center: [cityCenter.lng, cityCenter.lat],
         tilt: 0,
         zoom: 10,
         style: snowStyle
       })
+
+      return map
     }
     // 准备数据源
     function initData () {
-      const cities = ['上海']
-      const cityCenter = mapv.utilCityCenter.getCenterByCityName(cities[0])
-      const data = []
-      data.push({
-        geometry: {
-          type: 'Point',
-          coordiantes: [cityCenter.lng, cityCenter.lat]
-        }
-      })
-
+      const cities = ["北京","天津","上海","重庆","石家庄","太原","呼和浩特","哈尔滨","长春","沈阳","济南","南京","合肥","杭州","南昌","福州","郑州","武汉","长沙","广州","南宁","西安","银川","兰州","西宁","乌鲁木齐","成都","贵阳","昆明","拉萨","海口"]
+      let data = []
+      let random = 700
+      while (random--) {
+        const index = parseInt(Math.random() * cities.length)
+        const cityCenter = mapv.utilCityCenter.getCenterByCityName(cities[index])
+        const lng = cityCenter.lng - 2 + Math.random() * 4
+        const lat = cityCenter.lat - 2 + Math.random() * 4
+        data.push({
+          geometry: {
+            type: 'Point',
+            coordinates: [lng, lat]
+          },
+          properties: {
+            sales: Math.random() * 100
+          }
+        }) 
+      }
+      data = data.filter(_ => _.properties.sales > 50)
       return data
     }
 
     // 绘制数据源
-    function setData () {
+    function setData (map, data) {
       // 1. 生成 mapvgl 视图 View
       const view = new mapvgl.View({ map })
-      // 2. 初始化 Point 对象
-      const pointeLayer = new mapvgl.pointeLayer()
-      // 3. 将 pointeLayer 对象加入 View 中
+      // 2. 初始化 Intensity 对象
+      const intensity = new mapvgl.Intensity({
+        min: 0,
+        max: 100,
+        minSize: 5,
+        maxSize: 30,
+        gradient: {
+          0: 'rgba(25, 66, 102, 0.8)',
+          0.3: 'rgba(145, 102, 129, 0.8)',
+          0.7: 'rgba(210, 131, 137, 0.8)',
+          1: 'rgba(248, 177, 149, 0.8)'
+        }
+      })
+      // 3. 初始化 Point 对象
+      const pointeLayer = new mapvgl.PointLayer({
+        size: data => intensity.getSize(data.properties.sales),
+        color: data => intensity.getColor(data.properties.sales)
+      })
+      // 4. 将 pointeLayer 对象加入 View 中
       view.addLayer(pointeLayer)
-      // 4. 将 data 与 pointeLayer 进行绑定
+      // 5. 将 data 与 pointeLayer 进行绑定
       pointeLayer.setData(data)
     }
   </script>
 </body>
-
 </html>
