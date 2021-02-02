@@ -5,8 +5,19 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
-  name: 'app'
+  name: 'app',
+  mounted () {
+    axios.get('/user?ID=12345')
+      .then(function (response) {
+        console.log(response)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  }
 }
 </script>
 

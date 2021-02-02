@@ -1,4 +1,4 @@
-const baseUrl = 'http://223.72.254.131:14646/'
+const baseUrl = 'http://222.249.128.80:8083/'
 
 module.exports = {
   gotoUrl: baseUrl,
