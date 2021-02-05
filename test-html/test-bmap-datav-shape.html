@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+  <title>测试百度地图散点图</title>
+  <script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&type=webgl&ak=VXPSxWlSlSjyA8MFMxG2uz3n6QC9tySo"></script>
+  <script src="https://mapv.baidu.com/gl/examples/static/common.js"></script>
+  <script src="https://mapv.baidu.com/build/mapv.js"></script>
+  <script src="https://code.bdstatic.com/npm/mapvgl@1.0.0-beta.54/dist/mapvgl.min.js"></script>
+  <script src="https://unpkg.com/mapvgl/dist/mapvgl.threelayers.min.js"></script>
+  <style type="text/css">
+    body, html, #map_container {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    .anchorBL, .BMap_cpyCtrl {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map_container"></div>
+  <script type="text/javascript">
+    const map = initBMap()
+    // const data = initData()
+    initData().then(data => {
+      setData(map, data)
+    })
+
+    function initBMap () {
+      const cityCenter = mapv.utilCityCenter.getCenterByCityName('北京')
+      const map = initMap({
+        // center: [cityCenter.lng, cityCenter.lat],
+        center: [106.540547, 29.564858],
+        tilt: 80,
+        heading: -45.3,
+        zoom: 17
+      })
+
+      return map
+    }
+
+    function initData () {
+      // let data = [{
+      //   geometry: {
+      //     type: 'Polygon',
+      //     coordinates: [
+      //       [
+      //         [12958287.560934239, 4826420.121990554],
+      //         [12959801.63393129, 4828874.558443741],
+      //         [12961481.9187227, 4826328.322460731],
+      //       ]
+      //     ]
+      //   },
+      //   properties: {
+      //     height: 100
+      //   }
+      // }]
+      let data = []
+      return fetch('https://www.youbaobao.xyz/datav-res/examples/chongqing.json')
+        .then(res => res.json())
+        .then(res => {
+          let polygons = []
+          const len = res.length
+          for (let i = 0; i < len; i++) {
+            const line = res[i]
+            let polygon = []
+            const pt = [line[1] * 512, line[2] * 512]
+            for (let j = 3; j < line.length; j += 2) {
+              pt[0] += line[j] / 100 / 2
+              pt[1] += line[j + 1] / 100 / 2
+              polygon.push([pt[0], pt[1]])
+            }
+            polygons.push({
+              geometry: {
+                type: 'Polygon',
+                coordinates: [polygon]
+              },
+              properties: {
+                height: line[0] / 2
+              }
+            })
+          }
+          return polygons
+        })
+      // return data
+    }
+
+    function setData (map, data) {
+      const view = new mapvgl.View({ map })
+      const shapeLayer = new mapvgl.ShapeLayer({
+        color: 'blue',
+        opacity: 0.3,
+        style: 'windowAnimation',
+        riseTime: 2000,
+        enablePicked: true,
+        selectedIndex: -1,
+        selectedColor: 'red',
+        autoSelect: true,
+        onClick: e => {
+          console.log(e)
+        }
+      })
+
+      view.addLayer(shapeLayer)
+      shapeLayer.setData(data)
+    }
+  </script>
+</body>
+</html>

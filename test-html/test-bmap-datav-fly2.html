@@ -46,20 +46,37 @@
     function initData () {
       let data = []
       const cities = ["北京","天津","上海","重庆","石家庄","太原","呼和浩特","哈尔滨","长春","沈阳","济南","南京","合肥","杭州","南昌","福州","郑州","武汉","长沙","广州","南宁","西安","银川","兰州","西宁","乌鲁木齐","成都","贵阳","昆明","拉萨","海口"]
-      const randomCount = 100
+      const randomCount = 500
       const targetCity = mapv.utilCityCenter.getCenterByCityName('北京')
-      const curve = new mapvgl.BezierCurve()
-      for (let i = 0; i < cities.length; i++) {
-        const startCity = mapv.utilCityCenter.getCenterByCityName(cities[i])
-        curve.setOptions({
-          start: [startCity.lng, startCity.lat],
-          end: [targetCity.lng, targetCity.lat]
+      const nodeData = [{
+        x: targetCity.lng,
+        y: targetCity.lat
+      }]
+      const edgeData = []
+      for (let i = 0; i < randomCount; i++) {
+        const startCity = mapv.utilCityCenter.getCenterByCityName(cities[parseInt(cities.length * Math.random())])
+        nodeData.push({
+          x: startCity.lng - 5 + Math.random() * 10,
+          y: startCity.lat - 5 + Math.random() * 10
         })
-        const curveData = curve.getPoints()
+        edgeData.push({
+          source: i + 1,
+          target: 0
+        })
+      }
+      const bundling = mapv.utilForceEdgeBundling().nodes(nodeData).edges(edgeData)
+      const results = bundling()
+
+      for (let i = 0; i < results.length; i++) {
+        const line = results[i]
+        let coordinates = []
+        for (let j = 0; j < line.length; j++) {
+          coordinates.push([line[j].x, line[j].y])
+        }
         data.push({
           geometry: {
             type: 'LineString',
-            coordinates: curveData
+            coordinates
           }
         })
       }
@@ -73,13 +90,14 @@
       const view = new mapvgl.View({ map })
       const lineLayer = new mapvgl.LineLayer({
         color: 'rgba(55, 50, 250, 0.3)',
+        blend: 'lighter'
       })
       view.addLayer(lineLayer)
       lineLayer.setData(data)
 
       const linePointLayer = new mapvgl.LinePointLayer({
         size: 5, // 点的大小
-        speed: 1, // 点运动速度
+        speed: 10, // 点运动速度
         color: 'rgba(255, 255, 0, 0.6)', // 点的颜色
         animationType: mapvgl.LinePointLayer.ANIMATION_TYPE_SMOOTH, // 点的动画类型
         shapeType: mapvgl.LinePointLayer.SHAPE_TYPE_CIRCLE, // 点的形状
