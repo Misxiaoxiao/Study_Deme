@@ -11,6 +11,7 @@
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "echarts": "^4.9.0",
+    "echarts-liquidfill": "^3.0.0",
     "element-ui": "^2.4.5",
     "v-charts": "^1.19.0",
     "vue": "^2.6.11",
