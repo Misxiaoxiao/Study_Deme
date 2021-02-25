@@ -12,6 +12,7 @@ import TopView from '../components/TopView'
 import SalesView from '../components/SalesView'
 import BottomView from '../components/BottomView'
 import MapView from '../components/MapView'
+import { wordcloud } from '../api'
 
 export default {
   name: 'Home',
@@ -20,6 +21,9 @@ export default {
     SalesView,
     BottomView,
     MapView
+  },
+  mounted () {
+    wordcloud()
   }
 }
 </script>
