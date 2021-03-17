@@ -1176,3 +1176,116 @@ class MyApp extends App {
 
 export default withRedux(MyApp)
 ```
+
+### 使用 rollup 打包 js vue 等文件
+
+
+新建项目文件，使用 `npm init -y` 初始化项目，之后安装使用 `npm i -D rollup` 命令安装 `rollup`
+
+新建文件 `rollup.config.js` 文件用来配置 `rollup` 的配置
+
+安装下列 `rollup-plugin-babel` 第三方代码引入 `rollup-plugin-commonjs` 处理commonjs规范 `rollup-plugin-json` 处理 json 文件 `rollup-plugin-node-resolve` 处理代码规范 `rollup-plugin-postcss` `sass` 样式 `rollup-plugin-terser` 代码压缩 插件等
+```js
+// rollup.config.js
+const path = require('path')
+const resolve = require('rollup-plugin-node-resolve')
+const commonjs = require('rollup-plugin-commonjs')
+const babel = require('rollup-plugin-babel')
+const json = require('rollup-plugin-json')
+const { terser } = require('rollup-plugin-terser')
+const vue = require('rollup-plugin-vue')
+const postcss = require('rollup-plugin-postcss')
+
+const inputPath = path.resolve(__dirname, './src/index.js')
+const outputUMDPath = path.resolve(__dirname, './dist/datav.min.js')
+const outputESPath = path.resolve(__dirname, './dist/datav.es.min.js')
+
+module.exports = {
+  input: inputPath, // 入口地址
+  output: [{ // 打包出口地址
+    file: outputUMDPath,
+    format: 'umd',
+    name: 'datav',
+    globals: {
+      vue: 'vue'
+    }
+  }, {
+    file: outputESPath,
+    format: 'es',
+    name: 'datav',
+    globals: {
+      vue: 'vue'
+    }
+  }],
+  plugins: [
+    resolve(),
+    vue(),
+    commonjs(),
+    json(),
+    postcss(),
+    terser(),
+    babel({
+      exclude: 'node_modules/**'
+    })
+  ],
+  external: ['vue']
+}
+```
+
+新建 `src` 文件夹，文件夹下新建测试文件 `index.js` 和 `Test.vue` 等
+```js
+// index.js
+import Test from './Test.vue'
+
+export default function (Vue) {
+  Vue.component(Test.name, Test)
+}
+```
+```js
+// Test.vue
+<template>
+  <div class="test">
+    {{message}}
+    <div>count: {{count}}</div>
+    <div>doubleCount: {{doubleCount}}</div>
+  </div>  
+</template>
+
+<script>
+import { computed, ref } from 'vue'
+
+export default {
+  name: 'TestCom',
+  setup() {
+    const message = 'test component'
+    const count = ref(1)
+    const doubleCount = computed(() => count.value * 2)
+    return {
+      message,
+      count,
+      doubleCount
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+.test {
+  color: red;
+}
+</style>
+```
+
+修改 `package.json` 文件，添加 `"dev": "rollup -wc rollup.config.js"` 命令
+`w` 表示 监听
+
+### 关联组件库
+`package.json` 文件修改 `main` 字段表示上传到npm之后导出的主体文件，`files` 字段上传到npm之后所包含的文件
+
+在组件库文件夹下使用命令 `npm link`，在项目需要使用的文件夹下使用命令 `npm link 组件库名称`，并在 `package.json` 下添加相关依赖即可，真实上线需要将组件库进行发布npm
+
+### 组件库 esLint 使用
+在组件库项目文件下使用命令 `npm i -D eslint` 进行安装 `eslint` 之后使用 `./node_modules/.bin/eslint --init` 初始化 `eslint` 相关配置
+
+### 按需加载
+直接引入组件相关的js文件
