@@ -7,6 +7,9 @@ const ageMockData = [
   { startValue: 0, value: 31088, axis: '>50', color: 'rgb(251, 253, 142)' }
 ]
 
+/* eslint-disable-next-line */
+const deviceMockData = {"totalDevices":1070909,"devices":[{"key":"Android","value":423676},{"key":"iOS","value":373581},{"key":"PC","value":273652}]}
+
 function random (val) {
   return Math.floor(Math.random() * val)
 }
@@ -17,6 +20,7 @@ export default function () {
   const growthLastMonth = ref(2.1)
   const ageData = ref(ageMockData)
   const averageAge = ref(0)
+  const deviceData = ref(deviceMockData)
 
   let task
 
@@ -26,14 +30,21 @@ export default function () {
       growthLastDay.value += 0.5
       growthLastMonth.value += 0.5
       averageAge.value += 1
+      // deviceData.totalDevices += 1
 
       const _ageData = [...ageData.value]
       _ageData.forEach(item => {
         item.startValue = item.value
         item.value = item.value + random(100)
       })
-
       ageData.value = _ageData
+
+      const _deviceData = { ...deviceData.value }
+      _deviceData.totalDevices += random(10)
+      _deviceData.devices.forEach(item => {
+        item.value += random(100)
+      })
+      deviceData.value = _deviceData
     }, 3000)
   })
 
@@ -46,6 +57,7 @@ export default function () {
     growthLastDay,
     growthLastMonth,
     ageData,
-    averageAge
+    averageAge,
+    deviceData
   }
 }

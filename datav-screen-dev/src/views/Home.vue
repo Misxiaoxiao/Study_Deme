@@ -23,7 +23,11 @@
               :avgAge="averageAge"
             />
           </div>
-          <div class="left3">3333</div>
+          <div class="left3">
+            <total-device
+              :data="deviceData"
+            />
+          </div>
           <div class="left4">3333</div>
           <div class="left5">3333</div>
           <div class="left6">3333</div>
@@ -55,10 +59,11 @@ import useScreenData from '../hooks/useScreenData'
 import TopHeader from '../components/TopHeader'
 import TotalUser from '../components/TotalUser'
 import AverageAge from '../components/AverageAge'
+import TotalDevice from '../components/TotalDevice'
 
 export default {
   name: 'Home',
-  components: { TopHeader, TotalUser, AverageAge },
+  components: { TopHeader, TotalUser, AverageAge, TotalDevice },
   setup () {
     const loading = ref(true)
 

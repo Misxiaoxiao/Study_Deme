@@ -49,7 +49,7 @@
 
   vue.pushScopeId("data-v-495a850e");
 
-  const _hoisted_1$2 = {
+  const _hoisted_1$1 = {
     class: "loading"
   };
   const _hoisted_2$1 = {
@@ -59,7 +59,7 @@
   vue.popScopeId();
 
   const render$4 = /*#__PURE__*/_withId$3((_ctx, _cache, $props, $setup, $data, $options) => {
-    return vue.openBlock(), vue.createBlock("div", _hoisted_1$2, [(vue.openBlock(), vue.createBlock("svg", {
+    return vue.openBlock(), vue.createBlock("div", _hoisted_1$1, [(vue.openBlock(), vue.createBlock("svg", {
       width: $props.width,
       height: $props.height,
       viewBox: "0 0 50 50",
@@ -284,7 +284,7 @@
 
   vue.pushScopeId("data-v-b4514fd8");
 
-  const _hoisted_1$1 = /*#__PURE__*/vue.createVNode("stop", {
+  const _hoisted_1 = /*#__PURE__*/vue.createVNode("stop", {
     offset: "0%",
     "stop-color": "#fff",
     "stop-opacity": "1"
@@ -326,7 +326,7 @@
       fx: "100%",
       fy: "50%",
       r: "50%"
-    }, [_hoisted_1$1, _hoisted_2], 8
+    }, [_hoisted_1, _hoisted_2], 8
     /* PROPS */
     , ["id"]), vue.createVNode("mask", {
       id: $setup.maskId
@@ -524,15 +524,19 @@
     },
 
     setup(ctx) {
-      let dom, chart;
+      let dom,
+          chart,
+          className = `echarts${v4()}`;
 
       const initChart = () => {
         if (!chart) {
-          dom = document.getElementsByClassName('echarts')[0];
+          dom = document.getElementsByClassName(className)[0];
           chart = echarts__default['default'].init(dom, ctx.theme);
         }
 
-        chart.setOption(ctx.options);
+        if (ctx.options) {
+          chart.setOption(ctx.options);
+        }
       };
 
       vue.onMounted(() => {
@@ -541,22 +545,21 @@
       vue.watch(() => ctx.options, () => {
         initChart();
       });
+      return {
+        className
+      };
     }
 
   };
 
   const _withId = /*#__PURE__*/vue.withScopeId("data-v-66f253d8");
 
-  vue.pushScopeId("data-v-66f253d8");
-
-  const _hoisted_1 = {
-    class: "echarts"
-  };
-
-  vue.popScopeId();
-
   const render$1 = /*#__PURE__*/_withId((_ctx, _cache, $props, $setup, $data, $options) => {
-    return vue.openBlock(), vue.createBlock("div", _hoisted_1);
+    return vue.openBlock(), vue.createBlock("div", {
+      class: [$setup.className, 'echarts']
+    }, null, 2
+    /* CLASS */
+    );
   });
 
   var css_248z = ".echarts[data-v-66f253d8] {\n  width: 100%;\n  height: 100%; }\n";
