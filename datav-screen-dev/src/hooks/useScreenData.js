@@ -7,6 +7,10 @@ const ageMockData = [
   { startValue: 0, value: 31088, axis: '>50', color: 'rgb(251, 253, 142)' }
 ]
 
+function random (val) {
+  return Math.floor(Math.random() * val)
+}
+
 export default function () {
   const todayUser = ref(10000)
   const growthLastDay = ref(1.7)
@@ -22,6 +26,14 @@ export default function () {
       growthLastDay.value += 0.5
       growthLastMonth.value += 0.5
       averageAge.value += 1
+
+      const _ageData = [...ageData.value]
+      _ageData.forEach(item => {
+        item.startValue = item.value
+        item.value = item.value + random(100)
+      })
+
+      ageData.value = _ageData
     }, 3000)
   })
 

@@ -18,7 +18,10 @@
             />
           </div>
           <div class="left2">
-            <average-age />
+            <average-age
+              :data="ageData"
+              :avgAge="averageAge"
+            />
           </div>
           <div class="left3">3333</div>
           <div class="left4">3333</div>

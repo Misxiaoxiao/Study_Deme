@@ -41,5 +41,5 @@ module.exports = {
       exclude: 'node_modules/**'
     })
   ],
-  external: ['vue']
+  external: ['vue', 'echarts']
 }

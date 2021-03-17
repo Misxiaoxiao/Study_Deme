@@ -1,14 +1,15 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('vue'), require('crypto')) :
-  typeof define === 'function' && define.amd ? define(['vue', 'crypto'], factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.datav = factory(global.vue, global.crypto));
-}(this, (function (vue, crypto) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('vue'), require('crypto'), require('echarts')) :
+  typeof define === 'function' && define.amd ? define(['vue', 'crypto', 'echarts'], factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.datav = factory(global.vue, global.crypto, global.echarts));
+}(this, (function (vue, crypto, echarts) { 'use strict';
 
   function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
   var crypto__default = /*#__PURE__*/_interopDefaultLegacy(crypto);
+  var echarts__default = /*#__PURE__*/_interopDefaultLegacy(echarts);
 
-  var script$2 = {
+  var script$4 = {
     name: 'Loading',
     props: {
       width: {
@@ -44,11 +45,11 @@
 
   };
 
-  const _withId$2 = /*#__PURE__*/vue.withScopeId("data-v-495a850e");
+  const _withId$3 = /*#__PURE__*/vue.withScopeId("data-v-495a850e");
 
   vue.pushScopeId("data-v-495a850e");
 
-  const _hoisted_1$1 = {
+  const _hoisted_1$2 = {
     class: "loading"
   };
   const _hoisted_2$1 = {
@@ -57,8 +58,8 @@
 
   vue.popScopeId();
 
-  const render$2 = /*#__PURE__*/_withId$2((_ctx, _cache, $props, $setup, $data, $options) => {
-    return vue.openBlock(), vue.createBlock("div", _hoisted_1$1, [(vue.openBlock(), vue.createBlock("svg", {
+  const render$4 = /*#__PURE__*/_withId$3((_ctx, _cache, $props, $setup, $data, $options) => {
+    return vue.openBlock(), vue.createBlock("div", _hoisted_1$2, [(vue.openBlock(), vue.createBlock("svg", {
       width: $props.width,
       height: $props.height,
       viewBox: "0 0 50 50",
@@ -149,15 +150,15 @@
     }
   }
 
-  var css_248z$2 = ".loading[data-v-495a850e] {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: column;\n  height: 100%; }\n\n.loading-content[data-v-495a850e] {\n  font-size: 20px;\n  margin-top: 10px; }\n";
-  styleInject(css_248z$2);
+  var css_248z$3 = ".loading[data-v-495a850e] {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: column;\n  height: 100%; }\n\n.loading-content[data-v-495a850e] {\n  font-size: 20px;\n  margin-top: 10px; }\n";
+  styleInject(css_248z$3);
 
-  script$2.render = render$2;
-  script$2.__scopeId = "data-v-495a850e";
-  script$2.__file = "src/component/Loading/Loading.vue";
+  script$4.render = render$4;
+  script$4.__scopeId = "data-v-495a850e";
+  script$4.__file = "src/component/Loading/Loading.vue";
 
   function Loading (Vue) {
-    Vue.component(script$2.name, script$2);
+    Vue.component(script$4.name, script$4);
   }
 
   const rnds8Pool = new Uint8Array(256); // # of random values to pre-allocate
@@ -225,7 +226,7 @@
     return stringify(rnds);
   }
 
-  var script$1 = {
+  var script$3 = {
     name: 'FlyBox',
     props: {
       lineColor: {
@@ -279,11 +280,11 @@
 
   };
 
-  const _withId$1 = /*#__PURE__*/vue.withScopeId("data-v-b4514fd8");
+  const _withId$2 = /*#__PURE__*/vue.withScopeId("data-v-b4514fd8");
 
   vue.pushScopeId("data-v-b4514fd8");
 
-  const _hoisted_1 = /*#__PURE__*/vue.createVNode("stop", {
+  const _hoisted_1$1 = /*#__PURE__*/vue.createVNode("stop", {
     offset: "0%",
     "stop-color": "#fff",
     "stop-opacity": "1"
@@ -305,7 +306,7 @@
 
   vue.popScopeId();
 
-  const render$1 = /*#__PURE__*/_withId$1((_ctx, _cache, $props, $setup, $data, $options) => {
+  const render$3 = /*#__PURE__*/_withId$2((_ctx, _cache, $props, $setup, $data, $options) => {
     return vue.openBlock(), vue.createBlock("div", {
       class: "fly-box",
       ref: $setup.refName
@@ -325,7 +326,7 @@
       fx: "100%",
       fy: "50%",
       r: "50%"
-    }, [_hoisted_1, _hoisted_2], 8
+    }, [_hoisted_1$1, _hoisted_2], 8
     /* PROPS */
     , ["id"]), vue.createVNode("mask", {
       id: $setup.maskId
@@ -365,15 +366,15 @@
     );
   });
 
-  var css_248z$1 = ".fly-box[data-v-b4514fd8] {\n  width: 100%;\n  height: 100%;\n  position: relative; }\n  .fly-box[data-v-b4514fd8] svg[data-v-b4514fd8] {\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%; }\n  .fly-box[data-v-b4514fd8] .fly-box-content[data-v-b4514fd8] {\n    width: 100%;\n    height: 100%;\n    padding: 5px;\n    box-sizing: border-box; }\n";
-  styleInject(css_248z$1);
+  var css_248z$2 = ".fly-box[data-v-b4514fd8] {\n  width: 100%;\n  height: 100%;\n  position: relative; }\n  .fly-box[data-v-b4514fd8] svg[data-v-b4514fd8] {\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%; }\n  .fly-box[data-v-b4514fd8] .fly-box-content[data-v-b4514fd8] {\n    width: 100%;\n    height: 100%;\n    padding: 5px;\n    box-sizing: border-box; }\n";
+  styleInject(css_248z$2);
 
-  script$1.render = render$1;
-  script$1.__scopeId = "data-v-b4514fd8";
-  script$1.__file = "src/component/FlyBox/FlyBox.vue";
+  script$3.render = render$3;
+  script$3.__scopeId = "data-v-b4514fd8";
+  script$3.__file = "src/component/FlyBox/FlyBox.vue";
 
   function FlyBox (Vue) {
-    Vue.component(script$1.name, script$1);
+    Vue.component(script$3.name, script$3);
   }
 
   function debounce(delay, callback) {
@@ -386,7 +387,7 @@
     };
   }
 
-  var script = {
+  var script$2 = {
     name: 'Container',
     props: {
       options: Object
@@ -492,9 +493,9 @@
 
   };
 
-  const _withId = /*#__PURE__*/vue.withScopeId("data-v-023372d0");
+  const _withId$1 = /*#__PURE__*/vue.withScopeId("data-v-023372d0");
 
-  const render = /*#__PURE__*/_withId((_ctx, _cache, $props, $setup, $data, $options) => {
+  const render$2 = /*#__PURE__*/_withId$1((_ctx, _cache, $props, $setup, $data, $options) => {
     return vue.openBlock(), vue.createBlock("div", {
       id: "container",
       ref: $setup.refName
@@ -505,14 +506,337 @@
     );
   });
 
-  var css_248z = "#container[data-v-023372d0] {\n  position: fixed;\n  top: 0;\n  left: 0;\n  overflow: hidden;\n  z-index: 999;\n  transform-origin: left top; }\n";
-  styleInject(css_248z);
+  var css_248z$1 = "#container[data-v-023372d0] {\n  position: fixed;\n  top: 0;\n  left: 0;\n  overflow: hidden;\n  z-index: 999;\n  transform-origin: left top; }\n";
+  styleInject(css_248z$1);
 
-  script.render = render;
-  script.__scopeId = "data-v-023372d0";
-  script.__file = "src/component/Container/Container.vue";
+  script$2.render = render$2;
+  script$2.__scopeId = "data-v-023372d0";
+  script$2.__file = "src/component/Container/Container.vue";
 
   function Container (Vue) {
+    Vue.component(script$2.name, script$2);
+  }
+
+  var script$1 = {
+    props: {
+      options: Object,
+      theme: [String, Object]
+    },
+
+    setup(ctx) {
+      let dom, chart;
+
+      const initChart = () => {
+        if (!chart) {
+          dom = document.getElementsByClassName('echarts')[0];
+          chart = echarts__default['default'].init(dom, ctx.theme);
+        }
+
+        chart.setOption(ctx.options);
+      };
+
+      vue.onMounted(() => {
+        initChart();
+      });
+      vue.watch(() => ctx.options, () => {
+        initChart();
+      });
+    }
+
+  };
+
+  const _withId = /*#__PURE__*/vue.withScopeId("data-v-66f253d8");
+
+  vue.pushScopeId("data-v-66f253d8");
+
+  const _hoisted_1 = {
+    class: "echarts"
+  };
+
+  vue.popScopeId();
+
+  const render$1 = /*#__PURE__*/_withId((_ctx, _cache, $props, $setup, $data, $options) => {
+    return vue.openBlock(), vue.createBlock("div", _hoisted_1);
+  });
+
+  var css_248z = ".echarts[data-v-66f253d8] {\n  width: 100%;\n  height: 100%; }\n";
+  styleInject(css_248z);
+
+  script$1.render = render$1;
+  script$1.__scopeId = "data-v-66f253d8";
+  script$1.__file = "src/component/VueECharts/VueECharts.vue";
+
+  function VueEcharts (Vue) {
+    Vue.component(script$1.name, script$1);
+  }
+
+  let lastTime = 0;
+  const prefixes = 'webkit moz ms o'.split(' '); // 各浏览器前缀
+
+  let requestAnimationFrame;
+  let cancelAnimationFrame;
+  const isServer = typeof window === 'undefined';
+
+  if (isServer) {
+    requestAnimationFrame = function () {};
+
+    cancelAnimationFrame = function () {};
+  } else {
+    requestAnimationFrame = window.requestAnimationFrame;
+    cancelAnimationFrame = window.cancelAnimationFrame;
+    let prefix; // 通过遍历各浏览器前缀，来得到requestAnimationFrame和cancelAnimationFrame在当前浏览器的实现形式
+
+    for (let i = 0; i < prefixes.length; i++) {
+      if (requestAnimationFrame && cancelAnimationFrame) {
+        break;
+      }
+
+      prefix = prefixes[i];
+      requestAnimationFrame = requestAnimationFrame || window[prefix + 'RequestAnimationFrame'];
+      cancelAnimationFrame = cancelAnimationFrame || window[prefix + 'CancelAnimationFrame'] || window[prefix + 'CancelRequestAnimationFrame'];
+    } // 如果当前浏览器不支持requestAnimationFrame和cancelAnimationFrame，则会退到setTimeout
+
+
+    if (!requestAnimationFrame || !cancelAnimationFrame) {
+      requestAnimationFrame = function (callback) {
+        const currTime = new Date().getTime(); // 为了使setTimteout的尽可能的接近每秒60帧的效果
+
+        const timeToCall = Math.max(0, 16 - (currTime - lastTime));
+        const id = window.setTimeout(() => {
+          callback(currTime + timeToCall);
+        }, timeToCall);
+        lastTime = currTime + timeToCall;
+        return id;
+      };
+
+      cancelAnimationFrame = function (id) {
+        window.clearTimeout(id);
+      };
+    }
+  }
+
+  var script = {
+    name: 'count-to',
+    props: {
+      startVal: {
+        type: Number,
+        required: false,
+        default: 0
+      },
+      endVal: {
+        type: Number,
+        required: false,
+        default: 2017
+      },
+      duration: {
+        type: Number,
+        required: false,
+        default: 3000
+      },
+      autoplay: {
+        type: Boolean,
+        required: false,
+        default: true
+      },
+      decimals: {
+        type: Number,
+        required: false,
+        default: 0,
+
+        validator(value) {
+          return value >= 0;
+        }
+
+      },
+      decimal: {
+        type: String,
+        required: false,
+        default: '.'
+      },
+      separator: {
+        type: String,
+        required: false,
+        default: ','
+      },
+      prefix: {
+        type: String,
+        required: false,
+        default: ''
+      },
+      suffix: {
+        type: String,
+        required: false,
+        default: ''
+      },
+      useEasing: {
+        type: Boolean,
+        required: false,
+        default: true
+      },
+      easingFn: {
+        type: Function,
+
+        default(t, b, c, d) {
+          return c * (-Math.pow(2, -10 * t / d) + 1) * 1024 / 1023 + b;
+        }
+
+      }
+    },
+
+    data() {
+      return {
+        localStartVal: this.startVal,
+        displayValue: this.formatNumber(this.startVal),
+        printVal: null,
+        paused: false,
+        localDuration: this.duration,
+        startTime: null,
+        timestamp: null,
+        remaining: null,
+        rAF: null
+      };
+    },
+
+    computed: {
+      countDown() {
+        return this.startVal > this.endVal;
+      }
+
+    },
+    watch: {
+      startVal() {
+        if (this.autoplay) {
+          this.start();
+        }
+      },
+
+      endVal() {
+        if (this.autoplay) {
+          this.start();
+        }
+      }
+
+    },
+
+    mounted() {
+      if (this.autoplay) {
+        this.start();
+      }
+
+      this.$emit('mountedCallback');
+    },
+
+    methods: {
+      start() {
+        this.localStartVal = this.startVal;
+        this.startTime = null;
+        this.localDuration = this.duration;
+        this.paused = false;
+        this.rAF = requestAnimationFrame(this.count);
+      },
+
+      pauseResume() {
+        if (this.paused) {
+          this.resume();
+          this.paused = false;
+        } else {
+          this.pause();
+          this.paused = true;
+        }
+      },
+
+      pause() {
+        cancelAnimationFrame(this.rAF);
+      },
+
+      resume() {
+        this.startTime = null;
+        this.localDuration = +this.remaining;
+        this.localStartVal = +this.printVal;
+        requestAnimationFrame(this.count);
+      },
+
+      reset() {
+        this.startTime = null;
+        cancelAnimationFrame(this.rAF);
+        this.displayValue = this.formatNumber(this.startVal);
+      },
+
+      count(timestamp) {
+        if (!this.startTime) this.startTime = timestamp;
+        this.timestamp = timestamp;
+        const progress = timestamp - this.startTime;
+        this.remaining = this.localDuration - progress;
+
+        if (this.useEasing) {
+          if (this.countDown) {
+            this.printVal = this.localStartVal - this.easingFn(progress, 0, this.localStartVal - this.endVal, this.localDuration);
+          } else {
+            this.printVal = this.easingFn(progress, this.localStartVal, this.endVal - this.localStartVal, this.localDuration);
+          }
+        } else {
+          if (this.countDown) {
+            this.printVal = this.localStartVal - (this.localStartVal - this.endVal) * (progress / this.localDuration);
+          } else {
+            this.printVal = this.localStartVal + (this.endVal - this.localStartVal) * (progress / this.localDuration);
+          }
+        }
+
+        if (this.countDown) {
+          this.printVal = this.printVal < this.endVal ? this.endVal : this.printVal;
+        } else {
+          this.printVal = this.printVal > this.endVal ? this.endVal : this.printVal;
+        }
+
+        this.displayValue = this.formatNumber(this.printVal);
+
+        if (progress < this.localDuration) {
+          this.rAF = requestAnimationFrame(this.count);
+        } else {
+          this.$emit('callback');
+        }
+      },
+
+      isNumber(val) {
+        return !isNaN(parseFloat(val));
+      },
+
+      formatNumber(num) {
+        num = num.toFixed(this.decimals);
+        num += '';
+        const x = num.split('.');
+        let x1 = x[0];
+        const x2 = x.length > 1 ? this.decimal + x[1] : '';
+        const rgx = /(\d+)(\d{3})/;
+
+        if (this.separator && !this.isNumber(this.separator)) {
+          while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + this.separator + '$2');
+          }
+        }
+
+        return this.prefix + x1 + x2 + this.suffix;
+      }
+
+    },
+
+    /* eslint-disable */
+    unmounted() {
+      cancelAnimationFrame(this.rAF);
+    }
+
+  };
+
+  function render(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createBlock("span", null, vue.toDisplayString($data.displayValue), 1
+    /* TEXT */
+    );
+  }
+
+  script.render = render;
+  script.__file = "src/component/CountTo/vue-countTo.vue";
+
+  function CountTo (Vue) {
     Vue.component(script.name, script);
   }
 
@@ -520,6 +844,8 @@
     vue.use(Loading);
     vue.use(FlyBox);
     vue.use(Container);
+    vue.use(VueEcharts);
+    vue.use(CountTo);
   }
 
   return index;

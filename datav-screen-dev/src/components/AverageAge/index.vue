@@ -17,7 +17,9 @@
         </div>
       </div>
     </div>
-    <div id="average-age-chart" />
+    <div id="average-age-chart">
+      <vue-e-charts :options="options" />
+    </div>
     <div class="average-data-wrapper">
       <div class="average-data" v-for="(item, index) in data" :key="index">
         <div class="average-data-value">
@@ -37,24 +39,112 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
+import VueECharts from '../../../../datav-libs-dev/src/component/VueECharts/VueECharts.vue'
 
 // const color = ['rgb(116,166,49)', 'rgb(190,245,99)', 'rgb(202,252,137)', 'rgb(251,253,142)']
 
 export default {
+  components: { VueECharts },
   name: 'averageAge',
   props: {
     data: Array,
     avgAge: Number
   },
-  setup () {
+  setup (ctx) {
     const startAge = ref(0)
-    const update = () => {
+    const options = ref({})
+
+    const updateChart = () => {
+      const data = ['指标']
+      const color = []
+      const axis = ['指标']
+      let max = 0
+      ctx.data.forEach(item => {
+        data.push(item.value)
+        color.push(item.color)
+        axis.push(item.axis)
+        max += +item.value
+      })
+
+      options.value = {
+        color,
+        tooltip: {
+          textStyle: {
+            fontSize: 28
+          },
+          padding: 10
+        },
+        grid: {
+          left: 40,
+          right: 40,
+          top: 0
+        },
+        dataset: {
+          source: [
+            axis,
+            data
+          ]
+        },
+        xAxis: {
+          type: 'value',
+          max,
+          splitLine: {
+            show: false
+          },
+          axisTick: {
+            show: false
+          },
+          axisLabel: {
+            color: 'rgb(98, 105, 113)',
+            fontSize: 18
+          },
+          axisLine: {
+            color: 'rgb(50, 51, 53)',
+            width: 3
+          }
+        },
+        yAxis: {
+          type: 'category',
+          show: false
+        },
+        series: [
+          {
+            type: 'bar',
+            stack: 'total',
+            barWidth: 15
+          },
+          {
+            type: 'bar',
+            stack: 'total'
+          },
+          {
+            type: 'bar',
+            stack: 'total'
+          },
+          {
+            type: 'bar',
+            stack: 'total'
+          }
+        ]
+      }
     }
+
+    watch(() => ctx.avgAge, (_, prevVal) => {
+      startAge.value = prevVal
+    })
+
+    watch(() => ctx.data, () => {
+      updateChart()
+    })
+
+    onMounted(() => {
+      updateChart()
+    })
 
     return {
       startAge,
-      update
+      options
     }
   }
 }
