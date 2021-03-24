@@ -511,6 +511,7 @@ function Container (Vue) {
 }
 
 var script$1 = {
+  name: 'VueECharts',
   props: {
     options: Object,
     theme: [String, Object]
@@ -562,7 +563,7 @@ script$1.render = render$1;
 script$1.__scopeId = "data-v-66f253d8";
 script$1.__file = "src/component/VueECharts/VueECharts.vue";
 
-function VueEcharts (Vue) {
+function VueECharts (Vue) {
   Vue.component(script$1.name, script$1);
 }
 
@@ -840,7 +841,7 @@ function index (vue) {
   vue.use(Loading);
   vue.use(FlyBox);
   vue.use(Container);
-  vue.use(VueEcharts);
+  vue.use(VueECharts);
   vue.use(CountTo);
 }
 

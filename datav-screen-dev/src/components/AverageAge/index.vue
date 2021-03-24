@@ -40,12 +40,10 @@
 
 <script>
 import { onMounted, ref, watch } from 'vue'
-import VueECharts from '../../../../datav-libs-dev/src/component/VueECharts/VueECharts.vue'
 
 // const color = ['rgb(116,166,49)', 'rgb(190,245,99)', 'rgb(202,252,137)', 'rgb(251,253,142)']
 
 export default {
-  components: { VueECharts },
   name: 'averageAge',
   props: {
     data: Array,

@@ -8,6 +8,7 @@ import echarts from 'echarts'
 import { v4 as uuidv4 } from 'uuid'
 
 export default {
+  name: 'VueECharts',
   props: {
     options: Object,
     theme: [String, Object]

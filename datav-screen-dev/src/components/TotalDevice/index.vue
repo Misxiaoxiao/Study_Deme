@@ -39,12 +39,10 @@
 
 <script>
 import { ref, watch, onMounted } from 'vue'
-import VueECharts from '../../../../datav-libs-dev/src/component/VueECharts/VueECharts.vue'
 
 const color = ['rgb(176,207,120)', 'rgb(157,195,91)', 'rgb(131,167,72)']
 
 export default {
-  components: { VueECharts },
   name: 'totalDevice',
   props: {
     data: Object
