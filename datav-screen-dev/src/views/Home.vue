@@ -43,12 +43,18 @@
           </div>
         </div>
         <div class="right">
-          <div class="right-top1"></div>
-          <div class="right-top2"></div>
+          <div class="right-top1">
+            <center-header :data="headerData" />
+          </div>
+          <div class="right-top2">
+            <transform-category :data="['all', '北京', '上海', '深圳', '杭州', '南京', '武汉']" />
+          </div>
           <div class="right-bottom">
             <div class="right-left">
               <div class="right-left1"></div>
-              <div class="right-left2"></div>
+              <div class="right-left2">
+                <transform-category :data="['订单量', '销售额', '用户数', '退单量']" :color="['rgb(178, 209, 126)', 'rgb(116, 116, 49)']" />
+              </div>
               <div class="right-left3"></div>
               <div class="right-left4"></div>
             </div>
@@ -73,10 +79,12 @@ import TotalDevice from '../components/TotalDevice'
 import TotalGender from '../components/TotalGender'
 import TotalRider from '../components/TotalRider'
 import HotCategory from '../components/HotCategory'
+import CenterHeader from '../components/CenterHeader'
+import TransformCategory from '../components/TransformCategory'
 
 export default {
   name: 'Home',
-  components: { TopHeader, TotalUser, AverageAge, TotalDevice, TotalGender, TotalRider, HotCategory },
+  components: { TopHeader, TotalUser, AverageAge, TotalDevice, TotalGender, TotalRider, HotCategory, CenterHeader, TransformCategory },
   setup () {
     const loading = ref(true)
 
@@ -156,6 +164,7 @@ export default {
         flex: 1;
         display: flex;
         flex-direction: column;
+        margin-left: 10px;
         .right-top1 {
           width: 100%;
           height: 206px;
@@ -163,6 +172,7 @@ export default {
         .right-top2 {
           width: 100%;
           height: 48;
+          margin: 10px 0;
         }
         .right-bottom {
           flex: 1;

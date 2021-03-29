@@ -9,7 +9,7 @@
   var crypto__default = /*#__PURE__*/_interopDefaultLegacy(crypto);
   var echarts__default = /*#__PURE__*/_interopDefaultLegacy(echarts);
 
-  var script$4 = {
+  var script$5 = {
     name: 'Loading',
     props: {
       width: {
@@ -45,21 +45,21 @@
 
   };
 
-  const _withId$3 = /*#__PURE__*/vue.withScopeId("data-v-495a850e");
+  const _withId$4 = /*#__PURE__*/vue.withScopeId("data-v-495a850e");
 
   vue.pushScopeId("data-v-495a850e");
 
-  const _hoisted_1$1 = {
+  const _hoisted_1$2 = {
     class: "loading"
   };
-  const _hoisted_2$1 = {
+  const _hoisted_2$2 = {
     class: "loading-content"
   };
 
   vue.popScopeId();
 
-  const render$4 = /*#__PURE__*/_withId$3((_ctx, _cache, $props, $setup, $data, $options) => {
-    return vue.openBlock(), vue.createBlock("div", _hoisted_1$1, [(vue.openBlock(), vue.createBlock("svg", {
+  const render$5 = /*#__PURE__*/_withId$4((_ctx, _cache, $props, $setup, $data, $options) => {
+    return vue.openBlock(), vue.createBlock("div", _hoisted_1$2, [(vue.openBlock(), vue.createBlock("svg", {
       width: $props.width,
       height: $props.height,
       viewBox: "0 0 50 50",
@@ -120,7 +120,7 @@
     /* PROPS */
     , ["stroke"])], 8
     /* PROPS */
-    , ["width", "height"])), vue.createVNode("div", _hoisted_2$1, [vue.renderSlot(_ctx.$slots, "default")])]);
+    , ["width", "height"])), vue.createVNode("div", _hoisted_2$2, [vue.renderSlot(_ctx.$slots, "default")])]);
   });
 
   function styleInject(css, ref) {
@@ -150,15 +150,15 @@
     }
   }
 
-  var css_248z$3 = ".loading[data-v-495a850e] {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: column;\n  height: 100%; }\n\n.loading-content[data-v-495a850e] {\n  font-size: 20px;\n  margin-top: 10px; }\n";
-  styleInject(css_248z$3);
+  var css_248z$4 = ".loading[data-v-495a850e] {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: column;\n  height: 100%; }\n\n.loading-content[data-v-495a850e] {\n  font-size: 20px;\n  margin-top: 10px; }\n";
+  styleInject(css_248z$4);
 
-  script$4.render = render$4;
-  script$4.__scopeId = "data-v-495a850e";
-  script$4.__file = "src/component/Loading/Loading.vue";
+  script$5.render = render$5;
+  script$5.__scopeId = "data-v-495a850e";
+  script$5.__file = "src/component/Loading/Loading.vue";
 
   function Loading (Vue) {
-    Vue.component(script$4.name, script$4);
+    Vue.component(script$5.name, script$5);
   }
 
   const rnds8Pool = new Uint8Array(256); // # of random values to pre-allocate
@@ -226,7 +226,7 @@
     return stringify(rnds);
   }
 
-  var script$3 = {
+  var script$4 = {
     name: 'FlyBox',
     props: {
       lineColor: {
@@ -280,11 +280,11 @@
 
   };
 
-  const _withId$2 = /*#__PURE__*/vue.withScopeId("data-v-b4514fd8");
+  const _withId$3 = /*#__PURE__*/vue.withScopeId("data-v-b4514fd8");
 
   vue.pushScopeId("data-v-b4514fd8");
 
-  const _hoisted_1 = /*#__PURE__*/vue.createVNode("stop", {
+  const _hoisted_1$1 = /*#__PURE__*/vue.createVNode("stop", {
     offset: "0%",
     "stop-color": "#fff",
     "stop-opacity": "1"
@@ -292,7 +292,7 @@
   /* HOISTED */
   );
 
-  const _hoisted_2 = /*#__PURE__*/vue.createVNode("stop", {
+  const _hoisted_2$1 = /*#__PURE__*/vue.createVNode("stop", {
     offset: "100%",
     "stop-color": "#fff",
     "stop-opacity": "0"
@@ -306,7 +306,7 @@
 
   vue.popScopeId();
 
-  const render$3 = /*#__PURE__*/_withId$2((_ctx, _cache, $props, $setup, $data, $options) => {
+  const render$4 = /*#__PURE__*/_withId$3((_ctx, _cache, $props, $setup, $data, $options) => {
     return vue.openBlock(), vue.createBlock("div", {
       class: "fly-box",
       ref: $setup.refName
@@ -326,7 +326,7 @@
       fx: "100%",
       fy: "50%",
       r: "50%"
-    }, [_hoisted_1, _hoisted_2], 8
+    }, [_hoisted_1$1, _hoisted_2$1], 8
     /* PROPS */
     , ["id"]), vue.createVNode("mask", {
       id: $setup.maskId
@@ -366,15 +366,15 @@
     );
   });
 
-  var css_248z$2 = ".fly-box[data-v-b4514fd8] {\n  width: 100%;\n  height: 100%;\n  position: relative; }\n  .fly-box[data-v-b4514fd8] svg[data-v-b4514fd8] {\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%; }\n  .fly-box[data-v-b4514fd8] .fly-box-content[data-v-b4514fd8] {\n    width: 100%;\n    height: 100%;\n    padding: 5px;\n    box-sizing: border-box; }\n";
-  styleInject(css_248z$2);
+  var css_248z$3 = ".fly-box[data-v-b4514fd8] {\n  width: 100%;\n  height: 100%;\n  position: relative; }\n  .fly-box[data-v-b4514fd8] svg[data-v-b4514fd8] {\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%; }\n  .fly-box[data-v-b4514fd8] .fly-box-content[data-v-b4514fd8] {\n    width: 100%;\n    height: 100%;\n    padding: 5px;\n    box-sizing: border-box; }\n";
+  styleInject(css_248z$3);
 
-  script$3.render = render$3;
-  script$3.__scopeId = "data-v-b4514fd8";
-  script$3.__file = "src/component/FlyBox/FlyBox.vue";
+  script$4.render = render$4;
+  script$4.__scopeId = "data-v-b4514fd8";
+  script$4.__file = "src/component/FlyBox/FlyBox.vue";
 
   function FlyBox (Vue) {
-    Vue.component(script$3.name, script$3);
+    Vue.component(script$4.name, script$4);
   }
 
   function debounce(delay, callback) {
@@ -387,7 +387,7 @@
     };
   }
 
-  var script$2 = {
+  var script$3 = {
     name: 'Container',
     props: {
       options: Object
@@ -493,9 +493,9 @@
 
   };
 
-  const _withId$1 = /*#__PURE__*/vue.withScopeId("data-v-023372d0");
+  const _withId$2 = /*#__PURE__*/vue.withScopeId("data-v-023372d0");
 
-  const render$2 = /*#__PURE__*/_withId$1((_ctx, _cache, $props, $setup, $data, $options) => {
+  const render$3 = /*#__PURE__*/_withId$2((_ctx, _cache, $props, $setup, $data, $options) => {
     return vue.openBlock(), vue.createBlock("div", {
       id: "container",
       ref: $setup.refName
@@ -506,18 +506,18 @@
     );
   });
 
-  var css_248z$1 = "#container[data-v-023372d0] {\n  position: fixed;\n  top: 0;\n  left: 0;\n  overflow: hidden;\n  z-index: 999;\n  transform-origin: left top; }\n";
-  styleInject(css_248z$1);
+  var css_248z$2 = "#container[data-v-023372d0] {\n  position: fixed;\n  top: 0;\n  left: 0;\n  overflow: hidden;\n  z-index: 999;\n  transform-origin: left top; }\n";
+  styleInject(css_248z$2);
 
-  script$2.render = render$2;
-  script$2.__scopeId = "data-v-023372d0";
-  script$2.__file = "src/component/Container/Container.vue";
+  script$3.render = render$3;
+  script$3.__scopeId = "data-v-023372d0";
+  script$3.__file = "src/component/Container/Container.vue";
 
   function Container (Vue) {
-    Vue.component(script$2.name, script$2);
+    Vue.component(script$3.name, script$3);
   }
 
-  var script$1 = {
+  var script$2 = {
     name: 'VueECharts',
     props: {
       options: Object,
@@ -553,9 +553,9 @@
 
   };
 
-  const _withId = /*#__PURE__*/vue.withScopeId("data-v-66f253d8");
+  const _withId$1 = /*#__PURE__*/vue.withScopeId("data-v-66f253d8");
 
-  const render$1 = /*#__PURE__*/_withId((_ctx, _cache, $props, $setup, $data, $options) => {
+  const render$2 = /*#__PURE__*/_withId$1((_ctx, _cache, $props, $setup, $data, $options) => {
     return vue.openBlock(), vue.createBlock("div", {
       class: [$setup.className, 'echarts']
     }, null, 2
@@ -563,15 +563,15 @@
     );
   });
 
-  var css_248z = ".echarts[data-v-66f253d8] {\n  width: 100%;\n  height: 100%; }\n";
-  styleInject(css_248z);
+  var css_248z$1 = ".echarts[data-v-66f253d8] {\n  width: 100%;\n  height: 100%; }\n";
+  styleInject(css_248z$1);
 
-  script$1.render = render$1;
-  script$1.__scopeId = "data-v-66f253d8";
-  script$1.__file = "src/component/VueECharts/VueECharts.vue";
+  script$2.render = render$2;
+  script$2.__scopeId = "data-v-66f253d8";
+  script$2.__file = "src/component/VueECharts/VueECharts.vue";
 
   function VueECharts (Vue) {
-    Vue.component(script$1.name, script$1);
+    Vue.component(script$2.name, script$2);
   }
 
   let lastTime = 0;
@@ -619,7 +619,7 @@
     }
   }
 
-  var script = {
+  var script$1 = {
     name: 'count-to',
     props: {
       startVal: {
@@ -831,16 +831,89 @@
 
   };
 
-  function render(_ctx, _cache, $props, $setup, $data, $options) {
+  function render$1(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createBlock("span", null, vue.toDisplayString($data.displayValue), 1
     /* TEXT */
     );
   }
 
-  script.render = render;
-  script.__file = "src/component/CountTo/vue-countTo.vue";
+  script$1.render = render$1;
+  script$1.__file = "src/component/CountTo/vue-countTo.vue";
 
   function CountTo (Vue) {
+    Vue.component(script$1.name, script$1);
+  }
+
+  var script = {
+    name: 'BaseScrollList',
+    props: {
+      // 标题数据
+      header: Array,
+      // 标题样式
+      headerStyle: Array,
+      headerBg: {
+        type: String,
+        default: 'rgb(90, 90, 90)'
+      },
+      headerHeight: {
+        type: [Number, String],
+        default: 35
+      }
+    },
+
+    setup(props) {
+      console.log(props);
+    }
+
+  };
+
+  const _withId = /*#__PURE__*/vue.withScopeId("data-v-5812e294");
+
+  vue.pushScopeId("data-v-5812e294");
+
+  const _hoisted_1 = {
+    class: "base-scroll-list"
+  };
+
+  const _hoisted_2 = /*#__PURE__*/vue.createVNode("div", {
+    class: "base-scroll-list-rows"
+  }, null, -1
+  /* HOISTED */
+  );
+
+  vue.popScopeId();
+
+  const render = /*#__PURE__*/_withId((_ctx, _cache, $props, $setup, $data, $options) => {
+    return vue.openBlock(), vue.createBlock("div", _hoisted_1, [vue.createVNode("div", {
+      class: "base-scroll-list-header",
+      style: {
+        backgroundColor: $props.headerBg,
+        height: $props.headerHeight + 'px'
+      }
+    }, [(vue.openBlock(true), vue.createBlock(vue.Fragment, null, vue.renderList($props.header, (item, index) => {
+      return vue.openBlock(), vue.createBlock("div", {
+        class: "header-item base-scroll-list-text",
+        key: item + index,
+        style: $props.headerStyle[index],
+        innerHTML: item
+      }, null, 12
+      /* STYLE, PROPS */
+      , ["innerHTML"]);
+    }), 128
+    /* KEYED_FRAGMENT */
+    ))], 4
+    /* STYLE */
+    ), _hoisted_2]);
+  });
+
+  var css_248z = ".base-scroll-list[data-v-5812e294] .base-scroll-list-text[data-v-5812e294] {\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  padding: 0 10px;\n  box-sizing: border-box; }\n\n.base-scroll-list[data-v-5812e294] .base-scroll-list-header[data-v-5812e294] {\n  display: flex;\n  font-size: 15px;\n  align-items: center; }\n";
+  styleInject(css_248z);
+
+  script.render = render;
+  script.__scopeId = "data-v-5812e294";
+  script.__file = "src/component/BaseScrollList/BaseScrollList.vue";
+
+  function BaseScrollList (Vue) {
     Vue.component(script.name, script);
   }
 
@@ -850,6 +923,7 @@
     vue.use(Container);
     vue.use(VueECharts);
     vue.use(CountTo);
+    vue.use(BaseScrollList);
   }
 
   return index;
