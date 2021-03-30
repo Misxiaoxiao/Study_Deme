@@ -1,8 +1,7 @@
 <template>
-  <div>
+  <div style="width: 500px; height: 400px;">
     <base-scroll-list
-      :header="header"
-      :headerStyle="headerStyle"
+      :config="config"
     ></base-scroll-list>
   </div>
 </template>
@@ -12,15 +11,32 @@ import { ref } from 'vue'
 
 export default {
   setup (props) {
-    const header = ref([])
-    const headerStyle = ref([])
+    const config = ref({})
 
-    header.value = ['姓名', '年龄', '月薪']
-    headerStyle.value = [{ color: 'red' }]
+    const header = ['姓名', '年龄', '月薪']
+    const headerStyle = [{ color: 'red', width: '100px' }]
+    const rowStyle = [{ color: 'blue' }]
+    const data = []
+
+    for (let i = 0; i < 15; i++) {
+      data.push([
+        '同学' + (i + 1),
+        Math.floor(Math.random() * 10 + 20),
+        Math.floor(Math.random() * 10000 + 10000)
+      ])
+    }
+
+    config.value = {
+      header,
+      headerStyle,
+      headerHeight: 40,
+      headerIndex: true,
+      rowStyle,
+      data
+    }
 
     return {
-      header,
-      headerStyle
+      config
     }
   }
 }
