@@ -9,7 +9,7 @@
     "antd": "^4.3.2",
     "echarts": "^4.8.0",
     "echarts-for-react": "^2.0.16",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-grid-layout": "^0.18.3",
