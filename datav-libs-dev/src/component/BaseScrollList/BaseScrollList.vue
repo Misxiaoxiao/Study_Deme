@@ -4,7 +4,9 @@
       class="base-scroll-list-header"
       :style="{
         backgroundColor: actualConfig.headerBg,
-        height: actualConfig.headerHeight + 'px'
+        height: actualConfig.headerHeight + 'px',
+        fontSize: actualConfig.headerFontSize + 'px',
+        color: actualConfig.headerFontColor
       }"
     >
       <div
@@ -14,6 +16,7 @@
         :style="{
           ...headerStyle[index],
           width: `${columnsWidth[index]}px`,
+          textAlign: aligns[index]
         }"
         v-html="item"
       />
@@ -23,7 +26,10 @@
       v-for="(row, rowIndex) in rowsData"
       :key="rowIndex"
       :style="{
-        height: `${rowHeights[rowIndex]}px`
+        height: `${rowHeights[rowIndex]}px`,
+        backgroundColor: rowIndex % 2 === 0 ? rowBg[1] : rowBg[0],
+        fontSize: actualConfig.rowFontSize + 'px',
+        color: actualConfig.rowFontColor
       }"
     >
       <div
@@ -32,6 +38,7 @@
         :key="colIndex"
         :style="{
           width: `${columnsWidth[colIndex]}px`,
+          textAlign: aligns[colIndex],
           ...rowStyle[colIndex]
         }"
         v-html="col"
@@ -63,6 +70,12 @@ const defaultConfig = {
   rowStyle: [],
   rowIndexStyle: {},
   rowNum: 5,
+  rowBg: [],
+  aligns: [],
+  headerFontSize: 28,
+  headerFontColor: '#000',
+  rowFontSize: 28,
+  rowFontColor: '#fff',
   // 数据项
   data: []
 }
@@ -87,18 +100,22 @@ export default {
     const rowNum = ref(defaultConfig.rowNum)
     const rowHeights = ref([])
     const rowStyle = ref([])
+    const rowBg = ref([])
+    const aligns = ref([])
 
     const handleHeader = (config) => {
       const _headerData = cloneDeep(config.header)
       const _headerStyle = cloneDeep(config.headerStyle)
       const _rowsData = cloneDeep(config.data)
-      const _rowStyle = cloneDeep            (config.rowStyle)
+      const _rowStyle = cloneDeep(config.rowStyle)
+      const _aligns = cloneDeep(config.aligns)
 
       if (config.header.length === 0) return
       if (config.headerIndex) {
         _headerData.unshift(config.headerIndexContent)
         _headerStyle.unshift(config.headerIndexStyle)
         _rowStyle.unshift(config.rowIndexStyle)
+        _aligns.unshift('center')
         _rowsData.forEach((_, index) => {
           _rowsData[index].unshift(index + 1)
         })
@@ -126,6 +143,7 @@ export default {
       headerStyle.value = _headerStyle
       rowsData.value = _rowsData
       rowStyle.value = _rowStyle
+      aligns.value = _aligns
     }
 
     const handleRows = (config) => {
@@ -133,13 +151,16 @@ export default {
       const { headerHeight } = config
       rowNum.value = config.rowNum
       const unuseHeight = height.value - headerHeight
-      console.log(rowsData.value.length)
       // 如果 rowNum 大于实际数据长度，则以实际长度为准
       if (rowNum.value < rowsData.value.length) {
         rowNum.value = rowsData.value.length
       }
       const avgHeight = unuseHeight / rowNum.value
       rowHeights.value = new Array(rowsData.value.length).fill(avgHeight)
+
+      if (config.rowBg) {
+        rowBg.value = config.rowBg
+      }
     }
 
     onMounted(() => {
@@ -158,7 +179,9 @@ export default {
       columnsWidth,
       rowsData,
       rowHeights,
-      rowStyle
+      rowStyle,
+      aligns,
+      rowBg
     }
   }
 }
@@ -185,7 +208,6 @@ export default {
     display: flex;
     align-items: center;
     .base-scroll-list-columns {
-      font-size: 28px;
     }
   }
 }

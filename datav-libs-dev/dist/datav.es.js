@@ -3659,6 +3659,12 @@ const defaultConfig = {
   rowStyle: [],
   rowIndexStyle: {},
   rowNum: 5,
+  rowBg: [],
+  aligns: [],
+  headerFontSize: 28,
+  headerFontColor: '#000',
+  rowFontSize: 28,
+  rowFontColor: '#fff',
   // 数据项
   data: []
 };
@@ -3685,6 +3691,8 @@ var script = {
     const rowNum = ref(defaultConfig.rowNum);
     const rowHeights = ref([]);
     const rowStyle = ref([]);
+    const rowBg = ref([]);
+    const aligns = ref([]);
 
     const handleHeader = config => {
       const _headerData = cloneDeep_1(config.header);
@@ -3695,6 +3703,8 @@ var script = {
 
       const _rowStyle = cloneDeep_1(config.rowStyle);
 
+      const _aligns = cloneDeep_1(config.aligns);
+
       if (config.header.length === 0) return;
 
       if (config.headerIndex) {
@@ -3703,6 +3713,8 @@ var script = {
         _headerStyle.unshift(config.headerIndexStyle);
 
         _rowStyle.unshift(config.rowIndexStyle);
+
+        _aligns.unshift('center');
 
         _rowsData.forEach((_, index) => {
           _rowsData[index].unshift(index + 1);
@@ -3736,6 +3748,7 @@ var script = {
       headerStyle.value = _headerStyle;
       rowsData.value = _rowsData;
       rowStyle.value = _rowStyle;
+      aligns.value = _aligns;
     };
 
     const handleRows = config => {
@@ -3744,8 +3757,7 @@ var script = {
         headerHeight
       } = config;
       rowNum.value = config.rowNum;
-      const unuseHeight = height.value - headerHeight;
-      console.log(rowsData.value.length); // 如果 rowNum 大于实际数据长度，则以实际长度为准
+      const unuseHeight = height.value - headerHeight; // 如果 rowNum 大于实际数据长度，则以实际长度为准
 
       if (rowNum.value < rowsData.value.length) {
         rowNum.value = rowsData.value.length;
@@ -3753,6 +3765,10 @@ var script = {
 
       const avgHeight = unuseHeight / rowNum.value;
       rowHeights.value = new Array(rowsData.value.length).fill(avgHeight);
+
+      if (config.rowBg) {
+        rowBg.value = config.rowBg;
+      }
     };
 
     onMounted(() => {
@@ -3771,7 +3787,9 @@ var script = {
       columnsWidth,
       rowsData,
       rowHeights,
-      rowStyle
+      rowStyle,
+      aligns,
+      rowBg
     };
   }
 
@@ -3787,14 +3805,17 @@ const render = /*#__PURE__*/_withId((_ctx, _cache, $props, $setup, $data, $optio
     class: "base-scroll-list-header",
     style: {
       backgroundColor: $setup.actualConfig.headerBg,
-      height: $setup.actualConfig.headerHeight + 'px'
+      height: $setup.actualConfig.headerHeight + 'px',
+      fontSize: $setup.actualConfig.headerFontSize + 'px',
+      color: $setup.actualConfig.headerFontColor
     }
   }, [(openBlock(true), createBlock(Fragment, null, renderList($setup.headerData, (item, index) => {
     return openBlock(), createBlock("div", {
       class: "header-item base-scroll-list-text",
       key: item + index,
       style: { ...$setup.headerStyle[index],
-        width: `${$setup.columnsWidth[index]}px`
+        width: `${$setup.columnsWidth[index]}px`,
+        textAlign: $setup.aligns[index]
       },
       innerHTML: item
     }, null, 12
@@ -3809,7 +3830,10 @@ const render = /*#__PURE__*/_withId((_ctx, _cache, $props, $setup, $data, $optio
       class: "base-scroll-list-rows",
       key: rowIndex,
       style: {
-        height: `${$setup.rowHeights[rowIndex]}px`
+        height: `${$setup.rowHeights[rowIndex]}px`,
+        backgroundColor: rowIndex % 2 === 0 ? $setup.rowBg[1] : $setup.rowBg[0],
+        fontSize: $setup.actualConfig.rowFontSize + 'px',
+        color: $setup.actualConfig.rowFontColor
       }
     }, [(openBlock(true), createBlock(Fragment, null, renderList(row, (col, colIndex) => {
       return openBlock(), createBlock("div", {
@@ -3817,6 +3841,7 @@ const render = /*#__PURE__*/_withId((_ctx, _cache, $props, $setup, $data, $optio
         key: colIndex,
         style: {
           width: `${$setup.columnsWidth[colIndex]}px`,
+          textAlign: $setup.aligns[colIndex],
           ...$setup.rowStyle[colIndex]
         },
         innerHTML: col
@@ -3835,7 +3860,7 @@ const render = /*#__PURE__*/_withId((_ctx, _cache, $props, $setup, $data, $optio
   , ["id"]);
 });
 
-var css_248z = ".base-scroll-list[data-v-5812e294] {\n  width: 100%;\n  height: 100%; }\n  .base-scroll-list[data-v-5812e294] .base-scroll-list-text[data-v-5812e294] {\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    padding: 0 10px;\n    box-sizing: border-box; }\n  .base-scroll-list[data-v-5812e294] .base-scroll-list-header[data-v-5812e294] {\n    display: flex;\n    font-size: 15px;\n    align-items: center; }\n  .base-scroll-list[data-v-5812e294] .base-scroll-list-rows[data-v-5812e294] {\n    display: flex;\n    align-items: center; }\n    .base-scroll-list[data-v-5812e294] .base-scroll-list-rows[data-v-5812e294] .base-scroll-list-columns[data-v-5812e294] {\n      font-size: 28px; }\n";
+var css_248z = ".base-scroll-list[data-v-5812e294] {\n  width: 100%;\n  height: 100%; }\n  .base-scroll-list[data-v-5812e294] .base-scroll-list-text[data-v-5812e294] {\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    padding: 0 10px;\n    box-sizing: border-box; }\n  .base-scroll-list[data-v-5812e294] .base-scroll-list-header[data-v-5812e294] {\n    display: flex;\n    font-size: 15px;\n    align-items: center; }\n  .base-scroll-list[data-v-5812e294] .base-scroll-list-rows[data-v-5812e294] {\n    display: flex;\n    align-items: center; }\n";
 styleInject(css_248z);
 
 script.render = render;

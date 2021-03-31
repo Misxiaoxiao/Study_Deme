@@ -3666,6 +3666,12 @@
     rowStyle: [],
     rowIndexStyle: {},
     rowNum: 5,
+    rowBg: [],
+    aligns: [],
+    headerFontSize: 28,
+    headerFontColor: '#000',
+    rowFontSize: 28,
+    rowFontColor: '#fff',
     // 数据项
     data: []
   };
@@ -3692,6 +3698,8 @@
       const rowNum = vue.ref(defaultConfig.rowNum);
       const rowHeights = vue.ref([]);
       const rowStyle = vue.ref([]);
+      const rowBg = vue.ref([]);
+      const aligns = vue.ref([]);
 
       const handleHeader = config => {
         const _headerData = cloneDeep_1(config.header);
@@ -3702,6 +3710,8 @@
 
         const _rowStyle = cloneDeep_1(config.rowStyle);
 
+        const _aligns = cloneDeep_1(config.aligns);
+
         if (config.header.length === 0) return;
 
         if (config.headerIndex) {
@@ -3710,6 +3720,8 @@
           _headerStyle.unshift(config.headerIndexStyle);
 
           _rowStyle.unshift(config.rowIndexStyle);
+
+          _aligns.unshift('center');
 
           _rowsData.forEach((_, index) => {
             _rowsData[index].unshift(index + 1);
@@ -3743,6 +3755,7 @@
         headerStyle.value = _headerStyle;
         rowsData.value = _rowsData;
         rowStyle.value = _rowStyle;
+        aligns.value = _aligns;
       };
 
       const handleRows = config => {
@@ -3751,8 +3764,7 @@
           headerHeight
         } = config;
         rowNum.value = config.rowNum;
-        const unuseHeight = height.value - headerHeight;
-        console.log(rowsData.value.length); // 如果 rowNum 大于实际数据长度，则以实际长度为准
+        const unuseHeight = height.value - headerHeight; // 如果 rowNum 大于实际数据长度，则以实际长度为准
 
         if (rowNum.value < rowsData.value.length) {
           rowNum.value = rowsData.value.length;
@@ -3760,6 +3772,10 @@
 
         const avgHeight = unuseHeight / rowNum.value;
         rowHeights.value = new Array(rowsData.value.length).fill(avgHeight);
+
+        if (config.rowBg) {
+          rowBg.value = config.rowBg;
+        }
       };
 
       vue.onMounted(() => {
@@ -3778,7 +3794,9 @@
         columnsWidth,
         rowsData,
         rowHeights,
-        rowStyle
+        rowStyle,
+        aligns,
+        rowBg
       };
     }
 
@@ -3794,14 +3812,17 @@
       class: "base-scroll-list-header",
       style: {
         backgroundColor: $setup.actualConfig.headerBg,
-        height: $setup.actualConfig.headerHeight + 'px'
+        height: $setup.actualConfig.headerHeight + 'px',
+        fontSize: $setup.actualConfig.headerFontSize + 'px',
+        color: $setup.actualConfig.headerFontColor
       }
     }, [(vue.openBlock(true), vue.createBlock(vue.Fragment, null, vue.renderList($setup.headerData, (item, index) => {
       return vue.openBlock(), vue.createBlock("div", {
         class: "header-item base-scroll-list-text",
         key: item + index,
         style: { ...$setup.headerStyle[index],
-          width: `${$setup.columnsWidth[index]}px`
+          width: `${$setup.columnsWidth[index]}px`,
+          textAlign: $setup.aligns[index]
         },
         innerHTML: item
       }, null, 12
@@ -3816,7 +3837,10 @@
         class: "base-scroll-list-rows",
         key: rowIndex,
         style: {
-          height: `${$setup.rowHeights[rowIndex]}px`
+          height: `${$setup.rowHeights[rowIndex]}px`,
+          backgroundColor: rowIndex % 2 === 0 ? $setup.rowBg[1] : $setup.rowBg[0],
+          fontSize: $setup.actualConfig.rowFontSize + 'px',
+          color: $setup.actualConfig.rowFontColor
         }
       }, [(vue.openBlock(true), vue.createBlock(vue.Fragment, null, vue.renderList(row, (col, colIndex) => {
         return vue.openBlock(), vue.createBlock("div", {
@@ -3824,6 +3848,7 @@
           key: colIndex,
           style: {
             width: `${$setup.columnsWidth[colIndex]}px`,
+            textAlign: $setup.aligns[colIndex],
             ...$setup.rowStyle[colIndex]
           },
           innerHTML: col
@@ -3842,7 +3867,7 @@
     , ["id"]);
   });
 
-  var css_248z = ".base-scroll-list[data-v-5812e294] {\n  width: 100%;\n  height: 100%; }\n  .base-scroll-list[data-v-5812e294] .base-scroll-list-text[data-v-5812e294] {\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    padding: 0 10px;\n    box-sizing: border-box; }\n  .base-scroll-list[data-v-5812e294] .base-scroll-list-header[data-v-5812e294] {\n    display: flex;\n    font-size: 15px;\n    align-items: center; }\n  .base-scroll-list[data-v-5812e294] .base-scroll-list-rows[data-v-5812e294] {\n    display: flex;\n    align-items: center; }\n    .base-scroll-list[data-v-5812e294] .base-scroll-list-rows[data-v-5812e294] .base-scroll-list-columns[data-v-5812e294] {\n      font-size: 28px; }\n";
+  var css_248z = ".base-scroll-list[data-v-5812e294] {\n  width: 100%;\n  height: 100%; }\n  .base-scroll-list[data-v-5812e294] .base-scroll-list-text[data-v-5812e294] {\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    padding: 0 10px;\n    box-sizing: border-box; }\n  .base-scroll-list[data-v-5812e294] .base-scroll-list-header[data-v-5812e294] {\n    display: flex;\n    font-size: 15px;\n    align-items: center; }\n  .base-scroll-list[data-v-5812e294] .base-scroll-list-rows[data-v-5812e294] {\n    display: flex;\n    align-items: center; }\n";
   styleInject(css_248z);
 
   script.render = render;
