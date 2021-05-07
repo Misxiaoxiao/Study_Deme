@@ -44,6 +44,7 @@ export default {
       headerFontColor,
       rowFontSize,
       rowFontColor,
+      rowNum: 10,
       data
     }
 

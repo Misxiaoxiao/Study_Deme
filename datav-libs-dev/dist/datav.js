@@ -3672,6 +3672,8 @@
     headerFontColor: '#000',
     rowFontSize: 28,
     rowFontColor: '#fff',
+    moveNum: 1,
+    duration: 3000,
     // 数据项
     data: []
   };
@@ -3695,11 +3697,15 @@
       } = useScreen(id);
       const columnsWidth = vue.ref([]);
       const rowsData = vue.ref([]);
+      const currentRowsData = vue.ref([]);
+      const currentIndex = vue.ref(0); // 动画指针
+
       const rowNum = vue.ref(defaultConfig.rowNum);
       const rowHeights = vue.ref([]);
       const rowStyle = vue.ref([]);
       const rowBg = vue.ref([]);
       const aligns = vue.ref([]);
+      let avgHeight; // 行高
 
       const handleHeader = config => {
         const _headerData = cloneDeep_1(config.header);
@@ -3753,7 +3759,23 @@
         columnsWidth.value = _columnWidth;
         headerData.value = _headerData;
         headerStyle.value = _headerStyle;
-        rowsData.value = _rowsData;
+        const {
+          rowNum
+        } = config;
+
+        if (_rowsData.length >= rowNum && _rowsData.length < rowNum * 2) {
+          const newRowData = [..._rowsData, ..._rowsData];
+          rowsData.value = newRowData.map((item, index) => ({
+            data: item,
+            rowIndex: index
+          }));
+        } else {
+          rowsData.value = _rowsData.map((item, index) => ({
+            data: item,
+            rowIndex: index
+          }));
+        }
+
         rowStyle.value = _rowStyle;
         aligns.value = _aligns;
       };
@@ -3766,16 +3788,53 @@
         rowNum.value = config.rowNum;
         const unuseHeight = height.value - headerHeight; // 如果 rowNum 大于实际数据长度，则以实际长度为准
 
-        if (rowNum.value < rowsData.value.length) {
+        if (rowNum.value > rowsData.value.length) {
           rowNum.value = rowsData.value.length;
         }
 
-        const avgHeight = unuseHeight / rowNum.value;
-        rowHeights.value = new Array(rowsData.value.length).fill(avgHeight);
+        avgHeight = unuseHeight / rowNum.value;
+        rowHeights.value = new Array(rowNum.value).fill(avgHeight);
 
         if (config.rowBg) {
           rowBg.value = config.rowBg;
         }
+      };
+
+      const startAnimation = async () => {
+        const config = actualConfig.value;
+        const {
+          rowNum,
+          moveNum,
+          duration
+        } = config;
+        const totalLength = rowsData.value.length;
+        if (totalLength < rowNum) return;
+        const index = currentIndex.value;
+
+        const _rowsData = cloneDeep_1(rowsData.value); // 讲数据重新进行头尾连接
+
+
+        const rows = _rowsData.slice(index);
+
+        rows.push(..._rowsData.slice(0, index));
+        currentRowsData.value = rows; // 先将所有行的高度还原
+
+        rowHeights.value = new Array(totalLength).fill(avgHeight);
+        const waitTime = 300;
+        await new Promise(resolve => setTimeout(resolve, waitTime)); // 将 moveNum 的行高度设置为 0
+
+        rowHeights.value.splice(0, moveNum, ...new Array(moveNum).fill(0));
+        currentIndex.value += moveNum; // 是否到达最后一组数据
+
+        const isLast = currentIndex.value - totalLength;
+
+        if (isLast >= 0) {
+          currentIndex.value = isLast;
+        } // sleep
+
+
+        await new Promise(resolve => setTimeout(resolve, duration - waitTime));
+        await startAnimation();
       };
 
       vue.onMounted(() => {
@@ -3785,6 +3844,7 @@
         handleHeader(_actualConfig);
         handleRows(_actualConfig);
         actualConfig.value = _actualConfig;
+        startAnimation();
       });
       return {
         id,
@@ -3796,6 +3856,8 @@
         rowHeights,
         rowStyle,
         aligns,
+        currentRowsData,
+        height,
         rowBg
       };
     }
@@ -3832,19 +3894,25 @@
     /* KEYED_FRAGMENT */
     ))], 4
     /* STYLE */
-    ), (vue.openBlock(true), vue.createBlock(vue.Fragment, null, vue.renderList($setup.rowsData, (row, rowIndex) => {
+    ), vue.createVNode("div", {
+      class: "base-scroll-list-rows-wrapper",
+      style: {
+        height: +$setup.height - $setup.actualConfig.headerHeight + 'px'
+      }
+    }, [(vue.openBlock(true), vue.createBlock(vue.Fragment, null, vue.renderList($setup.currentRowsData, (row, rowIndex) => {
       return vue.openBlock(), vue.createBlock("div", {
         class: "base-scroll-list-rows",
-        key: rowIndex,
+        key: row.rowIndex,
         style: {
           height: `${$setup.rowHeights[rowIndex]}px`,
-          backgroundColor: rowIndex % 2 === 0 ? $setup.rowBg[1] : $setup.rowBg[0],
+          lineHeight: `${$setup.rowHeights[rowIndex]}px`,
+          backgroundColor: row.rowIndex % 2 === 0 ? $setup.rowBg[1] : $setup.rowBg[0],
           fontSize: $setup.actualConfig.rowFontSize + 'px',
           color: $setup.actualConfig.rowFontColor
         }
-      }, [(vue.openBlock(true), vue.createBlock(vue.Fragment, null, vue.renderList(row, (col, colIndex) => {
+      }, [(vue.openBlock(true), vue.createBlock(vue.Fragment, null, vue.renderList(row.data, (col, colIndex) => {
         return vue.openBlock(), vue.createBlock("div", {
-          class: "base-scroll-list-columns",
+          class: "base-scroll-list-columns base-scroll-list-text",
           key: colIndex,
           style: {
             width: `${$setup.columnsWidth[colIndex]}px`,
@@ -3862,12 +3930,14 @@
       );
     }), 128
     /* KEYED_FRAGMENT */
-    ))], 8
+    ))], 4
+    /* STYLE */
+    )], 8
     /* PROPS */
     , ["id"]);
   });
 
-  var css_248z = ".base-scroll-list[data-v-5812e294] {\n  width: 100%;\n  height: 100%; }\n  .base-scroll-list[data-v-5812e294] .base-scroll-list-text[data-v-5812e294] {\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    padding: 0 10px;\n    box-sizing: border-box; }\n  .base-scroll-list[data-v-5812e294] .base-scroll-list-header[data-v-5812e294] {\n    display: flex;\n    font-size: 15px;\n    align-items: center; }\n  .base-scroll-list[data-v-5812e294] .base-scroll-list-rows[data-v-5812e294] {\n    display: flex;\n    align-items: center; }\n";
+  var css_248z = ".base-scroll-list[data-v-5812e294] {\n  width: 100%;\n  height: 100%; }\n  .base-scroll-list[data-v-5812e294] .base-scroll-list-text[data-v-5812e294] {\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    padding: 0 10px;\n    box-sizing: border-box; }\n  .base-scroll-list[data-v-5812e294] .base-scroll-list-header[data-v-5812e294] {\n    display: flex;\n    font-size: 15px;\n    align-items: center; }\n  .base-scroll-list[data-v-5812e294] .base-scroll-list-rows-wrapper[data-v-5812e294] {\n    overflow: hidden; }\n    .base-scroll-list[data-v-5812e294] .base-scroll-list-rows-wrapper[data-v-5812e294] .base-scroll-list-rows[data-v-5812e294] {\n      display: flex;\n      align-items: center;\n      transition: all 0.3s linear; }\n";
   styleInject(css_248z);
 
   script.render = render;
