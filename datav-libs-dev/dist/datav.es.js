@@ -3656,6 +3656,8 @@ const defaultConfig = {
   headerIndexStyle: {
     width: 50
   },
+  // 序号列的数据内容
+  headerIndexData: [],
   rowStyle: [],
   rowIndexStyle: {},
   rowNum: 5,
@@ -3698,6 +3700,7 @@ var script = {
     const rowStyle = ref([]);
     const rowBg = ref([]);
     const aligns = ref([]);
+    const isAnimationStart = ref(true);
     let avgHeight; // 行高
 
     const handleHeader = config => {
@@ -3722,8 +3725,12 @@ var script = {
 
         _aligns.unshift('center');
 
-        _rowsData.forEach((_, index) => {
-          _rowsData[index].unshift(index + 1);
+        _rowsData.forEach((row, index) => {
+          if (config.headerIndexData && config.headerIndexData.length > 0 && config.headerIndexData[index]) {
+            row.unshift(config.headerIndexData[index]);
+          } else {
+            row.unshift(index + 1);
+          }
         });
       } // 动态计算 header 中每一列宽度
 
@@ -3794,6 +3801,7 @@ var script = {
     };
 
     const startAnimation = async () => {
+      if (!isAnimationStart) return;
       const config = actualConfig.value;
       const {
         rowNum,
@@ -3814,6 +3822,7 @@ var script = {
 
       rowHeights.value = new Array(totalLength).fill(avgHeight);
       const waitTime = 300;
+      if (!isAnimationStart) return;
       await new Promise(resolve => setTimeout(resolve, waitTime)); // 将 moveNum 的行高度设置为 0
 
       rowHeights.value.splice(0, moveNum, ...new Array(moveNum).fill(0));
@@ -3826,18 +3835,31 @@ var script = {
       } // sleep
 
 
+      if (!isAnimationStart) return;
       await new Promise(resolve => setTimeout(resolve, duration - waitTime));
+      if (!isAnimationStart) return;
       await startAnimation();
     };
 
-    onMounted(() => {
+    const stopAnimation = () => {
+      isAnimationStart.value = false;
+    };
+
+    const update = () => {
+      stopAnimation();
+
       const _actualConfig = assign_1(defaultConfig, props.config);
 
       rowsData.value = _actualConfig.data || [];
       handleHeader(_actualConfig);
       handleRows(_actualConfig);
       actualConfig.value = _actualConfig;
+      isAnimationStart.value = true;
       startAnimation();
+    };
+
+    watch(() => props.config, () => {
+      update();
     });
     return {
       id,
@@ -3930,7 +3952,7 @@ const render = /*#__PURE__*/_withId((_ctx, _cache, $props, $setup, $data, $optio
   , ["id"]);
 });
 
-var css_248z = ".base-scroll-list[data-v-5812e294] {\n  width: 100%;\n  height: 100%; }\n  .base-scroll-list[data-v-5812e294] .base-scroll-list-text[data-v-5812e294] {\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    padding: 0 10px;\n    box-sizing: border-box; }\n  .base-scroll-list[data-v-5812e294] .base-scroll-list-header[data-v-5812e294] {\n    display: flex;\n    font-size: 15px;\n    align-items: center; }\n  .base-scroll-list[data-v-5812e294] .base-scroll-list-rows-wrapper[data-v-5812e294] {\n    overflow: hidden; }\n    .base-scroll-list[data-v-5812e294] .base-scroll-list-rows-wrapper[data-v-5812e294] .base-scroll-list-rows[data-v-5812e294] {\n      display: flex;\n      align-items: center;\n      transition: all 0.3s linear; }\n";
+var css_248z = ".base-scroll-list[data-v-5812e294] {\n  width: 100%;\n  height: 100%; }\n  .base-scroll-list[data-v-5812e294] .base-scroll-list-text[data-v-5812e294] {\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    box-sizing: border-box; }\n  .base-scroll-list[data-v-5812e294] .base-scroll-list-header[data-v-5812e294] {\n    display: flex;\n    font-size: 15px;\n    align-items: center; }\n  .base-scroll-list[data-v-5812e294] .base-scroll-list-rows-wrapper[data-v-5812e294] {\n    overflow: hidden; }\n    .base-scroll-list[data-v-5812e294] .base-scroll-list-rows-wrapper[data-v-5812e294] .base-scroll-list-rows[data-v-5812e294] {\n      display: flex;\n      align-items: center;\n      transition: all 0.3s linear; }\n      .base-scroll-list[data-v-5812e294] .base-scroll-list-rows-wrapper[data-v-5812e294] .base-scroll-list-rows[data-v-5812e294] .base-scroll-list-columns[data-v-5812e294] {\n        height: 100%; }\n";
 styleInject(css_248z);
 
 script.render = render;

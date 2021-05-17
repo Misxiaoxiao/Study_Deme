@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
 import useScreen from '../../hooks/useScreen'
 import cloneDeep from 'lodash/cloneDeep'
@@ -75,6 +75,8 @@ const defaultConfig = {
   headerIndexStyle: {
     width: 50
   },
+  // 序号列的数据内容
+  headerIndexData: [],
   rowStyle: [],
   rowIndexStyle: {},
   rowNum: 5,
@@ -114,6 +116,8 @@ export default {
     const rowStyle = ref([])
     const rowBg = ref([])
     const aligns = ref([])
+    const isAnimationStart = ref(true)
+
     let avgHeight // 行高
 
     const handleHeader = (config) => {
@@ -129,8 +133,12 @@ export default {
         _headerStyle.unshift(config.headerIndexStyle)
         _rowStyle.unshift(config.rowIndexStyle)
         _aligns.unshift('center')
-        _rowsData.forEach((_, index) => {
-          _rowsData[index].unshift(index + 1)
+        _rowsData.forEach((row, index) => {
+          if (config.headerIndexData && config.headerIndexData.length > 0 && config.headerIndexData[index]) {
+            row.unshift(config.headerIndexData[index])
+          } else {
+            row.unshift(index + 1)
+          }
         })
       }
 
@@ -190,6 +198,7 @@ export default {
     }
 
     const startAnimation = async () => {
+      if (!isAnimationStart) return
       const config = actualConfig.value
       const { rowNum, moveNum, duration } = config
       const totalLength = rowsData.value.length
@@ -203,6 +212,8 @@ export default {
       // 先将所有行的高度还原
       rowHeights.value = new Array(totalLength).fill(avgHeight)
       const waitTime = 300
+
+      if (!isAnimationStart) return
       await new Promise(resolve => setTimeout(resolve, waitTime))
       // 将 moveNum 的行高度设置为 0
       rowHeights.value.splice(0, moveNum, ...new Array(moveNum).fill(0))
@@ -214,18 +225,30 @@ export default {
         currentIndex.value = isLast
       }
       // sleep
+      if (!isAnimationStart) return
       await new Promise(resolve => setTimeout(resolve, duration - waitTime))
+      if (!isAnimationStart) return
       await startAnimation()
     }
 
-    onMounted(() => {
+    const stopAnimation = () => {
+      isAnimationStart.value = false
+    }
+
+    const update = () => {
+      stopAnimation()
       const _actualConfig = assign(defaultConfig, props.config)
       rowsData.value = _actualConfig.data || []
       handleHeader(_actualConfig)
       handleRows(_actualConfig)
       actualConfig.value = _actualConfig
 
+      isAnimationStart.value = true
       startAnimation()
+    }
+
+    watch(() => props.config, () => {
+      update()
     })
 
     return {
@@ -254,7 +277,6 @@ export default {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding: 0 10px;
     box-sizing: border-box;
   }
   .base-scroll-list-header {
@@ -270,6 +292,7 @@ export default {
       align-items: center;
       transition: all 0.3s linear;
       .base-scroll-list-columns {
+        height: 100%;
       }
     }
   }
