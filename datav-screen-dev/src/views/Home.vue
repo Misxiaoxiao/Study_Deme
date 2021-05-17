@@ -60,7 +60,7 @@
             </div>
             <div class="right-right">
               <div class="right-right1">
-                <sales-list />
+                <sales-list :data="salesListData" />
               </div>
               <div class="right-right2"></div>
             </div>

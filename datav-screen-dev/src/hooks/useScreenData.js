@@ -40,6 +40,7 @@ export default function () {
   const riderData = ref(riderMockData)
   const hotCategoryData = ref(hotCategoryMockData)
   const headerData = ref(headerMockData)
+  const salesListData = ref(salesListMockData)
 
   let task
 
@@ -125,6 +126,7 @@ export default function () {
     genderData,
     riderData,
     hotCategoryData,
-    headerData
+    headerData,
+    salesListData
   }
 }
