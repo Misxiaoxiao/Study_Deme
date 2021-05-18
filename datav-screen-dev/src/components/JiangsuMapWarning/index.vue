@@ -6,7 +6,7 @@
 
 <script>
 import { onMounted, onUnmounted, ref } from 'vue'
-import echarts from 'echarts'
+import * as echarts from 'echarts'
 import cloneDeep from 'lodash/cloneDeep'
 
 export default {

@@ -51,7 +51,9 @@
           </div>
           <div class="right-bottom">
             <div class="right-left">
-              <div class="right-left1"></div>
+              <div class="right-left1">
+                <jiangsu-map-warning />
+              </div>
               <div class="right-left2">
                 <transform-category :data="['订单量', '销售额', '用户数', '退单量']" :color="['rgb(178, 209, 126)', 'rgb(116, 116, 49)']" />
               </div>
@@ -84,10 +86,11 @@ import HotCategory from '../components/HotCategory'
 import CenterHeader from '../components/CenterHeader'
 import TransformCategory from '../components/TransformCategory'
 import SalesList from '../components/SalesList'
+import JiangsuMapWarning from '../components/JiangsuMapWarning'
 
 export default {
   name: 'Home',
-  components: { TopHeader, TotalUser, AverageAge, TotalDevice, TotalGender, TotalRider, HotCategory, CenterHeader, TransformCategory, SalesList },
+  components: { TopHeader, TotalUser, AverageAge, TotalDevice, TotalGender, TotalRider, HotCategory, CenterHeader, TransformCategory, SalesList, JiangsuMapWarning },
   setup () {
     const loading = ref(true)
 

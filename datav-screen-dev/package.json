@@ -9,7 +9,8 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
-    "echarts": "4.9.0",
+    "echarts": "^5.1.1",
+    "echarts-gl": "^2.0.4",
     "lodash": "^4.17.21",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-alpha.6",
