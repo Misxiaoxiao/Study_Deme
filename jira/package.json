@@ -65,5 +65,8 @@
   "lint-staged": {
     "*.{js,css,md,ts,tsx}": "prettier --write",
     "*.{js,css,md}": "prettier --write"
+  },
+  "msw": {
+    "workerDirectory": "public"
   }
 }
