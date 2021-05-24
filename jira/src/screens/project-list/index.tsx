@@ -12,7 +12,7 @@ export const ProjectListScreen: React.FC = () => {
     name: '',
     personId: ''
   })
-  const debounceParam = useDebounce(param, 2000)
+  const debounceParam = useDebounce(param)
 
   const [list, setList] = useState([])
   const [users, setUsers] = useState([])

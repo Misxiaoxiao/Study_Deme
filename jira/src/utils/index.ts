@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react"
 
-export function isFalsy (val: any) {
+export interface CObject extends Object {
+  [k: string]: any;
+}
+
+export function isFalsy (val: unknown): boolean {
   return val === 0 ? false : !val
 }
 
-export function cleanObject (object: any) {
+export function cleanObject (object: CObject) {
   const result = {...object}
   Object.keys(result).forEach(key => {
     const value = result[key]
@@ -21,7 +25,7 @@ export function useMount (callback: Function) {
   }, [])
 }
 
-export function useDebounce (value: any, delay = 300) {
+export function useDebounce<T> (value: T, delay: number = 300) {
   const [ debounceValue, setDebounceValue ] = useState(value)
   useEffect(() => {
     const handler = setTimeout(() => {

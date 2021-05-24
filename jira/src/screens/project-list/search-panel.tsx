@@ -1,6 +1,24 @@
 import React from 'react'
+import type { Dispatch, SetStateAction } from 'react'
 
-export const SearchPanel: React.FC<any> = ({param, setParam, users}) => {
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  title: string;
+  organization: string;
+}
+
+interface SearchPanelProps {
+  users: User[],
+  param: {
+    name: string;
+    personId: string;
+  },
+  setParam: Dispatch<SetStateAction<SearchPanelProps['param']>>
+}
+
+export const SearchPanel: React.FC<SearchPanelProps> = ({param, setParam, users}) => {
   return (
     <form>
       <div>
@@ -14,7 +32,7 @@ export const SearchPanel: React.FC<any> = ({param, setParam, users}) => {
         })}>
           <option value={''}>负责人</option>
           {
-            users.map((user: any) => <option value={user.id} key={user.id}>{user.name}</option>)
+            users.map((user: User) => <option value={user.id} key={user.id}>{user.name}</option>)
           }
         </select>
       </div>
