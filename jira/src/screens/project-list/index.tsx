@@ -5,7 +5,7 @@ import {List} from './list'
 import {SearchPanel} from './search-panel'
 import { cleanObject, useMount, useDebounce } from 'utils'
 
-const apiUrl = process.env.REACT_APP_API_URL
+import { apiUrl } from 'utils/config'
 
 export const ProjectListScreen: React.FC = () => {
   const [param, setParam] = useState({
