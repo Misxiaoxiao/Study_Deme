@@ -12,7 +12,7 @@ interface AuthContextType {
   user: User | null;
   login: (form: AuthForm) => Promise<void>;
   register: (form: AuthForm) => Promise<void>;
-  logout: (form: AuthForm) => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
