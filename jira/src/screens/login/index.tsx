@@ -1,27 +1,10 @@
 import React from 'react'
 import type { FormEvent } from 'react'
 
-import { apiUrl } from 'utils/config'
-
-interface LoginFormParamType {
-  username: string;
-  password: string;
-}
+import { useAuth } from 'context/authContext'
 
 export const LoginScreen: React.FC = () => {
-  const login = (param: LoginFormParamType) => {
-    fetch(`${apiUrl}/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(param)
-    }).then(async response => {
-      if (response.ok) {
-        
-      }
-    })
-  }
+  const { login, user } = useAuth()
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -33,6 +16,9 @@ export const LoginScreen: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit}>
+      {
+        user ? <div>登录成功：用户名：{user?.name}</div> : null
+      }
       <div>
         <label htmlFor="username">用户名</label>
         <input type="text" id={'username'} />
