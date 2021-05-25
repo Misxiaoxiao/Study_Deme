@@ -1,7 +1,9 @@
 import { createContext, useContext, useState } from 'react'
-import * as Auth from 'auth-provider'
+import * as auth from 'auth-provider'
 import type { User } from 'screens/project-list/search-panel'
 import type { ReactNode } from 'react'
+import { http } from 'utils/http'
+import { useMount } from 'utils'
 
 interface AuthForm {
   username: string;
@@ -15,19 +17,33 @@ interface AuthContextType {
   logout: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
-AuthContext.displayName = 'AuthContext'
-
 interface AuthProviderPropsType {
   children: ReactNode
 }
 
+const bootstrapUser = async () => {
+  let user = null
+  const token = auth.getToken()
+  if (token) {
+    const data = await http('me', { token })
+    user = data.user
+  }
+  return user
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined)
+AuthContext.displayName = 'AuthContext'
+
 export const AuthProvider: React.FC<AuthProviderPropsType> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null)
 
-  const login = (form: AuthForm) => Auth.login(form).then(setUser)
-  const register = (form: AuthForm) => Auth.register(form).then(setUser)
-  const logout = () => Auth.logout().then(() => setUser(null))
+  const login = (form: AuthForm) => auth.login(form).then(setUser)
+  const register = (form: AuthForm) => auth.register(form).then(setUser)
+  const logout = () => auth.logout().then(() => setUser(null))
+
+  useMount(() => {
+    bootstrapUser().then(setUser)
+  })
 
   return <AuthContext.Provider value={{ user, login, register, logout }} children={children} />
 }
