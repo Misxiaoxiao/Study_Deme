@@ -1,5 +1,6 @@
 import React from 'react'
-import { Form, Input, Button } from 'antd'
+import { Form, Input } from 'antd'
+import { LongButton } from './index'
 
 import { useAuth } from 'context/authContext'
 import type { AuthForm } from 'context/authContext' 
@@ -20,7 +21,7 @@ export const RegisterScreen: React.FC = () => {
         <Input type="password" id={'password'} placeholder={'密码'} />
       </Form.Item>
       <Form.Item>
-        <Button type={'primary'} htmlType={'submit'} >注册</Button>
+        <LongButton type={'primary'} htmlType={'submit'} >注册</LongButton>
       </Form.Item>
     </Form>
   )
