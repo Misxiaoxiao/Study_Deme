@@ -1,5 +1,6 @@
 import React from 'react'
 import type { Dispatch, SetStateAction } from 'react'
+import { Input, Select } from 'antd'
 
 export interface User {
   id: string;
@@ -23,19 +24,19 @@ export const SearchPanel: React.FC<SearchPanelProps> = ({param, setParam, users}
   return (
     <form>
       <div>
-        <input type="text" value={param.name} onChange={e => setParam({
+        <Input type="text" value={param.name} onChange={e => setParam({
           ...param,
           name: e.target.value
         })} />
-        <select value={param.personId} onChange={e => setParam({
+        <Select value={param.personId} onChange={val => setParam({
           ...param,
-          personId: e.target.value
+          personId: val
         })}>
-          <option value={''}>负责人</option>
+          <Select.Option value={''}>负责人</Select.Option>
           {
-            users.map((user: User) => <option value={user.id} key={user.id}>{user.name}</option>)
+            users.map((user: User) => <Select.Option value={user.id} key={user.id}>{user.name}</Select.Option>)
           }
-        </select>
+        </Select>
       </div>
     </form>
   )

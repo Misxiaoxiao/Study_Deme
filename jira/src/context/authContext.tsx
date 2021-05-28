@@ -5,7 +5,7 @@ import type { ReactNode } from 'react'
 import { http } from 'utils/http'
 import { useMount } from 'utils'
 
-interface AuthForm {
+export interface AuthForm {
   username: string;
   password: string;
 }
