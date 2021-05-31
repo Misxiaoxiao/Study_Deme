@@ -4,7 +4,7 @@ import React from 'react'
 import type { Dispatch, SetStateAction } from 'react'
 import { Input, Select, Form } from 'antd'
 
-export interface User {
+export interface UserType {
   id: string;
   name: string;
   email: string;
@@ -14,7 +14,7 @@ export interface User {
 }
 
 interface SearchPanelProps {
-  users: User[],
+  users: UserType[],
   param: {
     name: string;
     personId: string;
@@ -38,7 +38,7 @@ export const SearchPanel: React.FC<SearchPanelProps> = ({param, setParam, users}
         })}>
           <Select.Option value={''}>负责人</Select.Option>
           {
-            users.map((user: User) => <Select.Option value={user.id} key={user.id}>{user.name}</Select.Option>)
+            users.map((user: UserType) => <Select.Option value={user.id} key={user.id}>{user.name}</Select.Option>)
           }
         </Select>
       </Form.Item>

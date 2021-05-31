@@ -1,11 +1,11 @@
-import { User } from "screens/project-list/search-panel"
+import { UserType } from "screens/project-list/search-panel"
 import { apiUrl } from 'utils/config'
 
 const localStorageKey = '__auth_provider_token__'
 
 export const getToken = () => window.localStorage.getItem(localStorageKey)
 
-export const handleUserResponse = ({user}: {user: User}) => {
+export const handleUserResponse = ({user}: {user: UserType}) => {
   window.localStorage.setItem(localStorageKey, user.token || '')
   return user
 }

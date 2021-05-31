@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from 'react'
 import * as auth from 'auth-provider'
-import type { User } from 'screens/project-list/search-panel'
+import type { UserType } from 'screens/project-list/search-panel'
 import type { ReactNode } from 'react'
 import { http } from 'utils/http'
 import { useMount } from 'utils'
@@ -11,7 +11,7 @@ export interface AuthForm {
 }
 
 interface AuthContextType {
-  user: User | null;
+  user: UserType | null;
   login: (form: AuthForm) => Promise<void>;
   register: (form: AuthForm) => Promise<void>;
   logout: () => Promise<void>;
@@ -35,7 +35,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 AuthContext.displayName = 'AuthContext'
 
 export const AuthProvider: React.FC<AuthProviderPropsType> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<UserType | null>(null)
 
   const login = (form: AuthForm) => auth.login(form).then(setUser)
   const register = (form: AuthForm) => auth.register(form).then(setUser)

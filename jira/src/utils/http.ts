@@ -2,13 +2,17 @@ import { apiUrl } from './config'
 import qs from 'qs'
 import * as auth from 'auth-provider'
 import { useAuth } from 'context/authContext'
+import { useCallback } from 'react'
 
 interface ConfigType extends RequestInit {
   data?: object;
   token?: string; 
 }
 
-export const http = async (endpoint: string, { data, token, headers, ...customConfig }: ConfigType = {}) => {
+export const http = async (
+  endpoint: string,
+  { data, token, headers, ...customConfig }: ConfigType = {}
+) => {
   const config = {
     method: 'GET',
     headers: {
@@ -44,5 +48,9 @@ export const http = async (endpoint: string, { data, token, headers, ...customCo
 export const useHttp = () => {
   const { user } = useAuth()
 
-  return (...[endpoint, config]: Parameters<typeof http>) => http(endpoint, {...config, token: user?.token})
+  return useCallback(
+    (...[endpoint, config]: Parameters<typeof http>) =>
+      http(endpoint, {...config, token: user?.token}),
+      [user?.token]
+  )
 }

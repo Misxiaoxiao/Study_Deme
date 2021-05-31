@@ -8,11 +8,15 @@ export function isFalsy (val: unknown): boolean {
   return val === 0 ? false : !val
 }
 
+export function isVoid (value: unknown): boolean {
+  return value === undefined || value === null || value === ''
+}
+
 export function cleanObject (object: CObject) {
   const result = {...object}
   Object.keys(result).forEach(key => {
     const value = result[key]
-    if (isFalsy(value)) {
+    if (isVoid(value)) {
       delete result[key]
     }
   })

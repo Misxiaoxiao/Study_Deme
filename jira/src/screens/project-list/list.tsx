@@ -1,10 +1,11 @@
 import React from 'react'
-import type { User } from './search-panel'
+import type { UserType } from './search-panel'
 
 import { Table } from 'antd'
+import type { TableProps } from 'antd'
 import dayjs from 'dayjs'
 
-interface Project {
+export interface ProjectType {
   id: string;
   name: string;
   personId: string;
@@ -13,14 +14,14 @@ interface Project {
   created: number;
 }
 
-interface ListProps {
-  list: Project[],
-  users: User[]
+interface ListProps extends TableProps<ProjectType> {
+  users: UserType[]
 }
 
-export const List: React.FC<ListProps> = ({ list, users }) => {
+export const List: React.FC<ListProps> = ({ users, ...props }) => {
 
   return <Table
+    rowKey={row => row.id}
     pagination={false}
     columns={[
       {
@@ -36,7 +37,7 @@ export const List: React.FC<ListProps> = ({ list, users }) => {
         title: '负责人',
         render (value, project) {
           return <span>
-            {users.find((user: User) => user.id === project.personId)?.name}
+            {users.find((user: UserType) => user.id === project.personId)?.name}
           </span>
         }
       },
@@ -49,6 +50,6 @@ export const List: React.FC<ListProps> = ({ list, users }) => {
         }
       }
     ]}
-    dataSource={list}
+    {...props}
   />
 }
