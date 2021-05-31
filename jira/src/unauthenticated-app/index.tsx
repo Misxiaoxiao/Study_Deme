@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Card, Divider, Button } from 'antd'
+import { Card, Divider, Button, Typography } from 'antd'
 import { LoginScreen } from './login'
 import { RegisterScreen } from './register'
 
@@ -10,6 +10,7 @@ import right from 'assets/right.svg'
 
 export const UnauthenticatedApp: React.FC = () => {
   const [isRegister, setIsRegister] = useState(false)
+  const [error, setError] = useState<Error | null>(null)
 
   return <Container>
     <Header />
@@ -18,7 +19,8 @@ export const UnauthenticatedApp: React.FC = () => {
       <Title>
         { isRegister ? '请注册' : '请登录' }
       </Title>
-      { isRegister ? <RegisterScreen /> : <LoginScreen /> }
+      { error ? <Typography.Text type="danger">{error.message}</Typography.Text> : null }
+      { isRegister ? <RegisterScreen onError={setError} /> : <LoginScreen onError={setError} /> }
       <Divider />
       <Button
         type={'link'}
