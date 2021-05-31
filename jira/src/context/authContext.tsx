@@ -1,9 +1,11 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext } from 'react'
 import * as auth from 'auth-provider'
 import type { UserType } from 'screens/project-list/search-panel'
 import type { ReactNode } from 'react'
 import { http } from 'utils/http'
 import { useMount } from 'utils'
+import { useAsync } from 'utils/useAsync'
+import { FullPageLoading, FullPageErrorFallback } from 'components/lib'
 
 export interface AuthForm {
   username: string;
@@ -35,15 +37,25 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 AuthContext.displayName = 'AuthContext'
 
 export const AuthProvider: React.FC<AuthProviderPropsType> = ({ children }) => {
-  const [user, setUser] = useState<UserType | null>(null)
+  const { data: user, error, isLoading, isIdle, isError, run, setData: setUser } = useAsync<UserType | null>()
+
+  // const [user, setUser] = useState<UserType | null>(null)
 
   const login = (form: AuthForm) => auth.login(form).then(setUser)
   const register = (form: AuthForm) => auth.register(form).then(setUser)
   const logout = () => auth.logout().then(() => setUser(null))
 
   useMount(() => {
-    bootstrapUser().then(setUser)
+    run(bootstrapUser())
   })
+
+  if (isIdle || isLoading) {
+    return <FullPageLoading />
+  }
+
+  if (isError) {
+    return <FullPageErrorFallback error={error} />
+  }
 
   return <AuthContext.Provider value={{ user, login, register, logout }} children={children} />
 }
