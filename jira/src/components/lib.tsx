@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import styled from "@emotion/styled"
 import { Spin, Typography } from 'antd'
 import { DevTools } from 'jira-dev-tool'
@@ -36,7 +36,7 @@ export const FullPageErrorFallback = ({ error }: { error: Error | null }) => <Fu
 </FullPage>
 
 export const useDocumentTitle = (title: string, keepOnUnmount: boolean = true) => {
-  const oldTitle = document.title
+  const oldTitle = useRef(document.title).current
 
   useEffect(() => {
     document.title = title
@@ -48,5 +48,5 @@ export const useDocumentTitle = (title: string, keepOnUnmount: boolean = true) =
         document.title = oldTitle
       }
     }
-  }, [])
+  }, [keepOnUnmount, oldTitle])
 }
