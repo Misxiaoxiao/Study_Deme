@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Card, Divider, Button, Typography } from 'antd'
 import { LoginScreen } from './login'
 import { RegisterScreen } from './register'
+import { useDocumentTitle } from 'components/lib'
 
 import styled from '@emotion/styled'
 import logo from 'assets/logo.svg'
@@ -11,6 +12,7 @@ import right from 'assets/right.svg'
 export const UnauthenticatedApp: React.FC = () => {
   const [isRegister, setIsRegister] = useState(false)
   const [error, setError] = useState<Error | null>(null)
+  useDocumentTitle('请登录注册以继续')
 
   return <Container>
     <Header />

@@ -1,4 +1,4 @@
-// import React from 'react'
+import { useEffect } from 'react'
 import styled from "@emotion/styled"
 import { Spin, Typography } from 'antd'
 import { DevTools } from 'jira-dev-tool'
@@ -34,3 +34,19 @@ export const FullPageErrorFallback = ({ error }: { error: Error | null }) => <Fu
   <DevTools />
   <Typography.Text type='danger' >{ error?.message }</Typography.Text>
 </FullPage>
+
+export const useDocumentTitle = (title: string, keepOnUnmount: boolean = true) => {
+  const oldTitle = document.title
+
+  useEffect(() => {
+    document.title = title
+  }, [title])
+
+  useEffect(() => {
+    return () => {
+      if (!keepOnUnmount) {
+        document.title = oldTitle
+      }
+    }
+  }, [])
+}

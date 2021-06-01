@@ -1,5 +1,5 @@
 import React from 'react'
-import type { ReactNode, ReactElement, PropsWithChildren } from 'react'
+import type { ReactElement, PropsWithChildren } from 'react'
 
 type FallBackRenderType = (props: { error: Error | null }) => ReactElement
 
