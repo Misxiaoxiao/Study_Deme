@@ -17,9 +17,9 @@ export const UnauthenticatedApp: React.FC = () => {
   return <Container>
     <Header />
     <Background />
-    <Button onClick={() => {
+    {/* <Button onClick={() => {
       throw new Error('点击抛出一个异常')
-    }}>抛出异常</Button>
+    }}>抛出异常</Button> */}
     <ShadowCard>
       <Title>
         { isRegister ? '请注册' : '请登录' }

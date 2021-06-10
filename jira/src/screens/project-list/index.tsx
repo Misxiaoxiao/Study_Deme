@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from '@emotion/styled'
 
 import {List} from './list'
@@ -7,14 +7,11 @@ import {SearchPanel} from './search-panel'
 import { useProjects } from 'utils/project'
 import { Typography } from 'antd'
 import { useUser } from 'utils/user'
+import { useUrlQueryParam } from 'utils/url'
 
 
 export const ProjectListScreen: React.FC = () => {
-  const [param, setParam] = useState({
-    name: '',
-    personId: ''
-  })
-
+  const [param, setParam] = useUrlQueryParam(['name', 'personId'])
   const { error, isLoading, data: list } = useProjects(param)
   const { data: users } = useUser()
 
@@ -27,6 +24,8 @@ export const ProjectListScreen: React.FC = () => {
     </Container>
   )
 }
+
+// ProjectListScreen.whyDidYouRender = true
 
 const Container = styled.div`
   padding: 3.2rem;

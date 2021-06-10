@@ -1,7 +1,6 @@
 /** @jsxImportSource @emotion/react */
 // import { jsx } from '@emotion/react'
 import React from 'react'
-import type { Dispatch, SetStateAction } from 'react'
 import { Input, Select, Form } from 'antd'
 
 export interface UserType {
@@ -19,7 +18,7 @@ interface SearchPanelProps {
     name: string;
     personId: string;
   },
-  setParam: Dispatch<SetStateAction<SearchPanelProps['param']>>
+  setParam: (param: SearchPanelProps['param']) => void
 }
 
 export const SearchPanel: React.FC<SearchPanelProps> = ({param, setParam, users}) => {
@@ -38,7 +37,7 @@ export const SearchPanel: React.FC<SearchPanelProps> = ({param, setParam, users}
         })}>
           <Select.Option value={''}>负责人</Select.Option>
           {
-            users.map((user: UserType) => <Select.Option value={user.id} key={user.id}>{user.name}</Select.Option>)
+            users.map((user: UserType) => <Select.Option value={String(user.id)} key={user.id}>{user.name}</Select.Option>)
           }
         </Select>
       </Form.Item>
