@@ -9,11 +9,47 @@ export const useProjects = (params?: Partial<ProjectType>) => {
   const debounceParam = useDebounce(params)
   const { run, ...result } = useAsync<ProjectType[]>()
 
+  const fetchProjects = () => client('projects', {data: cleanObject(debounceParam || {})})
+
   useEffect(() => {
-    run(client('projects', {data: cleanObject(debounceParam || {})}))
+    run(fetchProjects(), {
+      retry: fetchProjects
+    })
   }, [debounceParam])
 
   return {
     ...result
+  }
+}
+
+export const useEditProject = () => {
+  const { run, ...asyncResult } = useAsync()
+  const client = useHttp()
+  const mutate = (params: Partial<ProjectType>) => {
+    return run(client(`projects/${params.id}`, {
+      data: params,
+      method: 'PATCH'
+    }))
+  }
+
+  return {
+    mutate,
+    ...asyncResult
+  }
+}
+
+export const useAddProject = () => {
+  const { run, ...asyncResult } = useAsync()
+  const client = useHttp()
+  const mutate = (params: Partial<ProjectType>) => {
+    run(client(`projects/${params.id}`, {
+      data: params,
+      method: 'POST'
+    }))
+  }
+
+  return {
+    mutate,
+    ...asyncResult
   }
 }

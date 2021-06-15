@@ -14,15 +14,16 @@ export const ProjectListScreen: React.FC = () => {
   useDocumentTitle('项目列表', false)
 
   const [param, setParam] = useProjectSearchParams()
-  const { error, isLoading, data: list } = useProjects(param)
+  const { error, isLoading, data: list, retry } = useProjects(param)
   const { data: users } = useUser()
 
   return (
     <Container>
       <h1>项目列表</h1>
+      <button onClick={retry}>retry</button>
       <SearchPanel param={param} setParam={setParam} users={users || []} />
       {error ? <Typography.Text type="danger">{error.message}</Typography.Text> : null}
-      <List loading={isLoading} dataSource={list || []} users={users || []} />
+      <List refresh={retry} loading={isLoading} dataSource={list || []} users={users || []} />
     </Container>
   )
 }
