@@ -7,11 +7,13 @@ import {SearchPanel} from './search-panel'
 import { useProjects } from 'utils/project'
 import { Typography } from 'antd'
 import { useUser } from 'utils/user'
-import { useUrlQueryParam } from 'utils/url'
-
+import { useProjectSearchParams } from './utils'
+import { useDocumentTitle } from 'components/lib'
 
 export const ProjectListScreen: React.FC = () => {
-  const [param, setParam] = useUrlQueryParam(['name', 'personId'])
+  useDocumentTitle('项目列表', false)
+
+  const [param, setParam] = useProjectSearchParams()
   const { error, isLoading, data: list } = useProjects(param)
   const { data: users } = useUser()
 

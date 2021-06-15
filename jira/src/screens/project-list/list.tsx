@@ -7,9 +7,9 @@ import type { TableProps } from 'antd'
 import dayjs from 'dayjs'
 
 export interface ProjectType {
-  id: string;
+  id: number;
   name: string;
-  personId: string;
+  personId: number | undefined;
   pin: boolean;
   organization: string;
   created: number;
