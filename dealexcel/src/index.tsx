@@ -2,14 +2,18 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 // import App from './App';
-import Test from 'page/Test'
+import { AppProviders } from 'context'
+import HomePage from 'page/home'
+// import Test from 'page/Test'
 import reportWebVitals from './reportWebVitals';
 
 import 'antd/dist/antd.css'
 
 ReactDOM.render(
   <React.StrictMode>
-    <Test />
+    <AppProviders>
+      <HomePage />
+    </AppProviders>
   </React.StrictMode>,
   document.getElementById('root')
 );
