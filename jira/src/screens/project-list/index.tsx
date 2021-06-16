@@ -5,12 +5,16 @@ import {List} from './list'
 import {SearchPanel} from './search-panel'
 
 import { useProjects } from 'utils/project'
-import { Typography } from 'antd'
+import { Typography, Button } from 'antd'
 import { useUser } from 'utils/user'
 import { useProjectSearchParams } from './utils'
-import { useDocumentTitle } from 'components/lib'
+import { Row, useDocumentTitle } from 'components/lib'
 
-export const ProjectListScreen: React.FC = () => {
+interface ProjectListScreenPropsType {
+  setProjectModalOpen: (isOpen: boolean) => void;
+}
+
+export const ProjectListScreen: React.FC<ProjectListScreenPropsType> = (props) => {
   useDocumentTitle('项目列表', false)
 
   const [param, setParam] = useProjectSearchParams()
@@ -19,11 +23,19 @@ export const ProjectListScreen: React.FC = () => {
 
   return (
     <Container>
-      <h1>项目列表</h1>
-      <button onClick={retry}>retry</button>
+      <Row between={true}>
+        <h1>项目列表</h1>
+        <Button onClick={() => props.setProjectModalOpen(true)}>创建项目</Button>
+      </Row>
       <SearchPanel param={param} setParam={setParam} users={users || []} />
       {error ? <Typography.Text type="danger">{error.message}</Typography.Text> : null}
-      <List refresh={retry} loading={isLoading} dataSource={list || []} users={users || []} />
+      <List
+        refresh={retry}
+        loading={isLoading}
+        dataSource={list || []}
+        users={users || []}
+        setProjectModalOpen={props.setProjectModalOpen}
+      />
     </Container>
   )
 }

@@ -26,6 +26,7 @@ export function cleanObject (object: CObject) {
 export function useMount (callback: Function) {
   useEffect(() => {
     callback()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 }
 

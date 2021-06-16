@@ -10,7 +10,7 @@ export const useUser = (param?: Partial<UserType>) => {
 
   useEffect(() => {
     run(client('users', {data: cleanObject(param || {})}))
-  }, [param])
+  }, [param, client, run])
 
   return {
     ...result

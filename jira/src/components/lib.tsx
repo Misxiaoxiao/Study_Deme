@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import styled from "@emotion/styled"
-import { Spin, Typography } from 'antd'
+import { Spin, Typography, Button } from 'antd'
 import { DevTools } from 'jira-dev-tool'
 
 export const Row = styled.div<{
@@ -50,3 +50,7 @@ export const useDocumentTitle = (title: string, keepOnUnmount: boolean = true) =
     }
   }, [keepOnUnmount, oldTitle])
 }
+
+export const ButtonNoPadding = styled(Button)`
+  padding: 0;
+`
