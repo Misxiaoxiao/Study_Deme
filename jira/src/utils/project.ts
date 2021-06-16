@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useCallback } from 'react'
 import { useHttp } from 'utils/http'
 import { useAsync } from 'utils/useAsync'
 import { cleanObject, useDebounce } from 'utils'
@@ -9,13 +9,16 @@ export const useProjects = (params?: Partial<ProjectType>) => {
   const debounceParam = useDebounce(params)
   const { run, ...result } = useAsync<ProjectType[]>()
 
-  const fetchProjects = () => client('projects', {data: cleanObject(debounceParam || {})})
+  const fetchProjects = useCallback(
+    () => client('projects', {data: cleanObject(debounceParam || {})}),
+    [debounceParam, client]
+  )
 
   useEffect(() => {
     run(fetchProjects(), {
       retry: fetchProjects
     })
-  }, [debounceParam])
+  }, [debounceParam, run, fetchProjects])
 
   return {
     ...result
