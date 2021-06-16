@@ -22,7 +22,7 @@ export const IdSelect: React.FC<IdSelectPropsType> = (props) => {
       : null }
     {
       options?.map(
-        option => <Select.Option value={option.id}>{option.name}</Select.Option>
+        option => <Select.Option value={option.id} key={option.id}>{option.name}</Select.Option>
       )
     }
   </Select>
