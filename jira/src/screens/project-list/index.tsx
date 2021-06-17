@@ -5,13 +5,13 @@ import {List} from './list'
 import {SearchPanel} from './search-panel'
 
 import { useProjects } from 'utils/project'
-import { Typography, Button } from 'antd'
+import { Typography } from 'antd'
 import { useUser } from 'utils/user'
 import { useProjectSearchParams } from './utils'
 import { Row, useDocumentTitle } from 'components/lib'
 
 interface ProjectListScreenPropsType {
-  setProjectModalOpen: (isOpen: boolean) => void;
+  projectButton: JSX.Element;
 }
 
 export const ProjectListScreen: React.FC<ProjectListScreenPropsType> = (props) => {
@@ -25,7 +25,7 @@ export const ProjectListScreen: React.FC<ProjectListScreenPropsType> = (props) =
     <Container>
       <Row between={true}>
         <h1>项目列表</h1>
-        <Button onClick={() => props.setProjectModalOpen(true)}>创建项目</Button>
+        {props.projectButton}
       </Row>
       <SearchPanel param={param} setParam={setParam} users={users || []} />
       {error ? <Typography.Text type="danger">{error.message}</Typography.Text> : null}
@@ -34,7 +34,7 @@ export const ProjectListScreen: React.FC<ProjectListScreenPropsType> = (props) =
         loading={isLoading}
         dataSource={list || []}
         users={users || []}
-        setProjectModalOpen={props.setProjectModalOpen}
+        projectButton={props.projectButton}
       />
     </Container>
   )

@@ -21,7 +21,7 @@ export interface ProjectType {
 interface ListProps extends TableProps<ProjectType> {
   users: UserType[];
   refresh?: () => void;
-  setProjectModalOpen: (isOpen: boolean) => void;
+  projectButton: JSX.Element;
 }
 
 export const List: React.FC<ListProps> = ({ users, ...props }) => {
@@ -69,7 +69,7 @@ export const List: React.FC<ListProps> = ({ users, ...props }) => {
         render (value, project) {
           return <Dropdown overlay={<Menu>
             <Menu.Item key={'edit'}>
-              <ButtonNoPadding type={'link'} onClick={() => props.setProjectModalOpen(true)}>编辑</ButtonNoPadding>
+              {/* <ButtonNoPadding type={'link'} onClick={() => props.setProjectModalOpen(true)}>编辑</ButtonNoPadding> */}
             </Menu.Item>
           </Menu>}>
             <ButtonNoPadding type={'link'}>...</ButtonNoPadding>

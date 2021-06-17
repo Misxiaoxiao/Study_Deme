@@ -2,10 +2,9 @@ import React from 'react'
 import { List, Popover, Typography, Divider } from 'antd'
 import { useProjects } from 'utils/project'
 import styled from '@emotion/styled'
-import { ButtonNoPadding } from 'components/lib'
 
 interface ProjectPopoverPropsType {
-  setProjectModalOpen: (isOpen: boolean) => void;
+  projectButton: JSX.Element;
 }
 
 export const ProjectPopover: React.FC<ProjectPopoverPropsType> = (props) => {
@@ -22,7 +21,7 @@ export const ProjectPopover: React.FC<ProjectPopoverPropsType> = (props) => {
       }
     </List>
     <Divider />
-    <ButtonNoPadding type={'link'} onClick={() => props.setProjectModalOpen(true)}>创建项目</ButtonNoPadding>
+    {props.projectButton}
   </ContentContainer>
   
   return <Popover placement={'bottom'} content={content}>
