@@ -68,7 +68,7 @@ export const List: React.FC<ListProps> = ({ users, ...props }) => {
         }
       },
       {
-        render (value, project) {
+        render () {
           return <Dropdown overlay={<Menu>
             <Menu.Item key={'edit'}>
               <ButtonNoPadding

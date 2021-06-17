@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react'
+import { useCallback } from 'react'
 import * as auth from 'auth-provider'
 import type { UserType } from 'screens/project-list/search-panel'
 import type { ReactNode } from 'react'
@@ -6,24 +6,19 @@ import { http } from 'utils/http'
 import { useMount } from 'utils'
 import { useAsync } from 'utils/useAsync'
 import { FullPageLoading, FullPageErrorFallback } from 'components/lib'
+import * as authStore from 'store/auth.slice'
+import { useDispatch, useSelector } from 'react-redux'
 
 export interface AuthForm {
   username: string;
   password: string;
 }
 
-interface AuthContextType {
-  user: UserType | null;
-  login: (form: AuthForm) => Promise<void>;
-  register: (form: AuthForm) => Promise<void>;
-  logout: () => Promise<void>;
-}
-
 interface AuthProviderPropsType {
   children: ReactNode
 }
 
-const bootstrapUser = async () => {
+export const bootstrapUser = async () => {
   let user = null
   const token = auth.getToken()
   if (token) {
@@ -33,20 +28,19 @@ const bootstrapUser = async () => {
   return user
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
-AuthContext.displayName = 'AuthContext'
-
 export const AuthProvider: React.FC<AuthProviderPropsType> = ({ children }) => {
-  const { data: user, error, isLoading, isIdle, isError, run, setData: setUser } = useAsync<UserType | null>()
+  const {
+    error,
+    isLoading,
+    isIdle,
+    isError,
+    run
+  } = useAsync<UserType | null>()
 
-  // const [user, setUser] = useState<UserType | null>(null)
-
-  const login = (form: AuthForm) => auth.login(form).then(setUser)
-  const register = (form: AuthForm) => auth.register(form).then(setUser)
-  const logout = () => auth.logout().then(() => setUser(null))
+  const dispatch: (args: any) => Promise<UserType> = useDispatch()
 
   useMount(() => {
-    run(bootstrapUser())
+    run(dispatch(authStore.bootstrap()))
   })
 
   if (isIdle || isLoading) {
@@ -57,14 +51,20 @@ export const AuthProvider: React.FC<AuthProviderPropsType> = ({ children }) => {
     return <FullPageErrorFallback error={error} />
   }
 
-  return <AuthContext.Provider value={{ user, login, register, logout }} children={children} />
+  return <div>{children}</div>
 }
 
 export const useAuth = () => {
-  const context = useContext(AuthContext)
-  if (!context) {
-    throw new Error('useAuth 必须在 AuthProvider 中使用')
-  }
+  const dispatch: (...args: unknown[]) => Promise<UserType> = useDispatch()
+  const user = useSelector(authStore.selectUser)
+  const login = useCallback((form: AuthForm) => dispatch(authStore.login(form)), [dispatch])
+  const register = useCallback((form: AuthForm) => dispatch(authStore.register(form)), [dispatch])
+  const logout = useCallback(() => dispatch(authStore.logout()), [dispatch])
 
-  return context
+  return {
+    user,
+    login,
+    register,
+    logout
+  }
 }

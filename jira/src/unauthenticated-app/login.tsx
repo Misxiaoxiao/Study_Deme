@@ -5,6 +5,7 @@ import { LongButton } from './index'
 import { useAuth } from 'context/authContext'
 import type { AuthForm } from 'context/authContext' 
 import { useAsync } from 'utils/useAsync'
+// import { useDispatch } from 'react-redux'
 
 interface LoginScreenProps {
   onError: (error: Error) => void
@@ -13,8 +14,10 @@ interface LoginScreenProps {
 export const LoginScreen: React.FC<LoginScreenProps> = ({ onError }) => {
   const { login } = useAuth()
   const { run, isLoading } = useAsync(undefined, { throwOnError: true })
+  // const dispatch = useDispatch()
 
   const handleSubmit = (values: AuthForm) => {
+    // dispatch(login(values))
     run(login(values)).catch(onError)
   }
 
