@@ -8,6 +8,8 @@ import dayjs from 'dayjs'
 import { Pin } from 'components/pin'
 import { useEditProject } from 'utils/project'
 import { ButtonNoPadding } from 'components/lib'
+import { useDispatch } from 'react-redux'
+import { projectListActions } from './project.list.slice'
 
 export interface ProjectType {
   id: number;
@@ -21,11 +23,11 @@ export interface ProjectType {
 interface ListProps extends TableProps<ProjectType> {
   users: UserType[];
   refresh?: () => void;
-  projectButton: JSX.Element;
 }
 
 export const List: React.FC<ListProps> = ({ users, ...props }) => {
   const { mutate } = useEditProject()
+  const dispatch = useDispatch()
   const pinProject = (id: number) => (pin: boolean) => mutate({id, pin}).then(props.refresh)
 
   return <Table
@@ -69,7 +71,10 @@ export const List: React.FC<ListProps> = ({ users, ...props }) => {
         render (value, project) {
           return <Dropdown overlay={<Menu>
             <Menu.Item key={'edit'}>
-              {/* <ButtonNoPadding type={'link'} onClick={() => props.setProjectModalOpen(true)}>编辑</ButtonNoPadding> */}
+              <ButtonNoPadding
+                type={'link'}
+                onClick={() => dispatch(projectListActions.openProjectModal())}
+              >编辑</ButtonNoPadding>
             </Menu.Item>
           </Menu>}>
             <ButtonNoPadding type={'link'}>...</ButtonNoPadding>

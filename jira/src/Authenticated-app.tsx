@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Button, Dropdown, Menu } from 'antd'
 import styled from '@emotion/styled'
 import { Row } from 'components/lib'
@@ -8,7 +8,7 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import { ProjectListScreen } from 'screens/project-list'
 import { ProjectScreen } from 'screens/project'
 import { useAuth } from 'context/authContext'
-import { useDocumentTitle, ButtonNoPadding } from 'components/lib'
+import { ButtonNoPadding } from 'components/lib'
 import { resetRoute } from 'utils'
 import { ProjectModal } from 'screens/project-list/project-modal'
 import { ProjectPopover } from 'components/project-popover'
@@ -16,42 +16,31 @@ import { ProjectPopover } from 'components/project-popover'
 import { ReactComponent as SoftwareLogo } from 'assets/software-logo.svg'
 
 export const AuthenticatedApp: React.FC = () => {
-  useDocumentTitle('项目列表')
-  const [projectModalOpen, setProjectModalOpen] = useState(false)
-
   return <Container>
-    <PageHeader
-      projectButton={
-        <ButtonNoPadding type={'link'} onClick={() => setProjectModalOpen(true)}>创建项目</ButtonNoPadding>
-      }
-    />
+    <PageHeader />
     <Main>
       <Router>
         <Routes>
           <Route path="/projects" element={
-            <ProjectListScreen
-              projectButton={
-                <ButtonNoPadding type={'link'} onClick={() => setProjectModalOpen(true)}>创建项目</ButtonNoPadding>
-              }
-            />
+            <ProjectListScreen />
           }/>
           <Route path="/projects/:projectId/*" element={<ProjectScreen />} />
           <Navigate to="/projects" />
         </Routes>
       </Router>
     </Main>
-    <ProjectModal projectModalOpen={projectModalOpen} onClose={() => setProjectModalOpen(false)} />
+    <ProjectModal />
   </Container>
 }
 
-const PageHeader = (props: {projectButton: JSX.Element}) => {
+const PageHeader = () => {
   return <Header between={true}>
     <HeaderLeft gap={true}>
       {/* <img src={softwareLogo} alt="" /> */}
       <ButtonNoPadding type="link" onClick={resetRoute}>
         <SoftwareLogo width={'18rem'} color={'rgb(38, 132, 255)'} />
       </ButtonNoPadding>
-      <ProjectPopover {...props} />
+      <ProjectPopover />
       <span>用户</span>
     </HeaderLeft>
     <HeaderRight>
