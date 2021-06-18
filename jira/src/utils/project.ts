@@ -1,58 +1,49 @@
-import { useEffect, useCallback } from 'react'
 import { useHttp } from 'utils/http'
-import { useAsync } from 'utils/useAsync'
-import { cleanObject, useDebounce } from 'utils'
 import type { ProjectType } from 'screens/project-list/list'
+import { useQuery, useMutation, useQueryClient } from 'react-query'
 
 export const useProjects = (params?: Partial<ProjectType>) => {
   const client = useHttp()
-  const debounceParam = useDebounce(params)
-  const { run, ...result } = useAsync<ProjectType[]>()
 
-  const fetchProjects = useCallback(
-    () => client('projects', {data: cleanObject(debounceParam || {})}),
-    [debounceParam, client]
-  )
-
-  useEffect(() => {
-    run(fetchProjects(), {
-      retry: fetchProjects
-    })
-  }, [debounceParam, run, fetchProjects])
-
-  return {
-    ...result
-  }
+  return useQuery<ProjectType[]>(['projects', params], () => client('projects', { data: params || {} }))
 }
 
 export const useEditProject = () => {
-  const { run, ...asyncResult } = useAsync()
   const client = useHttp()
-  const mutate = (params: Partial<ProjectType>) => {
-    return run(client(`projects/${params.id}`, {
-      data: params,
-      method: 'PATCH'
-    }))
-  }
+  const queryClient = useQueryClient()
 
-  return {
-    mutate,
-    ...asyncResult
-  }
+  return useMutation(
+    (params: Partial<ProjectType>) => client(`projects/${params.id}`, {
+      method: 'PATCH',
+      data: params
+    }), {
+      onSuccess: () => queryClient.invalidateQueries('projects')
+    }
+  )
 }
 
 export const useAddProject = () => {
-  const { run, ...asyncResult } = useAsync()
   const client = useHttp()
-  const mutate = (params: Partial<ProjectType>) => {
-    run(client(`projects/${params.id}`, {
-      data: params,
-      method: 'POST'
-    }))
-  }
+  const queryClient = useQueryClient()
 
-  return {
-    mutate,
-    ...asyncResult
-  }
+  return useMutation(
+    (params: Partial<ProjectType>) => client(`projects`, {
+      method: 'POST',
+      data: params
+    }),
+  {
+      onSuccess: () => queryClient.invalidateQueries('projects')
+    }
+  )
+}
+
+export const useProject = (id: number) => {
+  const client = useHttp()
+  return useQuery<ProjectType>(
+    ['project', {id}],
+    () => client(`projects/${id}`),
+    {
+      enabled: !!id
+    }
+  )
 }

@@ -8,6 +8,7 @@ import dayjs from 'dayjs'
 import { Pin } from 'components/pin'
 import { useEditProject } from 'utils/project'
 import { ButtonNoPadding } from 'components/lib'
+import { useProjectModal } from './utils'
 
 export interface ProjectType {
   id: number;
@@ -25,7 +26,9 @@ interface ListProps extends TableProps<ProjectType> {
 
 export const List: React.FC<ListProps> = ({ users, ...props }) => {
   const { mutate } = useEditProject()
-  const pinProject = (id: number) => (pin: boolean) => mutate({id, pin}).then(props.refresh)
+  const { startEdit } = useProjectModal()
+  const pinProject = (id: number) => (pin: boolean) => mutate({id, pin})
+  const editPeoject = (id: number) => () => startEdit(id)
 
   return <Table
     rowKey={row => row.id}
@@ -67,8 +70,8 @@ export const List: React.FC<ListProps> = ({ users, ...props }) => {
       {
         render (value, project) {
           return <Dropdown overlay={<Menu>
-            <Menu.Item key={'edit'}>
-            </Menu.Item>
+            <Menu.Item key={'edit'} onClick={editPeoject(project.id)}>编辑</Menu.Item>
+            <Menu.Item key={'delete'}>删除</Menu.Item>
           </Menu>}>
             <ButtonNoPadding type={'link'}>...</ButtonNoPadding>
           </Dropdown>
