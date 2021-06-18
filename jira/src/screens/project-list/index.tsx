@@ -7,25 +7,26 @@ import {SearchPanel} from './search-panel'
 import { useProjects } from 'utils/project'
 import { Typography } from 'antd'
 import { useUser } from 'utils/user'
-import { useProjectSearchParams } from './utils'
-import { Row, useDocumentTitle } from 'components/lib'
+import { useProjectSearchParams, useProjectModal } from './utils'
+import { Row, useDocumentTitle, ButtonNoPadding } from 'components/lib'
 
 interface ProjectListScreenPropsType {
-  projectButton: JSX.Element;
+  // projectButton: JSX.Element;
 }
 
-export const ProjectListScreen: React.FC<ProjectListScreenPropsType> = (props) => {
+export const ProjectListScreen: React.FC<ProjectListScreenPropsType> = () => {
   useDocumentTitle('项目列表', false)
 
   const [param, setParam] = useProjectSearchParams()
   const { error, isLoading, data: list, retry } = useProjects(param)
   const { data: users } = useUser()
+  const { open } = useProjectModal()
 
   return (
     <Container>
       <Row between={true}>
         <h1>项目列表</h1>
-        {props.projectButton}
+        <ButtonNoPadding type={'link'} onClick={open}>创建项目</ButtonNoPadding>
       </Row>
       <SearchPanel param={param} setParam={setParam} users={users || []} />
       {error ? <Typography.Text type="danger">{error.message}</Typography.Text> : null}
@@ -34,7 +35,6 @@ export const ProjectListScreen: React.FC<ProjectListScreenPropsType> = (props) =
         loading={isLoading}
         dataSource={list || []}
         users={users || []}
-        projectButton={props.projectButton}
       />
     </Container>
   )

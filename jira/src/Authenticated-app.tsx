@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Button, Dropdown, Menu } from 'antd'
 import styled from '@emotion/styled'
 import { Row } from 'components/lib'
@@ -17,41 +17,31 @@ import { ReactComponent as SoftwareLogo } from 'assets/software-logo.svg'
 
 export const AuthenticatedApp: React.FC = () => {
   useDocumentTitle('项目列表')
-  const [projectModalOpen, setProjectModalOpen] = useState(false)
+  // const [projectModalOpen, setProjectModalOpen] = useState(false)
 
   return <Container>
-    <PageHeader
-      projectButton={
-        <ButtonNoPadding type={'link'} onClick={() => setProjectModalOpen(true)}>创建项目</ButtonNoPadding>
-      }
-    />
-    <Main>
-      <Router>
+    <Router>
+    <PageHeader />
+      <Main>
         <Routes>
-          <Route path="/projects" element={
-            <ProjectListScreen
-              projectButton={
-                <ButtonNoPadding type={'link'} onClick={() => setProjectModalOpen(true)}>创建项目</ButtonNoPadding>
-              }
-            />
-          }/>
+          <Route path="/projects" element={<ProjectListScreen />}/>
           <Route path="/projects/:projectId/*" element={<ProjectScreen />} />
           <Navigate to="/projects" />
         </Routes>
-      </Router>
-    </Main>
-    <ProjectModal projectModalOpen={projectModalOpen} onClose={() => setProjectModalOpen(false)} />
+      </Main>
+      <ProjectModal />
+    </Router>
   </Container>
 }
 
-const PageHeader = (props: {projectButton: JSX.Element}) => {
+const PageHeader = () => {
   return <Header between={true}>
     <HeaderLeft gap={true}>
       {/* <img src={softwareLogo} alt="" /> */}
       <ButtonNoPadding type="link" onClick={resetRoute}>
         <SoftwareLogo width={'18rem'} color={'rgb(38, 132, 255)'} />
       </ButtonNoPadding>
-      <ProjectPopover {...props} />
+      <ProjectPopover />
       <span>用户</span>
     </HeaderLeft>
     <HeaderRight>
