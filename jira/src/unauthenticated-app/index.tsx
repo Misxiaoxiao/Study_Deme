@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { Card, Divider, Button, Typography } from 'antd'
+import { Card, Divider, Button } from 'antd'
 import { LoginScreen } from './login'
 import { RegisterScreen } from './register'
-import { useDocumentTitle } from 'components/lib'
+import { useDocumentTitle, ErrorBox } from 'components/lib'
 
 import styled from '@emotion/styled'
 import logo from 'assets/logo.svg'
@@ -17,14 +17,11 @@ export const UnauthenticatedApp: React.FC = () => {
   return <Container>
     <Header />
     <Background />
-    {/* <Button onClick={() => {
-      throw new Error('点击抛出一个异常')
-    }}>抛出异常</Button> */}
     <ShadowCard>
       <Title>
         { isRegister ? '请注册' : '请登录' }
       </Title>
-      { error ? <Typography.Text type="danger">{error.message}</Typography.Text> : null }
+      <ErrorBox error={error} />
       { isRegister ? <RegisterScreen onError={setError} /> : <LoginScreen onError={setError} /> }
       <Divider />
       <Button
