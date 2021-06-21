@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useHttp } from 'utils/http'
 import { useAsync } from 'utils/useAsync'
-import { UserType } from 'screens/project-list/search-panel'
+import type { UserType } from 'types/user'
 import { cleanObject } from 'utils'
 
 export const useUser = (param?: Partial<UserType>) => {

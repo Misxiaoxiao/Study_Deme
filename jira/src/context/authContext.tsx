@@ -1,11 +1,12 @@
 import { createContext, useContext } from 'react'
 import * as auth from 'auth-provider'
-import type { UserType } from 'screens/project-list/search-panel'
+import type { UserType } from 'types/user'
 import type { ReactNode } from 'react'
 import { http } from 'utils/http'
 import { useMount } from 'utils'
 import { useAsync } from 'utils/useAsync'
 import { FullPageLoading, FullPageErrorFallback } from 'components/lib'
+import { useQueryClient } from 'react-query'
 
 export interface AuthForm {
   username: string;
@@ -39,11 +40,14 @@ AuthContext.displayName = 'AuthContext'
 export const AuthProvider: React.FC<AuthProviderPropsType> = ({ children }) => {
   const { data: user, error, isLoading, isIdle, isError, run, setData: setUser } = useAsync<UserType | null>()
 
-  // const [user, setUser] = useState<UserType | null>(null)
+  const queryClient = useQueryClient()
 
   const login = (form: AuthForm) => auth.login(form).then(setUser)
   const register = (form: AuthForm) => auth.register(form).then(setUser)
-  const logout = () => auth.logout().then(() => setUser(null))
+  const logout = () => auth.logout().then(() => {
+    setUser(null)
+    queryClient.clear()
+  })
 
   useMount(() => {
     run(bootstrapUser())

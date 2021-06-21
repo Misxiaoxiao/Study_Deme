@@ -1,5 +1,5 @@
 import { useHttp } from 'utils/http'
-import type { ProjectType } from 'screens/project-list/list'
+import type { ProjectType } from 'types/project'
 import { useQuery, useMutation } from 'react-query'
 import { useAddConfig, useDeleteConfig, useEditConfig } from './use-optimistic-options'
 import type { QueryKey } from 'react-query'

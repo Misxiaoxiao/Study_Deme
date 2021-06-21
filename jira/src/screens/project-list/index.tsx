@@ -6,7 +6,7 @@ import {SearchPanel} from './search-panel'
 
 import { useProjects } from 'utils/project'
 import { useUser } from 'utils/user'
-import { useProjectSearchParams, useProjectModal } from './utils'
+import { useProjectSearchParams, useProjectModal } from './util'
 import { Row, useDocumentTitle, ButtonNoPadding, ErrorBox } from 'components/lib'
 
 interface ProjectListScreenPropsType {

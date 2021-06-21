@@ -2,17 +2,9 @@
 // import { jsx } from '@emotion/react'
 import React from 'react'
 import { Input, Form } from 'antd'
-import { ProjectType } from './list'
+import type { ProjectType } from 'types/project'
 import { UserSelect } from 'components/user-select'
-
-export interface UserType {
-  id: number;
-  name: string;
-  email: string;
-  title: string;
-  organization: string;
-  token: string;
-}
+import type { UserType } from 'types/user'
 
 interface SearchPanelProps {
   users: UserType[],

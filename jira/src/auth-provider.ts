@@ -1,4 +1,4 @@
-import { UserType } from "screens/project-list/search-panel"
+import type { UserType } from 'types/user'
 import { apiUrl } from 'utils/config'
 
 const localStorageKey = '__auth_provider_token__'

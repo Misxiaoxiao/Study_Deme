@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Drawer, Button, Spin, Form, Input } from 'antd'
-import { useProjectModal, useProjectsQueryKey } from './utils'
+import { useProjectModal, useProjectsQueryKey } from './util'
 import { UserSelect } from 'components/user-select'
 import { useAddProject, useEditProject } from 'utils/project'
 import { useForm } from 'antd/lib/form/Form'
@@ -25,11 +25,16 @@ export const ProjectModal: React.FC<ProjectModalPropsType> = () => {
     })
   }
 
+  const closeModal = () => {
+    form.resetFields()
+    close()
+  }
+
   useEffect(() => {
     form.setFieldsValue(editingProject)
   }, [editingProject, form])
 
-  return <Drawer forceRender={true} onClose={close} visible={projectModalOpen} width={'100%'}>
+  return <Drawer forceRender={true} onClose={closeModal} visible={projectModalOpen} width={'100%'}>
     <Container>
       {isLoading
         ? <Spin size={'large'} />

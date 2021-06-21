@@ -13,7 +13,7 @@ export const ProjectScreen: React.FC = () => {
     <Routes>
       <Route path="/kanban" element={<KanBanScreen />} />
       <Route path="/epic" element={<EpicScreen />} />
-      <Navigate to={window.location.pathname + '/kanban'} />
+      <Navigate to={window.location.pathname + '/kanban'} replace={true} />
     </Routes>
   </h1>
 }
