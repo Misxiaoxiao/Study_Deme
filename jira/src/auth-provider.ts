@@ -34,7 +34,6 @@ export const register = (data: { username: string, password: string }) => {
     },
     body: JSON.stringify(data)
   }).then(async response => {
-    console.log(data)
     if (response.ok) {
       return handleUserResponse(await response.json())
     } else {

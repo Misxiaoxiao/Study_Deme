@@ -2,7 +2,7 @@ import type { KanbanType } from 'types/kanban'
 import { useHttp } from './http'
 import { useQuery, useMutation } from 'react-query'
 import type { QueryKey } from 'react-query'
-import { useAddConfig, useDeleteConfig } from './use-optimistic-options'
+import { useAddConfig, useDeleteConfig, useReorderKanbanConfig } from './use-optimistic-options'
 
 export const useKanbans = (param?: Partial<KanbanType>) => {
   const client = useHttp()
@@ -34,5 +34,26 @@ export const useDeleteKanban = (queryKey: QueryKey) => {
         method: 'DELETE'
       }),
     useDeleteConfig(queryKey)
+  )
+}
+
+export interface SortPropsType {
+  fromId: number;
+  referenceId: number;
+  type: 'before' | 'after';
+  fromKanbanId?: number;
+  toKanbanId?: number;
+}
+
+export const useReorderKanban = (queryKey: QueryKey) => {
+  const client = useHttp()
+  return useMutation(
+    (params: SortPropsType) => {
+      return client('kanbans/reorder', {
+        data: params,
+        method: 'POST'
+      })
+    },
+    useReorderKanbanConfig(queryKey)
   )
 }

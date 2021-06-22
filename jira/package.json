@@ -20,6 +20,7 @@
     "jira-dev-tool": "^1.6.59",
     "qs": "^6.5.2",
     "react": "^16.0.0",
+    "react-beautiful-dnd": "^13.1.0",
     "react-dom": "^17.0.2",
     "react-helmet": "^6.1.0",
     "react-router": "^6.0.0-beta.0",
@@ -42,8 +43,7 @@
       "react-app/jest",
       "prettier"
     ],
-    "rules": {
-    }
+    "rules": {}
   },
   "browserslist": {
     "production": [
@@ -61,6 +61,7 @@
     "@commitlint/cli": "^12.1.4",
     "@commitlint/config-conventional": "^12.1.4",
     "@types/qs": "^6.9.6",
+    "@types/react-beautiful-dnd": "^13.0.0",
     "@types/react-helmet": "^6.1.1",
     "@welldone-software/why-did-you-render": "^6.1.4",
     "eslint-config-prettier": "^8.3.0",
