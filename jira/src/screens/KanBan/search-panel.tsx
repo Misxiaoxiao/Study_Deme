@@ -18,7 +18,7 @@ export const SearchPanel: React.FC = () => {
     })
   }
 
-  return <Row marginBottom={10} gap={true}>
+  return <Row marginBottom={5} gap={true}>
     <Input
       style={{ width: '20rem' }}
       placeholder={'任务名'}
