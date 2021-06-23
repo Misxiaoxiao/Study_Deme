@@ -42,4 +42,5 @@ export const ProjectListScreen: React.FC<ProjectListScreenPropsType> = () => {
 
 const Container = styled.div`
   padding: 3.2rem;
+  width: 100%;
 `

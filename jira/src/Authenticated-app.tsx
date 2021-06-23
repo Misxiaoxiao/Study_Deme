@@ -12,6 +12,7 @@ import { useDocumentTitle, ButtonNoPadding } from 'components/lib'
 import { resetRoute } from 'utils'
 import { ProjectModal } from 'screens/project-list/project-modal'
 import { ProjectPopover } from 'components/project-popover'
+import { UserPropover } from 'components/user-popover'
 
 import { ReactComponent as SoftwareLogo } from 'assets/software-logo.svg'
 
@@ -42,7 +43,7 @@ const PageHeader = () => {
         <SoftwareLogo width={'18rem'} color={'rgb(38, 132, 255)'} />
       </ButtonNoPadding>
       <ProjectPopover />
-      <span>用户</span>
+      <UserPropover />
     </HeaderLeft>
     <HeaderRight>
       <User />
@@ -81,4 +82,5 @@ const HeaderRight = styled.div``
 const Main = styled.main`
   display: flex;
   overflow: hidden;
+  width: 100%;
 `

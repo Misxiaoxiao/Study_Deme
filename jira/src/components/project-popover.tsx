@@ -9,7 +9,7 @@ interface ProjectPopoverPropsType {
 }
 
 export const ProjectPopover: React.FC<ProjectPopoverPropsType> = (props) => {
-  const { data: projects } = useProjects()
+  const { data: projects, refetch } = useProjects()
   const pinnedProjects = projects?.filter(project => project.pin)
   const { open } = useProjectModal()
 
@@ -26,7 +26,7 @@ export const ProjectPopover: React.FC<ProjectPopoverPropsType> = (props) => {
     <ButtonNoPadding type={'link'} onClick={open}>创建项目</ButtonNoPadding>
   </ContentContainer>
   
-  return <Popover placement={'bottom'} content={content}>
+  return <Popover placement={'bottom'} content={content} onVisibleChange={() => refetch()}>
     <span>项目</span>
   </Popover>
 }

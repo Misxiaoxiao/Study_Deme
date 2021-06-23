@@ -7,7 +7,10 @@ import type { QueryKey } from 'react-query'
 export const useProjects = (params?: Partial<ProjectType>) => {
   const client = useHttp()
 
-  return useQuery<ProjectType[]>(['projects', params], () => client('projects', { data: params || {} }))
+  return useQuery<ProjectType[]>(
+    ['projects', params],
+    () => client('projects', { data: params || {} })
+  )
 }
 
 export const useEditProject = (queryKey: QueryKey) => {
