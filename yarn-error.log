@@ -1,0 +1,36 @@
+Arguments: 
+  /Users/misxiao/.nvm/versions/node/v14.17.1/bin/node /Users/misxiao/.nvm/versions/node/v14.17.1/bin/yarn init @vitejs/app manager-vue3 --template vue-ts
+
+PATH: 
+  /Users/misxiao/.nvm/versions/node/v14.17.1/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin
+
+Yarn version: 
+  1.22.10
+
+Node version: 
+  14.17.1
+
+Platform: 
+  darwin x64
+
+Trace: 
+  Error: canceled
+      at Interface.<anonymous> (/Users/misxiao/.nvm/versions/node/v14.17.1/lib/node_modules/yarn/lib/cli.js:136216:13)
+      at Interface.emit (events.js:375:28)
+      at Interface._ttyWrite (readline.js:910:16)
+      at ReadStream.onkeypress (readline.js:235:10)
+      at ReadStream.emit (events.js:375:28)
+      at emitKeys (internal/readline/utils.js:358:14)
+      at emitKeys.next (<anonymous>)
+      at ReadStream.onData (readline.js:1179:36)
+      at ReadStream.emit (events.js:375:28)
+      at addChunk (internal/streams/readable.js:290:12)
+
+npm manifest: 
+  No manifest
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
