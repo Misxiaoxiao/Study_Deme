@@ -1,16 +1,17 @@
 <template>
-  <welcome />
   <router-view />
 </template>
 
 <script lang="ts">
-import Welcome from './components/Welcome.vue'
-import { defineComponent } from 'vue'
+import { defineComponent, onMounted } from 'vue'
+import storage from './utils/storage'
 
 export default defineComponent({
   name: 'App',
-  components: {
-    Welcome
+  setup () {
+    onMounted(() => {
+      storage.clearItem('name')
+    })
   }
 })
 </script>
