@@ -1,19 +1,27 @@
 <template>
-  <div>
-    login page
-  </div>
+    <h1>login page title</h1>
+    this is login page
+    <el-button @click="goHome">go to home</el-button>
 </template>
 
-<script>
-export default {
-  setup () {
-    
+<script lang="ts">
+import { defineComponent } from 'vue'
+import { useRouter } from 'vue-router'
 
-    return {}
+export default defineComponent({
+  setup () {
+    const router = useRouter()
+
+    const goHome = () => {
+      router.push('/welcome')
+    }
+
+    return {
+      goHome
+    }
   }
-}
+})
 </script>
 
-<style lang="scss" scoped>
-
+<style scoped>
 </style>
