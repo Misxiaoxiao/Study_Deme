@@ -10,6 +10,9 @@ export default defineConfig({
       '@': path.join(__dirname, 'src')
     }
   },
+  define: {
+    'process.env': {}
+  },
   css: {
     preprocessorOptions: {
       scss: {
@@ -19,5 +22,7 @@ export default defineConfig({
         `
       }
     }
+  },
+  server: {
   }
 })
