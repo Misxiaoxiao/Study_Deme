@@ -8,7 +8,9 @@
   "dependencies": {
     "vue": "^3.0.5",
     "vue-router": "^4.0.0-0",
-    "vuex": "^4.0.0-0"
+    "vuex": "^4.0.0-0",
+    "@better-scroll/core": "^2.0.6",
+    "@better-scroll/slide": "^2.0.6"
   },
   "devDependencies": {
     "@types/jsonp": "^0.2.0",
