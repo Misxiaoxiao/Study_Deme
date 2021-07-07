@@ -13,7 +13,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, reactive } from 'vue'
+import {
+  defineComponent, PropType, reactive,
+} from 'vue'
 
 const emailReg = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 
@@ -62,7 +64,9 @@ export default defineComponent({
         })
 
         inputRef.error = !allPassed
+        return allPassed
       }
+      return true
     }
 
     return {
