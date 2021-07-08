@@ -1,30 +1,18 @@
 <template>
   <div class="container">
     <global-header :user="currentUser" />
-    <validate-form action="" @form-submit="onFormSubmit">
-      <div class="mb-3">
-        <label class="form-label">邮箱地址</label>
-        <validate-input
-          :rules="emailRules"
-          v-model="emailVal"
-          type="text"
-          placeholder="请输入邮箱地址"
-          ref="inputRef"
-        />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">密码</label>
-        <validate-input
-          :rules="passwordRules"
-          v-model="passwordVal"
-          type="password"
-          placeholder="请输入密码"
-        />
-      </div>
-      <template #submit>
-        <span class="btn btn-danger">submit</span>
-      </template>
-    </validate-form>
+    <router-view />
+    <footer class="text-center py-4 text-secondary bg-light mt-6">
+      <small>
+        <ul class="list-inline mb-0">
+          <li class="list-inline-item">专栏</li>
+          <li class="list-inline-item">课程</li>
+          <li class="list-inline-item">文档</li>
+          <li class="list-inline-item">联系</li>
+          <li class="list-inline-item">更多</li>
+        </ul>
+      </small>
+    </footer>
   </div>
 </template>
 
@@ -45,8 +33,6 @@ const emailReg = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0
 export default defineComponent({
   components: {
     GlobalHeader,
-    ValidateInput,
-    ValidateForm,
   },
   setup() {
     const inputRef = ref()
