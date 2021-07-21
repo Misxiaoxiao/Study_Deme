@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import { defineComponent, onUnmounted } from 'vue'
-import mitt from 'mitt'
+import mitt, { Handler } from 'mitt'
 
 type ValidateFunc = () => boolean
 
@@ -27,12 +27,12 @@ export default defineComponent({
       context.emit('form-submit', result)
     }
 
-    const callback: any = (func: ValidateFunc) => {
+    const callback: Handler<() => boolean> = (func: ValidateFunc) => {
       funcArr.push(func)
     }
-    emitter.on('form-item-created', callback)
+    emitter.on('form-item-created', () => callback)
     onUnmounted(() => {
-      emitter.off('form-item-created', callback)
+      emitter.off('form-item-created', () => callback)
       funcArr = []
     })
 
