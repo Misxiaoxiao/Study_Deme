@@ -1,16 +1,16 @@
 <template>
   <div class="login-wrapper">
     <div class="modal">
-      <el-form>
+      <el-form ref="userForm" :model="user" :rules="rules" status-icon>
         <div class="title">火星</div>
-        <el-form-item>
-          <el-input type="text" prefix-icon="el-icon-user" />
+        <el-form-item prop="userName">
+          <el-input type="text" prefix-icon="el-icon-user" v-model="user.userName" />
+        </el-form-item>
+        <el-form-item prop="userPwd">
+          <el-input type="password" prefix-icon="el-icon-view" v-model="user.userPwd" />
         </el-form-item>
         <el-form-item>
-          <el-input type="password" prefix-icon="el-icon-view" />
-        </el-form-item>
-        <el-form-item>
-          <el-button class="btn-login" type="primary">登录</el-button>
+          <el-button class="btn-login" type="primary" @click="login">登录</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -18,34 +18,51 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+import api from '../api'
 
 export default defineComponent({
   setup () {
-    const router = useRouter()
+    const user = ref({
+      userName: '',
+      userPwd: ''
+    })
+    const userForm = ref()
+    const rules = {
+      userName: [
+        { required: true, message: '请输入用户名', trigger: 'blur' }
+      ],
+      userPwd: [
+        { required: true, message: '请输入密码', trigger: 'blur' }
+      ]
+    }
 
-    const goHome = () => {
-      router.push('/welcome')
+    const router = useRouter()
+    const store = useStore()
+
+    const login = () => {
+      userForm.value.validate((valid: boolean) => {
+        if (valid) {
+          api.login(user.value).then(res => {
+            router.push('/welcome')
+            store.commit('saveUserInfo', res)
+          })
+        } else {
+          return false
+        }
+      })
     }
 
     onMounted(() => {
-      // request({
-      //   method: 'get',
-      //   url: '/login',
-      //   data: {
-      //     name: 'jack'
-      //   }
-      // }).then(res => {
-      //   console.log(res)
-      // })
-      // request.get('/login').then(res => {
-      //   console.log(res)
-      // })
     })
 
     return {
-      goHome
+      user,
+      userForm,
+      rules,
+      login
     }
   }
 })
