@@ -28,8 +28,9 @@ app.use(views(__dirname + '/views', {
 
 // logger
 app.use(async (ctx, next) => {
+  log4js.info(`get params: ${JSON.stringify(ctx.request.query)}`)
+  log4js.info(`post params: ${JSON.stringify(ctx.request.body)}`)
   await next()
-  log4js.info('log output')
 })
 
 router.prefix('/api')
