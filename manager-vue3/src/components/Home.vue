@@ -8,29 +8,14 @@
       </div>
       <!-- 导航菜单 -->
       <el-menu
-        default-active="2"
+        :default-active="activeMenu"
         class="nav-menu"
         background-color="#001529"
         text-color="#fff"
         router
         :collapse="isCollapse"
       >
-        <el-submenu index="1">
-          <template #title>
-            <i class="el-icon-setting"></i>
-            <span>系统管理</span>
-          </template>
-          <el-menu-item index="1-1">用户管理</el-menu-item>
-          <el-menu-item index="1-2">菜单管理</el-menu-item>
-        </el-submenu>
-        <el-submenu index="2">
-          <template #title>
-            <i class="el-icon-setting"></i>
-            <span>审批管理</span>
-          </template>
-          <el-menu-item index="2-1">休假申请</el-menu-item>
-          <el-menu-item index="2-2">待我审批</el-menu-item>
-        </el-submenu>
+        <tree-menu :userMenu="userMenu" />
       </el-menu>
     </div>
     <div class="content-right" :class="['content-right', isCollapse ? 'fold' : 'unfold']">
@@ -41,10 +26,12 @@
           >
             <i class="el-icon-s-fold" />
           </div>
-          <div class="bread">面包屑</div>
+          <div class="bread">
+            <bread-crumb />
+          </div>
         </div>
         <div class="user-info">
-          <el-badge :is-dot="true" class="notice" type="danger">
+          <el-badge :is-dot="!!noticeCount" class="notice" type="danger">
             <i class="el-icon-bell" />
           </el-badge>
           <el-dropdown @command="handleLogout">
@@ -71,24 +58,26 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-
-type UserInfo = {
-  userName: string;
-  userEmail: string;
-}
+import { State, UserInfo } from '../store'
+import Api from '../api'
+import TreeMenu, { UserMenuItem } from './TreeMenu.vue'
+import BreadCrumb from './BreadCrumb.vue'
 
 export default defineComponent({
+  components: {
+    TreeMenu,
+    BreadCrumb
+  },
   setup() {
-    const store = useStore()
+    const store = useStore<State>()
     const router = useRouter()
-
-    const userInfo = ref<UserInfo | null>({
-      userName: 'xiao',
-      userEmail: 'xiao@admin.com'
-    })
+    const userInfo = ref<UserInfo | null>(store.state.userInfo)
+    const noticeCount = ref(0)
+    const userMenu = ref<UserMenuItem[]>([])
+    const activeMenu = ref(location.hash.slice(1))
 
     const isCollapse = ref(false)
 
@@ -103,11 +92,37 @@ export default defineComponent({
       isCollapse.value = !isCollapse.value
     }
 
+    const getNoticeCount = async () => {
+      try {
+        const count = await Api.noticeCount()
+        noticeCount.value = Number(count)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    const getMenuList = async () => {
+      try {
+        const list: any = await Api.getMenuList()
+        userMenu.value = list
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    onMounted(() => {
+      getNoticeCount()
+      getMenuList()
+    })
+
     return {
       userInfo,
       handleLogout,
       isCollapse,
-      toggle
+      toggle,
+      noticeCount,
+      userMenu,
+      activeMenu
     }
   },
 });

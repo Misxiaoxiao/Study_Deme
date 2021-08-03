@@ -3,8 +3,19 @@ import { createStore } from 'vuex'
 import mutations from './mutations'
 import storage from '../utils/storage'
 
+export type UserInfo = {
+  userName: string;
+  userId: string;
+  userEmail: string;
+  token: string;
+  state: number;
+  roleList: string[];
+  role: number;
+  deptId: string[]
+} | undefined;
+
 export type State = {
-  userInfo: string;
+  userInfo: UserInfo
 }
 
 const state: State = {
@@ -13,5 +24,5 @@ const state: State = {
 
 export default createStore({
   state,
-  mutations
+  mutations,
 })
