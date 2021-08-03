@@ -1,10 +1,10 @@
 <template>
   <div class="basic-layout">
-    <div class="nav-side">
+    <div :class="['nav-side', isCollapse ? 'fold' : 'unfold']">
       <!-- 系统logo -->
       <div class="logo">
         <img src="../assets/logo.png" />
-        <span>Manager</span>
+        <span v-if="!isCollapse">Manager</span>
       </div>
       <!-- 导航菜单 -->
       <el-menu
@@ -13,7 +13,7 @@
         background-color="#001529"
         text-color="#fff"
         router
-        :collapse="false"
+        :collapse="isCollapse"
       >
         <el-submenu index="1">
           <template #title>
@@ -33,15 +33,33 @@
         </el-submenu>
       </el-menu>
     </div>
-    <div class="content-right">
+    <div class="content-right" :class="['content-right', isCollapse ? 'fold' : 'unfold']">
       <div class="nav-top">
         <div class="nav-left">
-          <div class="menu-fold">
+          <div class="menu-fold"
+            @click="toggle"
+          >
             <i class="el-icon-s-fold" />
           </div>
           <div class="bread">面包屑</div>
         </div>
-        <div class="user">用户</div>
+        <div class="user-info">
+          <el-badge :is-dot="true" class="notice" type="danger">
+            <i class="el-icon-bell" />
+          </el-badge>
+          <el-dropdown @command="handleLogout">
+            <span class="user-link">
+              {{userInfo?.userName}}
+              <i class="el-icon--right" />
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item command="email">邮箱: {{userInfo?.userEmail}}</el-dropdown-item>
+                <el-dropdown-item command="logout">退出</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </div>
       </div>
       <div class="wrapper">
         <div class="main-page">
@@ -53,13 +71,46 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue"
+import { defineComponent, ref } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+
+type UserInfo = {
+  userName: string;
+  userEmail: string;
+}
 
 export default defineComponent({
   setup() {
-    return {}
+    const store = useStore()
+    const router = useRouter()
+
+    const userInfo = ref<UserInfo | null>({
+      userName: 'xiao',
+      userEmail: 'xiao@admin.com'
+    })
+
+    const isCollapse = ref(false)
+
+    const handleLogout = (key: string) => {
+      if (key === 'email') return
+      store.commit('saveUserInfo', '')
+      userInfo.value = null
+      router.push('/login')
+    }
+
+    const toggle = () => {
+      isCollapse.value = !isCollapse.value
+    }
+
+    return {
+      userInfo,
+      handleLogout,
+      isCollapse,
+      toggle
+    }
   },
-})
+});
 </script>
 
 <style lang="scss">
