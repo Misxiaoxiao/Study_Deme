@@ -8,6 +8,9 @@ const bodyparser = require('koa-bodyparser')
 const log4js = require('./utils/log4')
 const users = require('./routes/users')
 const router = require('koa-router')()
+const jwt = require('jsonwebtoken')
+const koajwt = require('koa-jwt')
+const util = require('./utils/util')
 
 // error handler
 onerror(app)
@@ -30,10 +33,21 @@ app.use(views(__dirname + '/views', {
 app.use(async (ctx, next) => {
   log4js.info(`get params: ${JSON.stringify(ctx.request.query)}`)
   log4js.info(`post params: ${JSON.stringify(ctx.request.body)}`)
-  await next()
+  await next().catch(error => {
+    if (error.status == '401') {
+      ctx.status = 200
+      ctx.body = util.fail('Token 认证失败', util.CODE.AUTH_ERROR)
+    } else {
+      throw error
+    }
+  })
 })
 
+app.use(koajwt({ secret: 'manager' }).unless({
+  path: [/^\/api\/users\/login/]
+}))
 router.prefix('/api')
+
 router.use(users.routes(), users.allowedMethods())
 
 app.use(router.routes(), router.allowedMethods())

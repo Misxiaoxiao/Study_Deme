@@ -30,6 +30,11 @@
   resolved "https://registry.nlark.com/@types/estree/download/@types/estree-0.0.48.tgz?cache=0&sync_timestamp=1622612050840&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Festree%2Fdownload%2F%40types%2Festree-0.0.48.tgz#18dc8091b285df90db2f25aa7d906cfc394b7f74"
   integrity sha1-GNyAkbKF35DbLyWqfZBs/DlLf3Q=
 
+"@types/node@^16.4.10":
+  version "16.4.10"
+  resolved "https://registry.nlark.com/@types/node/download/@types/node-16.4.10.tgz?cache=0&sync_timestamp=1627817742550&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-16.4.10.tgz#e57e2a54fc6da58da94b3571b1cb456d39f88597"
+  integrity sha1-5X4qVPxtpY2pSzVxsctFbTn4hZc=
+
 "@vitejs/plugin-vue@^1.1.4":
   version "1.2.5"
   resolved "https://registry.nlark.com/@vitejs/plugin-vue/download/@vitejs/plugin-vue-1.2.5.tgz?cache=0&sync_timestamp=1626093026011&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40vitejs%2Fplugin-vue%2Fdownload%2F%40vitejs%2Fplugin-vue-1.2.5.tgz#ef7dc4a92e53fe866b54bcc1266788513262ac09"

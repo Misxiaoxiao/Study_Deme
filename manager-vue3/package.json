@@ -6,6 +6,7 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "@types/node": "^16.4.10",
     "axios": "^0.21.1",
     "element-plus": "^1.0.2-beta.62",
     "vite": "^2.0.1",
