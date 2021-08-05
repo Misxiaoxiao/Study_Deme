@@ -37,5 +37,15 @@ export default {
       params,
       mock: true
     })
+  },
+  userDel (params: {
+    userIds: string[];
+  }) {
+    return request({
+      url: '/users/delete',
+      method: 'post',
+      params,
+      mock: true
+    })
   }
 }

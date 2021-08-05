@@ -25,11 +25,12 @@
     <div class="base-table">
       <div class="action">
         <el-button type="primary">新增</el-button>
-        <el-button type="danger">批量删除</el-button>
+        <el-button type="danger" @click="handlePatchDel">批量删除</el-button>
       </div>
       <el-table
         :data="userList"
         style="width: 100%"
+        @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" />
         <el-table-column
@@ -38,15 +39,16 @@
           :prop="item.prop"
           :label="item.label"
           :width="item?.width"
+          :formatter="item.formatter"
         />
         <el-table-column
           fixed="right"
           label="操作"
           width="150"
         >
-          <template #default>
+          <template #default="scope">
             <el-button size="mini">编辑</el-button>
-            <el-button type="danger" size="mini">删除</el-button>
+            <el-button type="danger" size="mini" @click="handleDel(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -66,7 +68,7 @@
 import { defineComponent, onMounted, reactive, ref } from 'vue'
 import { UserInfo } from '../store'
 import Api from '../api'
-// import { _Form } from 'element-plus'
+import { ElMessage } from 'element-plus'
 
 type FormItem = {
   userId?: string;
@@ -89,15 +91,28 @@ export default defineComponent({
       pageSize: 10,
       total: 0
     })
+    // 选中用户列表的对象
+    const checkedUserId = ref<string[]>([])
     // 邓毅动态表格-格式
     const columns = reactive<
-      { label: string, prop: string, width?: string | number; }[]
+      { label: string, prop: string, width?: string | number; [k: string]: any; }[]
     >([
       { label: '用户ID', prop: 'userId' },
       { label: '用户名', prop: 'userName' },
       { label: '用户邮箱', prop: 'userEmail' },
-      { label: '用户角色', prop: 'role' },
-      { label: '用户状态', prop: 'state' },
+      { label: '用户角色', prop: 'role', formatter (row: any, column: any, value: number) {
+        return {
+          0: '管理员',
+          1: '普通用户',
+        }[value]
+      } },
+      { label: '用户状态', prop: 'state',formatter (row: any, column: any, value: number) {
+        return {
+          1: '在职',
+          2: '离职',
+          3: '试用期'
+        }[value]
+      } },
       { label: '注册时间', prop: 'createTime' },
       { label: '最后登录时间', prop: 'lastLoginTime' },
     ])
@@ -130,6 +145,34 @@ export default defineComponent({
       pager.pageNum = current
       getUserList()
     }
+    // 用户单个删除
+    const handleDel = async (row: UserInfo) => {
+      await Api.userDel({
+        userIds: [String(row?.userId)]
+      })
+      ElMessage.success('删除成功')
+      getUserList()
+    }
+    // 批量删除
+    const handlePatchDel = async () => {
+      if (checkedUserId.value.length === 0) {
+        ElMessage.error('请选择要删除的用户')
+        return
+      }
+      const res: any = await Api.userDel({
+        userIds: checkedUserId.value
+      })
+      if (res.nModified > 0) {
+        ElMessage.success('删除成功')
+        getUserList()
+      } else {
+        ElMessage.success('修改失败')
+      }
+    }
+    // 表格多选
+    const handleSelectionChange = (list: UserInfo[]) => {
+      checkedUserId.value = list.map(item => String(item?.userId))
+    }
 
     onMounted(() => {
       getUserList()
@@ -139,11 +182,15 @@ export default defineComponent({
       formRef,
       user,
       userList,
+      checkedUserId,
       columns,
       pager,
       handleQuery,
       handleReset,
-      handleCurrentChange
+      handleDel,
+      handlePatchDel,
+      handleCurrentChange,
+      handleSelectionChange
     }
   },
 })
