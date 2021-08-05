@@ -1,7 +1,7 @@
 <template>
   <template v-for="menu in userMenu">
     <el-submenu
-      v-if="menu.children && menu.children.length > 0 && menu.children[0].menuType === '1'"
+      v-if="menu.children && menu.children.length > 0 && menu.children[0].menuType == '1'"
       :key="menu._id"
       :index="menu.path"
     >
