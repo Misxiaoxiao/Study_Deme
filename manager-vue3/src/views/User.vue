@@ -24,7 +24,7 @@
     </div>
     <div class="base-table">
       <div class="action">
-        <el-button type="primary">新增</el-button>
+        <el-button type="primary" @click="handleCreate">新增</el-button>
         <el-button type="danger" @click="handlePatchDel">批量删除</el-button>
       </div>
       <el-table
@@ -61,6 +61,51 @@
         @current-change="handleCurrentChange"
       />
     </div>
+    <el-dialog title="用户新增" v-model="showModal">
+      <el-form :model="userForm" label-width="100px" ref="dialogForm" :rules="rules">
+        <el-form-item label="用户名" prop="userName">
+          <el-input v-model="userForm.userName" placeholder="请输入用户名称" />
+        </el-form-item>
+        <el-form-item label="邮箱" prop="userEmail">
+          <el-input v-model="userForm.userEmail" placeholder="请输入邮箱">
+            <template #append>@manager.com</template>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="手机号" prop="mobile">
+          <el-input v-model="userForm.mobile" placeholder="请输入手机号" />
+        </el-form-item>
+        <el-form-item label="岗位" prop="job">
+          <el-input v-model="userForm.job" placeholder="请输入岗位" />
+        </el-form-item>
+        <el-form-item label="状态" prop="state">
+          <el-select v-model="userForm.state" placeholder="请选择用户状态">
+            <el-option :value="1" label="在职" />
+            <el-option :value="2" label="离职" />
+            <el-option :value="3" label="试用期" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="系统角色" prop="roleList">
+          <el-select v-model="userForm.roleList" placeholder="请选择用户角色">
+            <el-option :value="1" label="在职" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="部门" prop="deptId">
+          <el-cascader
+            v-model="userForm.deptId"
+            :options="[]"
+            :props="{ checkStrictly: true, value: '_id', label: 'deptName' }"
+            clearable
+            placeholder="请选择用户部门"
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button>取消</el-button>
+          <el-button type="primary">确定</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -74,6 +119,16 @@ type FormItem = {
   userId?: string;
   userName?: string;
   state?: 0 | 1 | 2 | 3;
+}
+
+type CreateForm = {
+  userName?: string;
+  userEmail?: string;
+  mobile?: string;
+  job?: string;
+  state?: 1 | 2 | 3;
+  roleList?: string[];
+  deptId?: string[];
 }
 
 export default defineComponent({
@@ -116,6 +171,28 @@ export default defineComponent({
       { label: '注册时间', prop: 'createTime' },
       { label: '最后登录时间', prop: 'lastLoginTime' },
     ])
+    // 添加用户表单对象
+    const userForm = reactive<CreateForm>({
+      state: 3
+    })
+    // 定义表单校验规则
+    const rules = reactive({
+      userName: [
+        { required: true, message: '请输入用户名称', trigger: 'blur' },
+      ],
+      userEmail: [
+        { required: true, message: '请输入用户邮箱', trigger: 'blur' },
+      ],
+      mobile: [
+        { pattern: /1\d{10}/, message: '请输入正确的手机号格式', trigger: 'blur' },
+      ],
+      deptId: [
+        { required: true, message: '请输入用户邮箱', trigger: 'blur' },
+      ],
+    })
+    // 弹框显示对象
+    const showModal = ref(false)
+
     // 获取用户列表
     const getUserList = async () => {
       const params = {
@@ -173,6 +250,10 @@ export default defineComponent({
     const handleSelectionChange = (list: UserInfo[]) => {
       checkedUserId.value = list.map(item => String(item?.userId))
     }
+    // 用户新增
+    const handleCreate = () => {
+      showModal.value = true
+    }
 
     onMounted(() => {
       getUserList()
@@ -185,6 +266,10 @@ export default defineComponent({
       checkedUserId,
       columns,
       pager,
+      userForm,
+      showModal,
+      rules,
+      handleCreate,
       handleQuery,
       handleReset,
       handleDel,
