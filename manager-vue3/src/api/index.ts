@@ -1,5 +1,6 @@
 // api 管理
-import request from "../utils/request"
+import request from '../utils/request'
+import { CreateForm, Action } from '../type/UserType'
 
 export default {
   login (
@@ -47,5 +48,26 @@ export default {
       params,
       mock: true
     })
-  }
+  },
+  getRoleList () {
+    return request({
+      url: '/roles/allList',
+      method: 'get',
+      mock: true
+    })
+  },
+  getDeptList () {
+    return request({
+      url: '/dept/list',
+      method: 'get',
+      mock: true
+    })
+  },
+  userSubmit (params: CreateForm & { action?: Action }) {
+    return request({
+      url: '/roles/allList',
+      method: 'get',
+      mock: true
+    })
+  },
 }
