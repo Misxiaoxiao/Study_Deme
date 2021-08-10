@@ -33,5 +33,3 @@ export type DeptType = {
 }
 
 export type DeptList = DeptType[]
-
-export type Action = 'add' | 'edit'

@@ -1,6 +1,8 @@
 // api 管理
 import request from '../utils/request'
-import { CreateForm, Action } from '../type/UserType'
+import { CreateForm } from '../type/UserType'
+import { MenuItem, MenuQueryForm } from '../type/MenuType'
+import { Action } from '../type/CommonType'
 
 export default {
   login (
@@ -23,12 +25,11 @@ export default {
       mock: true
     })
   },
-  getMenuList () {
+  getMenuList (params: MenuQueryForm) {
     return request({
       url: '/menu/list',
       method: 'get',
-      data: {},
-      mock: true
+      data: params
     })
   },
   getUserList (params: any) {
@@ -61,11 +62,18 @@ export default {
       mock: true
     })
   },
-  userSubmit (params: CreateForm & { action?: Action }) {
+  userSubmit (params: Partial<CreateForm> & { action?: Action }) {
     return request({
       url: '/users/operate',
       method: 'post',
       data: params
     })
   },
+  menuSubmit (params: Partial<MenuItem> & { action?: Action }) {
+    return request({
+      url: '/menu/operate',
+      method: 'post',
+      data: params
+    })
+  }
 }

@@ -126,7 +126,8 @@ import { defineComponent, onMounted, reactive, ref, toRaw, nextTick } from 'vue'
 import { UserInfo } from '../store'
 import Api from '../api'
 import { ElMessage } from 'element-plus'
-import { FormItem, CreateForm, RoleList, DeptList, Action } from '../type/UserType'
+import { FormItem, CreateForm, RoleList, DeptList } from '../type/UserType'
+import { Column, Action } from '../type/CommonType'
 import utils from '../utils/utils'
 
 export default defineComponent({
@@ -135,7 +136,7 @@ export default defineComponent({
     const dialogForm = ref<null | any>(null)
     // 初始化用户表单对象
     const user = reactive<FormItem>({
-      state: 0
+      state: 1
     })
     // 初始化用户列表数据
     const userList = ref<UserInfo[]>([])
@@ -148,27 +149,25 @@ export default defineComponent({
     // 选中用户列表的对象
     const checkedUserId = ref<string[]>([])
     // 邓毅动态表格-格式
-    const columns = reactive<
-      { label: string, prop: string, width?: string | number; [k: string]: any; }[]
-    >([
+    const columns = reactive<Column[]>([
       { label: '用户ID', prop: 'userId' },
       { label: '用户名', prop: 'userName' },
       { label: '用户邮箱', prop: 'userEmail' },
-      { label: '用户角色', prop: 'role', formatter (row: any, column: any, value: number) {
+      { label: '用户角色', prop: 'role', formatter (row, column, value) {
         return {
           0: '管理员',
           1: '普通用户',
         }[value]
       } },
-      { label: '用户状态', prop: 'state',formatter (row: any, column: any, value: number) {
+      { label: '用户状态', prop: 'state',formatter (row, column, value) {
         return {
           1: '在职',
           2: '离职',
           3: '试用期'
         }[value]
       } },
-      { label: '注册时间', prop: 'createTime', width: 180, formatter: (row: any, column: any, value: string) => utils.formateDate(value) },
-      { label: '最后登录时间', prop: 'lastLoginTime', width: 180, formatter: (row: any, column: any, value: string) => utils.formateDate(value) },
+      { label: '注册时间', prop: 'createTime', width: 180, formatter: (row, column, value) => utils.formateDate(String(value)) },
+      { label: '最后登录时间', prop: 'lastLoginTime', width: 180, formatter: (row, column, value) => utils.formateDate(String(value)) },
     ])
     // 添加用户表单对象
     const userForm = reactive<CreateForm>({
@@ -217,9 +216,7 @@ export default defineComponent({
     }
     // 重置查询表单
     const handleReset = (form: any) => {
-      if (form) {
-        form.resetFields()
-      }
+      form?.resetFields()
     }
     // 分页事件处理
     const handleCurrentChange = (current: number) => {
@@ -279,7 +276,6 @@ export default defineComponent({
     // 添加用户表单提交
     const handleSubmit = () => {
       dialogForm.value.validate(async (valid: boolean) => {
-        console.log(valid)
         if (valid) {
           const params = toRaw(userForm)
           params.userEmail += '@manager.com'
