@@ -44,8 +44,7 @@ export default {
     return request({
       url: '/users/delete',
       method: 'post',
-      params,
-      mock: true
+      data: params
     })
   },
   getRoleList () {
