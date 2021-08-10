@@ -188,7 +188,7 @@ export default defineComponent({
         { required: true, message: '请输入用户邮箱', trigger: 'blur' },
       ],
       mobile: [
-        { pattern: /1\d{10}/, message: '请输入正确的手机号格式', trigger: 'blur' },
+        { pattern: /1[3-9]\d{9}/, message: '请输入正确的手机号格式', trigger: 'blur' },
       ],
       deptId: [
         { required: true, message: '请输入用户邮箱', trigger: 'blur' },

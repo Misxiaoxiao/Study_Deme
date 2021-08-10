@@ -80,4 +80,40 @@ router.post('/delete', async (ctx) => {
   ctx.body = util.fail('删除失败')
 })
 
+// 用户新增/编辑
+router.post('/operate', async (ctx) => {
+  const {
+    userId,
+    userName,
+    userEmail,
+    mobile,
+    job,
+    state,
+    roleList,
+    deptId,
+    action
+  } = ctx.request.body
+
+  if (action === 'add') {
+    if (!userName || userEmail || !deptId) {
+      ctx.body = util.fail('参数错误', util.CODE.PARAM_ERROR)
+      return
+    }
+  } else {
+    if (!deptId) {
+      ctx.body = util.fail('部门不能为空', util.CODE.PARAM_ERROR)
+      return
+    }
+    const res = await User.findOneAndUpdate(
+      { userId },
+      { job, state, roleList, deptId, mobile }
+    )
+    try {
+      ctx.body = util.success({}, '更新成功')
+    } catch (error) {
+      ctx.body = util.fail(res, '更新失败')
+    }
+  }
+})
+
 module.exports = router

@@ -63,9 +63,9 @@ export default {
   },
   userSubmit (params: CreateForm & { action?: Action }) {
     return request({
-      url: '/roles/allList',
-      method: 'get',
-      mock: true
+      url: '/users/operate',
+      method: 'post',
+      data: params
     })
   },
 }
