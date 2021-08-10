@@ -27,7 +27,7 @@ service.interceptors.request.use(req => {
   // TODO
   const headers = req.headers
   const { token } = storage.getItem('userInfo')
-  if (!headers.Authorization) headers.Authorization = `Bear ${token}`
+  if (!headers.Authorization) headers.Authorization = `Bearer ${token}`
   return req
 })
 
@@ -57,15 +57,16 @@ const request = (options: RequestOptionsType) => {
   if (options.method.toLocaleLowerCase() === 'GET') {
     options.params = options.data
   }
+  let isMock = config.mock
 
   if (typeof options.mock !== 'undefined') {
-    config.mock = options.mock
+    isMock = options.mock
   }
 
   if (config.env === 'prod') {
     service.defaults.baseURL = config.baseApi
   } else {
-    service.defaults.baseURL = config.mock ? config.mockApi : config.baseApi
+    service.defaults.baseURL = isMock ? config.mockApi : config.baseApi
   }
 
   return service(options)

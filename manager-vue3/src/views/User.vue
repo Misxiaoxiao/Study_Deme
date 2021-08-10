@@ -127,6 +127,7 @@ import { UserInfo } from '../store'
 import Api from '../api'
 import { ElMessage } from 'element-plus'
 import { FormItem, CreateForm, RoleList, DeptList, Action } from '../type/UserType'
+import utils from '../utils/utils'
 
 export default defineComponent({
   setup() {
@@ -166,8 +167,8 @@ export default defineComponent({
           3: '试用期'
         }[value]
       } },
-      { label: '注册时间', prop: 'createTime' },
-      { label: '最后登录时间', prop: 'lastLoginTime' },
+      { label: '注册时间', prop: 'createTime', width: 180, formatter: (row: any, column: any, value: string) => utils.formateDate(value) },
+      { label: '最后登录时间', prop: 'lastLoginTime', width: 180, formatter: (row: any, column: any, value: string) => utils.formateDate(value) },
     ])
     // 添加用户表单对象
     const userForm = reactive<CreateForm>({

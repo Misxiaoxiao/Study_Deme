@@ -35,8 +35,7 @@ export default {
     return request({
       url: '/users/list',
       method: 'get',
-      params,
-      mock: true
+      params
     })
   },
   userDel (params: {

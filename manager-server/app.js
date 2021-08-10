@@ -8,7 +8,6 @@ const bodyparser = require('koa-bodyparser')
 const log4js = require('./utils/log4')
 const users = require('./routes/users')
 const router = require('koa-router')()
-const jwt = require('jsonwebtoken')
 const koajwt = require('koa-jwt')
 const util = require('./utils/util')
 
