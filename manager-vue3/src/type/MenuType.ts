@@ -14,4 +14,16 @@ export type MenuItem = {
   menuState: 1 | 2;
   createTime: string;
   parentId: string[];
+  action: any;
+  children: MenuItem[];
+}
+
+export type MenuRoutes = {
+  name: string;
+  path: string;
+  meta: {
+    title: string;
+    [k: string]: string;
+  },
+  component: any;
 }

@@ -32,6 +32,13 @@ export default {
       data: params
     })
   },
+  getPermissionList () {
+    return request({
+      url: '/users/getPermissionList',
+      method: 'get',
+      data: {}
+    })
+  },
   getUserList (params: any) {
     return request({
       url: '/users/list',
