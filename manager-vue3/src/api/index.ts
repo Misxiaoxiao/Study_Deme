@@ -69,14 +69,14 @@ export default {
       mock: true
     })
   },
-  userSubmit (params: Partial<CreateForm> & { action?: Action }) {
+  userSubmit (params: Partial<CreateForm & { action?: Action }>) {
     return request({
       url: '/users/operate',
       method: 'post',
       data: params
     })
   },
-  menuSubmit (params: Partial<MenuItem> & { action?: Action }) {
+  menuSubmit (params: Partial<MenuItem & { action?: Action }>) {
     return request({
       url: '/menu/operate',
       method: 'post',

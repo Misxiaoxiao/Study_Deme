@@ -6,11 +6,11 @@ const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 // const logger = require('koa-logger')
 const log4js = require('./utils/log4')
-const users = require('./routes/users')
-const menus = require('./routes/menus')
 const router = require('koa-router')()
 const koajwt = require('koa-jwt')
 const util = require('./utils/util')
+const users = require('./routes/users')
+const menus = require('./routes/menus')
 
 // error handler
 onerror(app)

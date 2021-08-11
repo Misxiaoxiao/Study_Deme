@@ -11,10 +11,10 @@
             <el-option :value="2" label="停用" />
           </el-select>
         </el-form-item>
-        <el-from-item>
+        <el-form-item>
           <el-button type="primary" @click="getMenuList">查询</el-button>
           <el-button @click="handleReset(form)">重置</el-button>
-        </el-from-item>
+        </el-form-item>
       </el-form>
     </div>
     <div class="base-table">
@@ -44,11 +44,11 @@
               size="mini"
             >新增</el-button>
             <el-button @click="handleEdit(scope.row)" size="mini">编辑</el-button>
-            <el-butto
+            <el-button
               type="danger"
               size="mini"
               @click="handleDel(scope.row._id)"
-            >删除</el-butto>
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -64,7 +64,7 @@
           <el-cascader
             v-model="menuForm.parentId"
             :options="menuList"
-            :prop="{ checkStrictly: true, value: '_id', label: 'menuName' }"
+            :props="{ checkStrictly: true, value: '_id', label: 'menuName' }"
             clearable
           />
           <span>不选，则直接创建一级菜单</span>
@@ -128,7 +128,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, nextTick } from 'vue'
+import { defineComponent, ref, reactive, nextTick, onMounted } from 'vue'
 import { MenuQueryForm, MenuItem } from '../type/MenuType'
 import { Action } from '../type/CommonType'
 import { Column } from '../type/CommonType'
@@ -138,8 +138,8 @@ import { ElMessage } from 'element-plus'
 
 export default defineComponent({
   setup() {
-    const form = ref()
-    const dialogForm = ref()
+    const form = ref(null)
+    const dialogForm = ref<any>(null)
     const queryForm = reactive<MenuQueryForm>({
       menuName: '',
       menuState: 1
@@ -169,7 +169,7 @@ export default defineComponent({
     const menuList = ref<MenuItem[]>([])
     const showModal = ref(false)
     const menuForm = reactive<Partial<MenuItem>>({
-      parentId: [],
+      parentId: [null],
       menuType: 1,
       menuState: 1
     })
@@ -225,6 +225,7 @@ export default defineComponent({
 
     const handleSubmit = () => {
       dialogForm.value.validate(async (valid: boolean) => {
+        if (!valid) return
         const params = { ...menuForm, action: action.value }
         await Api.menuSubmit(params)
         showModal.value = false
@@ -233,6 +234,10 @@ export default defineComponent({
         getMenuList()
       })
     }
+
+    onMounted(() => {
+      getMenuList()
+    })
 
     return {
       form,

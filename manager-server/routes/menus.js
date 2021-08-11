@@ -2,6 +2,7 @@ const router = require('koa-router')()
 const util = require('../utils/util')
 const Menu = require('../models/menuSchema')
 
+router.prefix('/menu')
 // 菜单列表查询
 router.get('/list', async ctx => {
   const { menuName, menuState } = ctx.request.query
@@ -25,12 +26,13 @@ router.post('/operate', async ctx => {
       res = await Menu.findByIdAndUpdate(_id, params)
       info = '编辑成功'
     } else if (action === 'delete') {
-      res = await Menu.findByIdAndUpdate(_id)
+      res = await Menu.findByIdAndRemove(_id)
       await Menu.deleteMany({ parentId: { $all: [_id] } })
       info = '删除成功'
     } else {
       util.fail('action 参数的类型只能为 add edit delete')
     }
+    ctx.body = util.success('', info)
   } catch (error) {
     ctx.body = util.fail(error.stack)
   }

@@ -13,7 +13,7 @@ export type MenuItem = {
   component: string;
   menuState: 1 | 2;
   createTime: string;
-  parentId: string[];
+  parentId: unknown[];
   action: any;
   children: MenuItem[];
 }
