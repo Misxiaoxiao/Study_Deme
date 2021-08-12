@@ -9,8 +9,10 @@ const log4js = require('./utils/log4')
 const router = require('koa-router')()
 const koajwt = require('koa-jwt')
 const util = require('./utils/util')
+
 const users = require('./routes/users')
 const menus = require('./routes/menus')
+const roles = require('./routes/roles')
 
 // error handler
 onerror(app)
@@ -50,6 +52,8 @@ router.prefix('/api')
 
 router.use(users.routes(), users.allowedMethods())
 router.use(menus.routes(), menus.allowedMethods())
+router.use(roles.routes(), menus.allowedMethods())
+
 app.use(router.routes(), router.allowedMethods())
 
 // error-handling
