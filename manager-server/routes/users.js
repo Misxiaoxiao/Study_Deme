@@ -28,8 +28,6 @@ router.post('/login', async (ctx) => {
       userPwd: md5(userPwd)
     }, 'userId userName userEmail state role deptId roleList')
     const data = res._doc
-    
-
 
     const token = jwt.sign({
       data

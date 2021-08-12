@@ -22,22 +22,6 @@ const routes = [
         },
         component: () => import('@/views/Welcome.vue')
       },
-      {
-        name: 'menu',
-        path: '/menu',
-        meta: {
-          title: '菜单管理'
-        },
-        component: () => import('@/views/Menu.vue')
-      },
-      {
-        name: 'role',
-        path: '/role',
-        meta: {
-          title: '角色管理'
-        },
-        component: () => import('@/views/Role.vue')
-      }
     ]
   },
   {
@@ -63,24 +47,25 @@ const router = createRouter({
   routes
 })
 
-// const loadAsyncRoutes = async () => {
-//   const userInfo = storage.getItem('userInfo') || {}
-//   if (userInfo.token) {
-//     try {
-//       const { menuList } = await Api.getPermissionList() as any
-//       let routes = utils.generateRoute(menuList)
-//       routes.map(route => {
-//         const url = `../views/${route.component}.vue`
-//         route.component = () => import(url)
-//         router.addRoute('home', route)
-//       })
-//     } catch (error) {
-//       console.error(error)
-//     }
-//   }
-// }
+const loadAsyncRoutes = async () => {
+  const userInfo = storage.getItem('userInfo') || {}
+  console.log(userInfo)
+  if (userInfo.token) {
+    try {
+      const { menuList } = await Api.getPermissionList() as any
+      let routes = utils.generateRoute(menuList)
+      routes.map(route => {
+        const url = `../views/${route.component}.vue`
+        route.component = () => import(url)
+        router.addRoute('home', route)
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  }
+}
 
-// await loadAsyncRoutes()
+await loadAsyncRoutes()
 // 导航守卫
 router.beforeEach((to, from, next) => {
   if (router.hasRoute(to.name || '')) {
