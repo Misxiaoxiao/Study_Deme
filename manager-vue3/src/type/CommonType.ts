@@ -7,3 +7,9 @@ export type Column = {
 }
 
 export type Action = 'add' | 'edit' | 'delete'
+
+export type Pager = {
+  pageNum: number;
+  pageSize: number;
+  total: number;
+}

@@ -148,7 +148,7 @@ export default defineComponent({
     })
     // 选中用户列表的对象
     const checkedUserId = ref<string[]>([])
-    // 邓毅动态表格-格式
+    // 动态表格-格式
     const columns = reactive<Column[]>([
       { label: '用户ID', prop: 'userId' },
       { label: '用户名', prop: 'userName' },
@@ -265,7 +265,7 @@ export default defineComponent({
     }
 
     const getRoleList = async () => {
-      const list: any = await Api.getRoleList()
+      const list: any = await Api.getRoleList({})
       roleList.value = list
     }
     // 用户弹窗管理

@@ -1,8 +1,9 @@
 // api 管理
 import request from '../utils/request'
-import { CreateForm } from '../type/UserType'
+import { CreateForm, FormItem } from '../type/UserType'
 import { MenuItem, MenuQueryForm } from '../type/MenuType'
-import { Action } from '../type/CommonType'
+import { Action, Pager } from '../type/CommonType'
+import { RoleQueryForm, RoleColumns } from '../type/RoleType'
 
 export default {
   login (
@@ -25,7 +26,7 @@ export default {
       mock: true
     })
   },
-  getMenuList (params: MenuQueryForm) {
+  getMenuList (params: Partial<MenuQueryForm>) {
     return request({
       url: '/menu/list',
       method: 'get',
@@ -39,7 +40,7 @@ export default {
       data: {}
     })
   },
-  getUserList (params: any) {
+  getUserList (params: Partial<FormItem & Pager>) {
     return request({
       url: '/users/list',
       method: 'get',
@@ -55,10 +56,11 @@ export default {
       data: params
     })
   },
-  getRoleList () {
+  getRoleList (params: Partial<RoleQueryForm & Pager>) {
     return request({
       url: '/roles/allList',
       method: 'get',
+      data: params,
       mock: true
     })
   },
@@ -79,6 +81,20 @@ export default {
   menuSubmit (params: Partial<MenuItem & { action?: Action }>) {
     return request({
       url: '/menu/operate',
+      method: 'post',
+      data: params
+    })
+  },
+  roleOperate (params: Partial<RoleColumns & { action?: Action }>) {
+    return request({
+      url: '/roles/operate',
+      method: 'post',
+      data: params
+    })
+  },
+  updatePermission (params: any) {
+    return request({
+      url: '/roles/update/permission',
       method: 'post',
       data: params
     })
