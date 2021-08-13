@@ -28,6 +28,11 @@
           <template #default="scope">
             <el-button size="mini" @click="handleEdit(scope.row)">编辑</el-button>
             <el-button
+              size="mini"
+              type="primary"
+              @click="handleOpenPermission(scope.row)"
+            >设置权限</el-button>
+            <el-button
               type="danger"
               size="mini"
               @click="handleDel(scope.row._id)"
@@ -83,7 +88,7 @@
             show-checkbox
             node-key="_id"
             default-expand-all
-            :prop="{ label: 'menuName' }"
+            :props="{ label: 'menuName' }"
           />
         </el-form-item>
       </el-form>
@@ -99,7 +104,7 @@
 <script lang="ts">
 import { defineComponent, reactive, ref, nextTick, onMounted } from 'vue'
 import { MenuItem } from '../type/MenuType'
-import { RoleQueryForm, RoleColumns } from '../type/RoleType'
+import { RoleQueryForm, RoleColumns, PermissionList } from '../type/RoleType'
 import { Column, Action } from '../type/CommonType'
 import utils from '../utils/utils'
 import Api from '../api'
@@ -120,7 +125,8 @@ export default defineComponent({
       { label: '备注', prop: 'remark' },
       { label: '权限列表', prop: 'permissionList', width: 200, formatter (row, column, value) {
         let names: string[] = []
-        const list = {...value as any}.halfCheckedKeys || []
+        const val: PermissionList = value as any
+        const list = { ...val }.halfCheckedKeys || []
         list.map((key: string) => {
           const name = actionMap.value[key]
           if (key && name) names.push(name)
@@ -142,7 +148,7 @@ export default defineComponent({
     })
     const action = ref<Action>('add')
     const showModal = ref(false)
-    const roleForm = ref<Partial<RoleColumns>>({})
+    const roleForm = reactive<Partial<RoleColumns>>({})
     const rules = ref()
     const showPermission = ref(false)
     const curRoleId = ref('')
@@ -180,7 +186,7 @@ export default defineComponent({
       nextTick(() => {
         Object.assign(roleForm, {
           _id: row._id,
-          roleForm: row.roleName,
+          roleName: row.roleName,
           remark: row.remark
         })
       })
@@ -214,6 +220,16 @@ export default defineComponent({
         }
       })
     }
+    // 打开权限弹框
+    const handleOpenPermission = (row: RoleColumns) => {
+      curRoleId.value = row._id
+      curRoleName.value = row.roleName
+      showPermission.value = true
+      const { checkedKeys } = row.permissionList
+      nextTick(() => {
+        tree.value?.setCheckedKeys(checkedKeys)
+      })
+    }
     // 关闭权限弹窗
     const handlePermissionClose = () => {
       showPermission.value = false
@@ -222,8 +238,8 @@ export default defineComponent({
     const handlePermissionSubmit = async () => {
       const nodes = tree.value.getCheckedNodes()
       const halfKeys = tree.value.getHalfCheckedKeys()
-      let checkedKeys: any[] = []
-      let parentKeys: any[] = []
+      let checkedKeys: string[] = []
+      let parentKeys: string[] = []
       nodes.map((node: any) => {
         if (!node.children) {
           checkedKeys.push(node._id)
@@ -298,6 +314,7 @@ export default defineComponent({
       handleCurrentChange,
       handleClose,
       handleSubmit,
+      handleOpenPermission,
       handlePermissionClose,
       handlePermissionSubmit
     }

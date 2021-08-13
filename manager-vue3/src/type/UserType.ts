@@ -4,7 +4,7 @@ export type FormItem = {
   state?: 0 | 1 | 2 | 3;
 }
 
-export type CreateForm = {
+export type QueryUserForm = {
   userName?: string;
   userEmail?: string;
   mobile?: string;

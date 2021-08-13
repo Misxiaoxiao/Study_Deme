@@ -125,7 +125,7 @@
 import { defineComponent, onMounted, reactive, ref, toRaw, nextTick } from 'vue'
 import Api from '../api'
 import { ElMessage } from 'element-plus'
-import { FormItem, CreateForm, RoleList, DeptList, UserInfo } from '../type/UserType'
+import { FormItem, QueryUserForm, RoleList, DeptList, UserInfo } from '../type/UserType'
 import { Column, Action } from '../type/CommonType'
 import utils from '../utils/utils'
 
@@ -169,7 +169,7 @@ export default defineComponent({
       { label: '最后登录时间', prop: 'lastLoginTime', width: 180, formatter: (row, column, value) => utils.formateDate(String(value)) },
     ])
     // 添加用户表单对象
-    const userForm = reactive<CreateForm>({
+    const userForm = reactive<QueryUserForm>({
       state: 3
     })
     // 所有的角色列表
@@ -263,8 +263,8 @@ export default defineComponent({
       deptList.value = list
     }
 
-    const getRoleList = async () => {
-      const list: any = await Api.getRoleList({})
+    const getRoleAllList = async () => {
+      const list: any = await Api.getRoleAllList()
       roleList.value = list
     }
     // 用户弹窗管理
@@ -304,7 +304,7 @@ export default defineComponent({
     onMounted(() => {
       getUserList()
       getDeptList()
-      getRoleList()
+      getRoleAllList()
     })
 
     return {
@@ -320,7 +320,7 @@ export default defineComponent({
       rules,
       roleList,
       deptList,
-      getRoleList,
+      getRoleAllList,
       getDeptList,
       action,
       handleEdit,

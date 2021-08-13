@@ -1,9 +1,9 @@
 // api 管理
 import request from '../utils/request'
-import { CreateForm, FormItem } from '../type/UserType'
+import { QueryUserForm, FormItem } from '../type/UserType'
 import { MenuItem, MenuQueryForm } from '../type/MenuType'
 import { Action, Pager } from '../type/CommonType'
-import { RoleQueryForm, RoleColumns } from '../type/RoleType'
+import { RoleQueryForm, RoleColumns, PermissionList } from '../type/RoleType'
 
 export default {
   login (
@@ -56,9 +56,16 @@ export default {
       data: params
     })
   },
-  getRoleList (params: Partial<RoleQueryForm & Pager>) {
+  getRoleAllList () {
     return request({
       url: '/roles/allList',
+      method: 'get',
+      mock: true
+    })
+  },
+  getRoleList (params: Partial<RoleQueryForm & Pager>) {
+    return request({
+      url: '/roles/list',
       method: 'get',
       data: params,
       mock: true
@@ -71,7 +78,7 @@ export default {
       mock: true
     })
   },
-  userSubmit (params: Partial<CreateForm & { action?: Action }>) {
+  userSubmit (params: Partial<QueryUserForm & { action?: Action }>) {
     return request({
       url: '/users/operate',
       method: 'post',
@@ -92,7 +99,7 @@ export default {
       data: params
     })
   },
-  updatePermission (params: any) {
+  updatePermission (params: { _id: string, permissionList: PermissionList }) {
     return request({
       url: '/roles/update/permission',
       method: 'post',
