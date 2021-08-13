@@ -2,20 +2,10 @@
 import { createStore } from 'vuex'
 import mutations from './mutations'
 import storage from '../utils/storage'
-
-export type UserInfo = {
-  userName: string;
-  userId: string;
-  userEmail: string;
-  token: string;
-  state: number;
-  roleList: string[];
-  role: number;
-  deptId: string[]
-} | undefined;
+import { UserInfo } from '../type/UserType'
 
 export type State = {
-  userInfo: UserInfo
+  userInfo: Partial<UserInfo>
 }
 
 const state: State = {

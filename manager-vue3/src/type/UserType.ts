@@ -21,15 +21,21 @@ export type RoleType = {
 
 export type RoleList = RoleType[]
 
-export type DeptType = {
+export interface UserDeptType extends Partial<UserInfo> {
   _id: string;
-  userName: string;
-  userId: string;
-  userEmail: string;
-  parentId: string[];
-  deptName: string;
   createTime: string;
   children: DeptList;
 }
 
-export type DeptList = DeptType[]
+export type DeptList = UserDeptType[]
+
+export type UserInfo = {
+  userName: string;
+  userId: string;
+  userEmail: string;
+  token: string;
+  state: number;
+  roleList: string[];
+  role: number;
+  deptId: string[]
+};

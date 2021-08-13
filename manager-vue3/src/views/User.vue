@@ -123,10 +123,9 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, reactive, ref, toRaw, nextTick } from 'vue'
-import { UserInfo } from '../store'
 import Api from '../api'
 import { ElMessage } from 'element-plus'
-import { FormItem, CreateForm, RoleList, DeptList } from '../type/UserType'
+import { FormItem, CreateForm, RoleList, DeptList, UserInfo } from '../type/UserType'
 import { Column, Action } from '../type/CommonType'
 import utils from '../utils/utils'
 
