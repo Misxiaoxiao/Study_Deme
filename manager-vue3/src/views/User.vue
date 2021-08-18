@@ -224,7 +224,6 @@ export default defineComponent({
     }
     // 用户单个删除
     const handleDel = async (row: UserInfo) => {
-      console.log(row)
       await Api.userDel({
         userIds: [String(row?.userId)]
       })

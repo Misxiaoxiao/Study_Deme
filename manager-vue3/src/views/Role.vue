@@ -127,7 +127,12 @@ export default defineComponent({
         let names: string[] = []
         const val: PermissionList = value as any
         const list = { ...val }.halfCheckedKeys || []
+        const sList = { ...val }.checkedKeys || []
         list.map((key: string) => {
+          const name = actionMap.value[key]
+          if (key && name) names.push(name)
+        })
+        sList.map((key: string) => {
           const name = actionMap.value[key]
           if (key && name) names.push(name)
         })
@@ -199,6 +204,7 @@ export default defineComponent({
     }
     const handleCurrentChange = (current: number) => {
       pager.pageNum = current
+      getRoleList()
     }
     // 弹框关闭
     const handleClose = () => {
@@ -211,12 +217,10 @@ export default defineComponent({
         if (valid) {
           const params = { ...roleForm, action: action.value }
           const res = await Api.roleOperate(params)
-          if (res) {
-            showModal.value = false
-            ElMessage.success('创建成功')
-            handleReset(dialogForm.value)
-            getRoleList()
-          }
+          showModal.value = false
+          ElMessage.success('创建成功')
+          handleReset(dialogForm.value)
+          getRoleList()
         }
       })
     }
@@ -275,10 +279,10 @@ export default defineComponent({
       const deep = (arr: MenuItem[]) => {
         while (arr.length) {
           const item = arr.pop()
-          if (item?.children && item.action) {
+          if (item?.menuType) {
             _actionMap[item._id] = item.menuName
           }
-          if (item?.children && !item.action) {
+          if (item?.children) {
             deep(item.children)
           }
         }

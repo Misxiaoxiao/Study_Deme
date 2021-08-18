@@ -5,6 +5,7 @@ const router = require('koa-router')()
 const Role = require('../models/roleSchema')
 const util = require('../utils/util')
 
+router.prefix('/roles')
 // 查询所有角色列表
 router.get('/allList', async ctx => {
   try {
@@ -17,7 +18,7 @@ router.get('/allList', async ctx => {
 
 // 按页获取角色列表
 router.get('/list', async ctx => {
-  const roleName = ctx.request.query
+  const { roleName } = ctx.request.query
   const { page, skipIndex } = util.pager(ctx.request.query)
   try {
     let params = {}

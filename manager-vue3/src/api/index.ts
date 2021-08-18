@@ -59,16 +59,14 @@ export default {
   getRoleAllList () {
     return request({
       url: '/roles/allList',
-      method: 'get',
-      mock: true
+      method: 'get'
     })
   },
   getRoleList (params: Partial<RoleQueryForm & Pager>) {
     return request({
       url: '/roles/list',
       method: 'get',
-      data: params,
-      mock: true
+      params
     })
   },
   getDeptList () {
