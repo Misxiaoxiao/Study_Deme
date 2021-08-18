@@ -4,6 +4,7 @@ import { QueryUserForm, FormItem } from '../type/UserType'
 import { MenuItem, MenuQueryForm } from '../type/MenuType'
 import { Action, Pager } from '../type/CommonType'
 import { RoleQueryForm, RoleColumns, PermissionList } from '../type/RoleType'
+import { DeptColumn, QueryDeptForm } from '../type/DeptType'
 
 export default {
   login (
@@ -47,6 +48,12 @@ export default {
       params
     })
   },
+  getAllUserList () {
+    return request({
+      url: '/users/all/list',
+      method: 'get'
+  })
+  },
   userDel (params: {
     userIds: string[];
   }) {
@@ -69,11 +76,11 @@ export default {
       params
     })
   },
-  getDeptList () {
+  getDeptList (params: Partial<QueryDeptForm & Pager>) {
     return request({
       url: '/dept/list',
       method: 'get',
-      mock: true
+      data: params
     })
   },
   userSubmit (params: Partial<QueryUserForm & { action?: Action }>) {
@@ -100,6 +107,13 @@ export default {
   updatePermission (params: { _id: string, permissionList: PermissionList }) {
     return request({
       url: '/roles/update/permission',
+      method: 'post',
+      data: params
+    })
+  },
+  deptOperate (params: Partial<DeptColumn & { action: Action }>) {
+    return request({
+      url: '/dept/operate',
       method: 'post',
       data: params
     })

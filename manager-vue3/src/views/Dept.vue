@@ -12,7 +12,7 @@
       </el-form>
     </div>
     <div class="base-table">
-      <div class="actio">
+      <div class="action">
         <el-button type="primary" @click="handleOpen">创建</el-button>
       </div>
       <el-table
@@ -102,10 +102,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue'
+import { defineComponent, reactive, ref, nextTick, onMounted } from 'vue'
 import { QueryDeptForm, DeptColumn } from '../type/DeptType'
 import { Column, Action } from '../type/CommonType'
 import { UserInfo } from '../type/UserType'
+import { ElMessage } from 'element-plus'
+import Api from '../api'
 
 export default defineComponent({
   setup() {
@@ -137,23 +139,71 @@ export default defineComponent({
     })
     const userList = ref<Partial<UserInfo>[]>([])
 
-    const getDeptList = () => {}
+    const getDeptList = async () => {
+      const list: any = await Api.getDeptList(queryForm)
+      deptList.value = list
+    }
+
+    const getAllUserList = async () => {
+      userList.value = await Api.getAllUserList() as any
+    }
     
     const handleReset = (form: any) => {
       form?.resetFields()
     }
 
-    const handleOpen = () => {}
+    const handleOpen = () => {
+      action.value = 'add'
+      showModal.value = true
+    }
 
-    const handleEdit = (row: DeptColumn) => {}
+    const handleEdit = (row: DeptColumn) => {
+      action.value = 'edit'
+      showModal.value = true
+      nextTick(() => {
+        Object.assign(deptForm, row, {
+          user: `${row.userId}/${row.userName}/${row.userEmail}`
+        })
+      })
+    }
 
-    const handleDel = (_id: string) => {}
+    const handleDel = async (_id: string) => {
+      action.value = 'delete'
+      await Api.deptOperate({ _id, action: action.value })
+      ElMessage.success('删除成功')
+      getDeptList()
+    }
 
-    const handleUser = () => {}
+    const handleUser = (val: string) => {
+      const [userId, userName, userEmail] = val.split('/')
+      Object.assign(deptForm, { userId, userName, userEmail })
+    }
 
-    const handleClose = () => {}
+    const handleClose = () => {
+      showModal.value = false
+      handleReset(dialogForm.value)
+    }
 
-    const handleSubmit = () => {}
+    const handleSubmit = () => {
+      dialogForm.value.validate(async (valid: boolean) => {
+        if (valid) {
+          const params = {
+            ...deptForm,
+            action: action.value
+          }
+          delete params.user
+          await Api.deptOperate(params)
+          ElMessage.success('操作成功')
+          handleClose()
+          getDeptList()
+        }
+      })
+    }
+
+    onMounted(() => {
+      getDeptList()
+      getAllUserList()
+    })
 
     return {
       form,

@@ -5,6 +5,7 @@ export type QueryDeptForm = {
 }
 
 export type DeptColumn = {
+  _id: string;
   deptName: string;
   userName: string;
   userEmail: string;
@@ -12,4 +13,5 @@ export type DeptColumn = {
   createTime: string;
   parentId: string[];
   user: Partial<UserDeptType>;
+  userId: string;
 }
