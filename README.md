@@ -1289,3 +1289,123 @@ export default {
 
 ### 按需加载
 直接引入组件相关的js文件
+
+# 脚手架
+## 脚手架实现原理
+
+> 问题
+  1. 为什么全局安装 `@vue/cli` 后会添加的命令为 `vue`?
+  2. 全局安装 `@vue/cli` 时发生了什么?
+  3. 执行 `vue` 命令时发生了什么？为什么`vue`指向一个`js`文件，我们却可以直接通过`vue`命令去执行它?
+
+> 脚手架原理进阶
+  1. 为什么说脚手架本质是操作系统的客户端？它和我们在pc上安装的应用/软件有什么区别？
+  2. 如何为 `node` 脚手架命令创建别名？
+  3. 描述脚手架命令执行的全过程？
+
+  # 脚手架的开发流程
+
+  ## 脚手架开发流程详解
+
+  ### 开发流程
+
+   * 创建 npm 项目
+   * 创建脚手架入口文件，最上方添加：
+  ```js
+    #!/usr/bin/env node
+  ``` 
+   * 配置 `package.json`,添加 `bin` 属性
+   * 编写脚手架代码
+   * 讲脚手架发布到 `npm`
+
+### 脚手架本地 link 标准流程
+
+连接本地脚手架：
+```js
+cd your-cli-dir
+npm link
+```
+
+连接本地库文件：
+```js
+cd your-lib-dir
+npm link
+cd your-cli-dir
+npm link your-lib
+```
+
+取消连接本地库文件：
+```js
+cd your-lib-dir
+npm unlink
+cd your-cli-dir
+npm unlink your-lib
+rm -rf node_modules
+npm install
+```
+
+理解 `npm link`:
+  * `npm link your-lib`: 将当前项目中 `node_modules` 下指定的库文件链接到 `node` 全局 `node_modules` 下的库文件
+  * `npm link`: 将当前项目链接到 `node` 全局 `node_modules` 中作为一个库文件，并解析 `bin` 配置创建可执行文件
+
+理解 `npm unlink`:
+  * `npm unlink`: 将当前项目从 `node` 全局 `node_modules` 中移除
+  * `npm unlink your-lib`: 将当前项目中的库文件依赖移除
+
+# Lerna简介
+
+## 原生脚手架开发痛点分析
+
+ * 痛点一: 重复操作
+    1. 多 Package 本地 link
+    2. 多 Package 依赖安装
+    3. 多 Package 单元测试
+    4. 多 Package 代码提交
+    5. 多 Package 代码发布
+
+ * 痛点二： 版本一致性
+    1. 发布时版本一致性
+    2. 发布后互相依赖版本升级
+
+### Lerna 简介
+
+Lerna 是一个优化基于 git + npm 的多 package 项目的管理工具
+
+### 优势
+
+  * 大幅减少重复操作
+  * 提升操作的标准化
+
+> Lerna 是架构优化的产物，它揭示了一个架构真理：项目复杂度提升后，就需要对项目进行架构优化。架构优化的主要目标往往都是以效能为核心
+
+### 官网
+
+官网： https://lerna.js.org
+
+### 案例
+
+使用 Lerna 管理的大型项目：
+
+ * babel: https://github.com/babel/babel
+ * vue-cli: https:github.com/vuejs/vue-cli
+ * create-react-app: https://github.com/facebook/create-react-app
+
+### lerna 开发脚手架流程（重点）
+
+ 1. 脚手架项目初始化
+  > 初始化npm项目 --> 安装lerna --> lerna init初始化项目
+
+ 2. 创建package
+  > lerna create（创建Package） --> lerna add（安装依赖） --> lerna link（链接依赖）
+
+ 3. 脚手架开发和测试
+ > * lerna exec 执行 shell 脚本
+ > * lerna run 执行 npm 命令
+ > * lerna clean 清空依赖
+ > * lerna bootstrap 重装依赖
+
+ 4. 脚手架发布上线
+ > * lerna version / bump version
+ > * lerna changed 查看上版本以来的所有变更
+ > * lerna diff 查看 diff
+ > * lerna publish 项目发布
