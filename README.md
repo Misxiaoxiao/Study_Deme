@@ -1428,10 +1428,308 @@ Lerna 是一个优化基于 git + npm 的多 package 项目的管理工具
   }
  ```
  > 此处 `require(".")` 表示相对路径，它等价于 `require("./index.js")`这个路径，如果为 `require("..")`，等价于 `require("../index.js")`这个路径
+
  > 所以这里的 `require(".")(process.argv.slice(2))` 实际是导入本级下的 `index.js` 中 `module.exports = main` 的 `main` 并进行执行；
+
  > `process.argv.slice(2)` 是获取环境变量中 `argv` 的后几个的值，将其作为 `main` 的参数
 
  ### `node` 项目如何关联本地 `package` 依赖
 
   * 1. 通过 `npm link` 的方式
   * 2. 在 `dependencies` 的依赖下通过 `package-name: "file: ../@package-name"` 的方式
+
+# `yargs` 使用说明
+
+首先通过 `npm install -S yargs` 或 `yarn add -S yargs` 进行安装 `yargs`
+
+## `yargs` 用法
+
+```js
+const yargs = require('yargs')
+const { hideBin } = require('yargs/helpers')
+
+const arg = hideBin(process.argv)
+
+yargs()
+  .argv
+```
+
+### `strict`
+
+使用严格模式，当使用严格模式时出现错误命令会对其进行提示：`Unknow argumaent: XXX`
+
+```js
+yargs()
+  .strict()
+  .argv
+```
+
+### `usage` 添加指令提示
+
+使用 `usage` 可以为开发脚手架添加相关指令提示
+
+```js
+yargs()
+  .usage('cli-test [command] <options>')
+  .strict()
+  .argv
+```
+
+### `demandCommand` 添加所需要的命令的数量提示
+
+```js
+yargs()
+  .usage('cli-test [command] <options>')
+  .demandCommand(1, 'a command is required')
+  .strict()
+  .argv
+```
+
+### `recommendCommands` 命令提示，它会在所有的 commands 中找到最近似的进行提示说明
+
+```js
+yargs()
+  .usage('cli-test [command] <options>')
+  .demandCommand(1, 'a command is required')
+  .recommendCommands()
+  .strict()
+  .argv
+```
+
+### `alias` 添加命令的别名
+
+```js
+yargs()
+  .usage('cli-test [command] <options>')
+  .demandCommand(1, 'a command is required')
+  .alias('h', 'help')
+  .alias('v', 'version')
+  .recommendCommands()
+  .strict()
+  .argv
+```
+
+### `wrap` 终端显示的宽度
+
+```js
+yargs()
+  .usage('cli-test [command] <options>')
+  .demandCommand(1, 'a command is required')
+  .alias('h', 'help')
+  .alias('v', 'version')
+  .wrap(100)
+  .recommendCommands()
+  .strict()
+  .argv
+```
+如何使用 `wrap` 使其占满终端屏幕呢，如下
+
+```js
+const cli = yargs()
+
+cli
+  .usage('cli-test [command] <options>')
+  .demandCommand(1, 'a command is required')
+  .alias('h', 'help')
+  .alias('v', 'version')
+  .wrap(cli.terminalWidth())
+  .recommendCommands()
+  .strict()
+  .argv
+```
+这里 `cli.terminalWidth()` 就会返回终端的宽度
+
+### `epilogue` 结尾提示语
+
+```js
+const cli = yargs()
+
+cli
+  .usage('cli-test [command] <options>')
+  .demandCommand(1, 'a command is required')
+  .alias('h', 'help')
+  .alias('v', 'version')
+  .wrap(cli.terminalWidth())
+  .epilogue(dedent`footer log message`)
+  .recommendCommands()
+  .strict()
+  .argv
+```
+
+> 在 `es6` 字符串模板中，支持使用 alert\`12\` 的形式进行方法调用
+
+> 此处使用到 `dedent` 这个库，它的作用是去除字符串中的空格，让其顶格显示
+
+### `options` 在全局添加多个option选项，添加的选项在全局命令都可以进行访问
+
+```js
+const cli = yargs()
+
+cli
+  .usage('cli-test [command] <options>')
+  .demandCommand(1, 'a command is required')
+  .alias('h', 'help')
+  .alias('v', 'version')
+  .wrap(cli.terminalWidth())
+  .epilogue(dedent`footer log message`)
+  .options({
+    debug: {
+      type: 'boolean',
+      describe: 'Bootstrap debug mode',
+      alias: 'd'
+    }
+  })
+  .recommendCommands()
+  .strict()
+  .argv
+```
+
+### `option` 全局添加一条option选项
+
+```js
+cli
+  .usage('cli-test [command] <options>')
+  .demandCommand(1, 'a command is required')
+  .alias('h', 'help')
+  .alias('v', 'version')
+  .wrap(cli.terminalWidth())
+  .epilogue(dedent`footer log message`)
+  .option('ci', {
+    type: 'boolean',
+    hidden: true // 是否隐藏该命令
+  })
+  .recommendCommands()
+  .strict()
+  .argv
+```
+
+### `group` 对当前的option进行分组
+
+```js
+cli
+  .usage('cli-test [command] <options>')
+  .demandCommand(1, 'a command is required')
+  .alias('h', 'help')
+  .alias('v', 'version')
+  .wrap(cli.terminalWidth())
+  .epilogue(dedent`footer log message`)
+  .option('ci', {
+    type: 'boolean',
+    hidden: true // 是否隐藏该命令
+  })
+  .group(['debug'], 'Dev Options:')
+  .group(['registry'], 'Extra Options:')
+  .recommendCommands()
+  .strict()
+  .argv
+```
+
+### `command` 自定义命令
+
+`command` 一共接收4个参数
+> * 第一个表示 command 的格式 `'serve [port]'`
+> * 第二个参数表示对该 command 的描述 `'start the serve'`
+> * 第三个参数是一个 builder 函数，具体是运行该 command 之前所做的事情 `(yargs) => { yargs.positional('port', { describe: 'port to bind on', default: 5000 }) }`
+> * 第四个参数为 `handler` 是用来具体执行 `command` 的行为 `(argv) => { if (argv.verbose) console.info(start server on port); serve(argv.port) }`
+
+```js
+cli
+  .usage('cli-test [command] <options>')
+  .demandCommand(1, 'a command is required')
+  .alias('h', 'help')
+  .alias('v', 'version')
+  .wrap(cli.terminalWidth())
+  .epilogue(dedent`footer log message`)
+  .option('ci', {
+    type: 'boolean',
+    hidden: true // 是否隐藏该命令
+  })
+  .group(['debug'], 'Dev Options:')
+  .group(['registry'], 'Extra Options:')
+  .command('init [name]', 'Do init a project', (yargs) => {
+    yargs
+      .option('name', {
+        type: 'string',
+        describe: 'Name of a project',
+        alias: 'n'
+      })
+  }, (argv) => {
+    console.log(argv)
+  })
+  .command({
+    command: 'list',
+    aliases: ['ls', 'la', 'll'],
+    describe: 'List local packages',
+    builder: yargs => {},
+    handler: argv => {}
+  })
+  .recommendCommands()
+  .strict()
+  .argv
+```
+
+### `fail` 命令执行失败的执行方法
+
+```js
+cli
+  .usage('cli-test [command] <options>')
+  .demandCommand(1, 'a command is required')
+  .alias('h', 'help')
+  .alias('v', 'version')
+  .wrap(cli.terminalWidth())
+  .epilogue(dedent`footer log message`)
+  .option('ci', {
+    type: 'boolean',
+    hidden: true // 是否隐藏该命令
+  })
+  .group(['debug'], 'Dev Options:')
+  .group(['registry'], 'Extra Options:')
+  .command('init [name]', 'Do init a project', (yargs) => {
+    yargs
+      .option('name', {
+        type: 'string',
+        describe: 'Name of a project',
+        alias: 'n'
+      })
+  }, (argv) => {
+    console.log(argv)
+  })
+  .command({
+    command: 'list',
+    aliases: ['ls', 'la', 'll'],
+    describe: 'List local packages',
+    builder: yargs => {},
+    handler: argv => {}
+  })
+  .recommendCommands()
+  .fail((err, msg) => {
+    console.log(err, 'err')
+    console.log(msg, 'msg')
+  })
+  .strict()
+  .argv
+```
+
+### `parse` 用来解析参数的一种方式可代替 `.argv`
+
+```js
+const cli = yargs()
+
+cli
+  .usage('cli-test [command] <options>')
+  .demandCommand(1, 'a command is required')
+  .alias('h', 'help')
+  .alias('v', 'version')
+  .wrap(cli.terminalWidth())
+  .epilogue(dedent`footer log message`)
+  .options({
+    debug: {
+      type: 'boolean',
+      describe: 'Bootstrap debug mode',
+      alias: 'd'
+    }
+  })
+  .recommendCommands()
+  .strict()
+  .parse(argv, context)
+```
