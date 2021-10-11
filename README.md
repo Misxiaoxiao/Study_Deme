@@ -1409,3 +1409,29 @@ Lerna 是一个优化基于 git + npm 的多 package 项目的管理工具
  > * lerna changed 查看上版本以来的所有变更
  > * lerna diff 查看 diff
  > * lerna publish 项目发布
+
+ ## `lerna` 初始化过程源码分析
+
+ 首先根据入口 `package.json` 文件的 `bin` 找到入口文件在 `lerna/core/lerna/cli.js`
+ ```js
+  #!/usr/bin/env node
+
+  "use strict";
+
+  /* eslint-disable import/no-dynamic-require, global-require */
+  const importLocal = require("import-local");
+
+  if (importLocal(__filename)) {
+    require("npmlog").info("cli", "using local version of lerna");
+  } else {
+    require(".")(process.argv.slice(2));
+  }
+ ```
+ > 此处 `require(".")` 表示相对路径，它等价于 `require("./index.js")`这个路径，如果为 `require("..")`，等价于 `require("../index.js")`这个路径
+ > 所以这里的 `require(".")(process.argv.slice(2))` 实际是导入本级下的 `index.js` 中 `module.exports = main` 的 `main` 并进行执行；
+ > `process.argv.slice(2)` 是获取环境变量中 `argv` 的后几个的值，将其作为 `main` 的参数
+
+ ### `node` 项目如何关联本地 `package` 依赖
+
+  * 1. 通过 `npm link` 的方式
+  * 2. 在 `dependencies` 的依赖下通过 `package-name: "file: ../@package-name"` 的方式
