@@ -1290,6 +1290,8 @@ export default {
 ### 按需加载
 直接引入组件相关的js文件
 
+
+概念  low code/no code
 # 脚手架
 ## 脚手架实现原理
 
@@ -1733,3 +1735,149 @@ cli
   .strict()
   .parse(argv, context)
 ```
+
+## javascript 事件循环
+
+`javascript` 是一个单进程语言，同一时间不能处理多个任务，每办理完一个业务，就会检查是否还有需要进行执行的微任务，会去检查是否还有宏任务需要进行执行，这个检查的过程是持续进行的，每完成一个任务都会进行一次，这样的操作就被称为 `Event Loop`
+
+## 如何让 Node 支持 ES Module
+
+> 模块化
+
+> CMD / AMD / require.js
+
+> CommonJS
+* 加载：`require()`
+* 输出：`module.exports / exports.x`
+
+> ES Module
+* 加载：`import`
+* 输出：`export default / export function / export const`
+
+### 1. 通过 webpack 进行构建
+
+1. 首先安装`npm i -D webpack webpack-cli`
+2. 在当前 node 项目中创建 `webpack.config.js` 文件
+3. 在 `webpack.config.js` 文件中写入
+```js
+const path = require('path');
+
+module.exports = {
+  entry: './bin/index.js', // 入口文件,
+  output: {
+    path: path.join(__dirname, '/dist'),
+    filename: 'index.js',
+  },
+};
+```
+4. 在 `package.json` 中 `scripts` 标签中创建命令
+```js
+"scripts": {
+  "build": "webpack",
+  "dev": "webpack -w"
+}
+```
+5. 此时执行命令过后会出现无法识别 `#!/usr/bin/env node` 的情况
+6. 将 `index.js` 中的业务代码移入一个 `core.js` 中，此时 `index.js` 中的代码为下，只作为加载执行使用，并修改 `webpack.config.js` 使其重新构建代码为 `core.js`
+
+```js
+// index.js
+#!/usr/bin/env node
+
+require('../dist/core')
+
+// webpack.config.js
+const path = require('path');
+
+module.exports = {
+  entry: './bin/core.js', // 入口文件,
+  output: {
+    path: path.join(__dirname, '/dist'),
+    filename: 'core.js',
+  },
+};
+```
+> 注意：此时构建的代码为 `production` 模式的，所以构建的 `core.js` 为压缩过得代码，这里可以根据修改 `webpack` 的 `mode: development` 来打包出开发模式的代码
+7. 执行完成上述的过程后，在项目中 `import path from 'path'` 类似引入 `node` 自身的模块的时候还是会出现编译上的报错，这里 `webpack` 提供了一个 `target: 'node'` 的属性用来增加编译时对 `node` 库的加载，默认 `target: 'web'`
+> 此时代码中并没有对 `ES6` 的相关语法进行编译和检查，这样在低版本的 `Node` 环境中会出现不支持和不兼容的情况，这里会引入 `babel-loader` 对其进行处理
+8. 安装 `npm i -D babel-loader @babel/core @babel/preset-env` 
+9. 在当前 `webpack.config.js` 配置相关 `module` 用来添加相关 `loader`，这里为 `js` 文件添加相关 `loader` 来处理 `es6` 的语法
+```js
+// webpack.config.js
+const path = require('path');
+
+module.exports = {
+  entry: './bin/core.js', // 入口文件,
+  output: {
+    path: path.join(__dirname, '/dist'),
+    filename: 'core.js',
+  },
+  mode: 'production',
+  target: 'node',
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /(node_modules|dist)/，
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env'],
+          }
+        }
+      }
+    ]
+  }
+};
+```
+
+> 此时再次执行编译，会出现一个错误 `regeneratorRuntime is not defained` 出现这个错误的原因是因为 `regeneratorRuntime` 在编译后找不到造成的， `regeneratorRuntime` 该方法实际是构建 `async` 和 `await` 之后生成的 `function`，此 `function` 实际上是以垫片的形式引入的，所以执行中会出现找不到没有被定义的情况，因此引入 `transformRuntime` 的垫片
+
+10. 安装 `npm i -D @babel/plugin-transform-runtime @babel/runtime-corejs3`
+11. 配置 `webpack.config.js` 中的 `options`，用来引入 `regeneratorRuntime`
+```js
+// webpack.config.js
+const path = require('path');
+
+module.exports = {
+  entry: './bin/core.js', // 入口文件,
+  output: {
+    path: path.join(__dirname, '/dist'),
+    filename: 'core.js',
+  },
+  mode: 'production',
+  target: 'node',
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /(node_modules|dist)/，
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env'],
+            plugins: [
+              [
+                '@babel/plugin-transform-runtime',
+                {
+                  'corejs': 3,
+                  'regenerator': true,
+                  'useESModules': true,
+                  'helpers': true,
+                }
+              ]
+            ]
+          }
+        }
+      }
+    ]
+  }
+};
+```
+
+### 2. 直接通过 node 进行直接支持
+
+1. 把原来的 `*.js` 修改为 `*.mjs`
+2. 增加 node 运行参数 `--experimental-modules`
+
+> 该方法在 node V14 版本后已经进行支持，在低于 V14 的版本中，会收到 node 的一些警告，因此不建议使用
