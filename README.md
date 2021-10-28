@@ -1881,3 +1881,99 @@ module.exports = {
 2. 增加 node 运行参数 `--experimental-modules`
 
 > 该方法在 node V14 版本后已经进行支持，在低于 V14 的版本中，会收到 node 的一些警告，因此不建议使用
+
+# node 子进程 child_process
+
+## 异步
+
+ * exec: 执行 shell 脚本
+```js
+const cp = require('child_process')
+
+cp.exec('ls -al', function (err, stdout, stderr) {
+  // 1. err 表示异常
+  // 2. stdout 正常输出的结果
+  // 3. stderr 异常输出的结果
+})
+```
+
+ * execFile： 用来执行一个文件
+ ```js
+const cp = require('child_process')
+const path = require('path')
+
+cp.execFile('ls', ['-al'], function (err, stdout, stderr) {
+  // 1. err 表示异常
+  // 2. stdout 正常输出的结果
+  // 3. stderr 异常输出的结果
+})
+
+cp.execFile(path.resolve(__dirname, 'test.shell'), ['-al', '-bl']， function (err, stdout, stderr) {
+  // 1. err 表示异常
+  // 2. stdout 正常输出的结果
+  // 3. stderr 异常输出的结果
+})
+
+// test.shell
+ls -al|grep node_modules
+
+echo $1
+ ```
+ > 通过 `chmod +x bin/process/test.shell` 给文件添加可执行权限
+
+ > `exec` 同样也支持执行 shell 文件，只是参数和 `execFile` 不同而已，`exec` 是通过 `execFile` 实现的
+
+ * fork 使用 node 来执行子进程
+ ```js
+ const cp = require('child_process')
+ const path = require('path')
+
+ const child = cp.fork(path.resolve(__dirname, 'child.js'))
+ child.send('hello child process', () => {
+   // child.disconnect(); 关闭进程的链接
+ })
+ child.on('message', msg => {
+   console.log(msg)
+ })
+
+ // child.js
+ console.log('log child')
+
+ process.on('message', msg => {
+   console.log(msg)
+ })
+
+ process.send('hello, child process')
+ ```
+
+ * spawn
+ ```js
+ const cp = require('child_process')
+ const path = require('path')
+
+ // spawn 第一个参数是所要执行的命令或命令文件，第二个参数是命令的参数，第三个参数是命令的的option
+ // spawn 返回的是一个子进程对象
+ const child = cp.spawn(path.resolve(__dirname, 'test.shell'), ['-al', '-bl'], {
+   cwd: path.resolve('..')
+ })
+
+ // 监听回调 success
+ child.stdout.on('data', function (chunk) {
+   console.log(chunk.toString());
+ })
+
+ // 监听异常回调
+ child.stderr.on('data', function (chunk) {
+   console.log(chunk.toString());
+ })
+ ```
+ > 多用于处理耗时任务（比如： npm install）,需要不断打印日志的任务
+ > exec / execFile：开销比较小的任务
+
+## 同步
+
+ * execSync
+
+ * execFileSync
+
+ * spawnSync
