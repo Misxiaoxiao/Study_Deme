@@ -1977,3 +1977,25 @@ echo $1
  * execFileSync
 
  * spawnSync
+
+# Node 多进程开发进阶
+
+ * exec 和 execFile 到底有什么区别？
+ * 为什么 exec / execFile / fork 都是通过 spawn 实现的，spawn 的作用到底是什么？
+ * 为什么 spawn 调用后没有回调，而 exec 和 execFile 能够回调？
+ * 为什么 spawn 调用后需要手动调用 child.stdout.on('data', callback)，这里的 child.stdout / child.stderr 到底是什么？
+ * 为什么有 data / error / exit / close 这么多种回调，他们执行顺序到底是怎样的？
+
+ ## 学习重点
+
+ 方法一：直接执行 shell 文件
+
+ ```bash
+ /bin/sh test.shell
+ ```
+
+ 方法二：直接执行 shell 语句
+ 
+ ```bash
+ /bin/sh -c 'ls -al|grep node_modules'
+ ```
