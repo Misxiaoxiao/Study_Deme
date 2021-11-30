@@ -1980,11 +1980,25 @@ echo $1
 
 # Node 多进程开发进阶
 
- * exec 和 execFile 到底有什么区别？
+ * exec 和 execFile 到底有什么 区别？
  * 为什么 exec / execFile / fork 都是通过 spawn 实现的，spawn 的作用到底是什么？
  * 为什么 spawn 调用后没有回调，而 exec 和 execFile 能够回调？
  * 为什么 spawn 调用后需要手动调用 child.stdout.on('data', callback)，这里的 child.stdout / child.stderr 到底是什么？
  * 为什么有 data / error / exit / close 这么多种回调，他们执行顺序到底是怎样的？
+
+## Node 多进程源码总结
+ * exec / execFile / spawn / fork 区别
+  > 1. exec: 原理是调用 /bin/sh -c 执行我们传入的 shell 脚本，底层调用了 execFile
+  > 2. execFile: 原理是直接执行我们传入的 file 和 args，底层调用 spawn 创建和执行子进程，并建立了回调，一次性将所有的 stdout 和 stderr 结果返回
+  > 3. spawn: 原理是调用 internal/child_process，实例化了 ChildProcess 子进程对象，在调用 child.spawn 创建子进程并执行命令，底层是调用 child._handle.spawn 执行 process_wrap 中的 spawn 方法，执行过程是异步的，执行完毕后通过 PIPE 进行单向数据通信，通信结束后会子进程发起 onexit 回调，同时 Socket 会执行 close 回调
+  > 4. fork: 原理是通过 spawn 创建子进程和执行命令，通过 setupchannel 创建 IPC 用于子进程和父进程之间的双向通信
+
+ * data / error / exit / close 回调的区别
+  > data: 主进程读取数据过程中通过 onStreamRead 发起的回调 emit
+  > error: 命令执行失败后发起的回调
+  > exit: 子进程关闭完成后发起的回调
+  > close: 子进程所有 Socket 通信端口全部关闭后发起的回调
+  > stdout close / stderr close: 特定的 PIPE 读取完成后调用 onReadableStreamEnd 关闭 Socket 时发起的回调
 
  ## 学习重点
 
@@ -1993,9 +2007,85 @@ echo $1
  ```bash
  /bin/sh test.shell
  ```
-
+ 
  方法二：直接执行 shell 语句
  
  ```bash
  /bin/sh -c 'ls -al|grep node_modules'
  ```
+
+ # egg.js + 云 mongodb 快速入门
+
+ ## egg.js
+
+ ### 官网
+
+ 官网地址: https://eggjs.org//zh-cn/
+
+ ### 初始化
+
+ 初始化和项目启动方法:
+
+ ```bash
+ # 初始化
+ mkdir egg-example && cd egg-example
+ npm init egg --type=simple
+ npm i
+ # 项目启动
+ npm run dev
+ open http://localhost:7001
+ ```
+
+ # 云 mongodb
+
+ ## 云 mongodb 开通
+
+ 地址：https://mongodb.console.aliyun.com/,创建实例并付款即可
+
+ ## 本地 mongodb 安装
+
+ 地址：https://www.runoob.com/mongodb/mongodb-tutorial.html
+
+ ## mongodb 使用方法
+
+ 地址：https://www.runoob.com/mongodb/mongodb-databases-documents-collections.html
+
+# React 组件库
+
+ * 1. 创建组件仓储 `mkdir testui`
+ * 2. 初始化一个组件库项目 `npx create-react-app testui --template typescript`
+ * 3. 删除并修改无关代码
+ * 4. 创建一个打包命令
+创建一个 `tsconfig.build.json` 添加
+ ```js
+ {
+  "compilerOptions": {
+    "outDir": "dist",
+    "module": "esnext",
+    "target": "es5",
+    "declaration": true,
+    "jsx": "react",
+    "moduleResolution": "Node",
+    "allowSyntheticDefaultImports": true,
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "src/**/*.test.tsx",
+    "src/**/*.stories.tsx",
+    "src/setupTests.ts",
+  ]
+}
+ ```
+ 修改 `package.json`, 添加编译命令
+ ```js
+ // 添加编译命令
+ "build-ts": "tsc -p tsconfig.build.json",
+ // 添加文件入口配置
+ "main": "dist/index.js",
+"module": "dist/index.js",
+"types": "dist/index.d.ts",
+ ```
+ * 5. 使用 `npm link` 创建本地组件库连接,使用 `npm link ../../project-name/node-modules/react`关联 `react`
+ * 6. 在 project-name 项目中通过 `npm link testui` 进行使用
